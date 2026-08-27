@@ -192,24 +192,32 @@ function renderMemoryPage() {
     // Display memory
     memoryContent.innerHTML = `
 
-        <p class="memory-date">
-            ${memory.date}
-        </p>
+    <p class="memory-date">
+        ${memory.date}
+    </p>
 
-        <h1>
-            ${memory.title}
-        </h1>
+    <h1>
+        ${memory.title}
+    </h1>
 
-        <p class="memory-location">
-            ${memory.location}
-        </p>
+    <p class="memory-location">
+        ${memory.location}
+    </p>
 
-        <div class="memory-story">
-            ${memory.description}
-        </div>
+    <div class="memory-photo">
 
-    `;
+        <img
+            src="${memory.images[0]}"
+            alt="${memory.title}"
+        >
 
+    </div>
+
+    <div class="memory-story">
+        ${memory.description}
+    </div>
+
+`;
     setupMemoryNavigation(memory);
 
 }
