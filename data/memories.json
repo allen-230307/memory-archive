@@ -5,7 +5,9 @@
   "date": "14 August 2026",
   "location": "Kochi",
   "description": "We weren't supposed to stay that long, but somehow the evening became one worth remembering.",
-  "images": ["images/memory-01/011.png"]
+  "images": [
+    "images/memory-01/011.png"
+  ]
 }
   {
     "id": 2,
