@@ -520,3 +520,189 @@ body {
         transition: none !important;
     }
   }
+/* =========================
+   STORY PAGE
+   ========================= */
+
+.story-header {
+    max-width: 700px;
+    margin-bottom: 120px;
+}
+
+.story-header h1 {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: clamp(60px, 8vw, 100px);
+
+    font-weight: 400;
+
+    line-height: 0.9;
+
+    letter-spacing: -2px;
+
+    margin-bottom: 30px;
+}
+
+
+/* Timeline */
+
+.timeline {
+    position: relative;
+
+    max-width: 900px;
+
+    padding-left: 45px;
+}
+
+
+/* Vertical line */
+
+.timeline::before {
+    content: "";
+
+    position: absolute;
+
+    left: 8px;
+    top: 0;
+    bottom: 0;
+
+    width: 1px;
+
+    background: var(--border);
+}
+
+
+/* Memory */
+
+.timeline-memory {
+    position: relative;
+
+    margin-bottom: 90px;
+
+    cursor: pointer;
+}
+
+
+/* Timeline dot */
+
+.timeline-memory::before {
+    content: "";
+
+    position: absolute;
+
+    left: -41px;
+    top: 7px;
+
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: var(--accent);
+}
+
+
+/* Date */
+
+.timeline-date {
+    font-family: "Caveat", cursive;
+
+    font-size: 21px;
+
+    color: var(--muted);
+
+    margin-bottom: 12px;
+}
+
+
+/* Memory title */
+
+.timeline-memory h2 {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 42px;
+
+    font-weight: 400;
+
+    margin-bottom: 8px;
+
+    transition: opacity 0.3s ease;
+}
+
+.timeline-memory:hover h2 {
+    opacity: 0.55;
+}
+
+
+/* Location */
+
+.timeline-location {
+    font-size: 10px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1.5px;
+
+    color: var(--muted);
+
+    margin-bottom: 18px;
+}
+
+
+/* Description */
+
+.timeline-description {
+    max-width: 520px;
+
+    color: var(--muted);
+
+    font-size: 14px;
+
+    line-height: 1.8;
+}
+
+
+/* Loading */
+
+.loading {
+    color: var(--muted);
+
+    font-family: "Caveat", cursive;
+
+    font-size: 20px;
+}
+
+
+/* Mobile */
+
+@media (max-width: 800px) {
+
+    .story-header {
+        margin-bottom: 80px;
+    }
+
+    .story-header h1 {
+        font-size: 65px;
+    }
+
+    .timeline {
+        padding-left: 30px;
+    }
+
+    .timeline::before {
+        left: 4px;
+    }
+
+    .timeline-memory::before {
+        left: -30px;
+    }
+
+    .timeline-memory h2 {
+        font-size: 38px;
+    }
+
+    .timeline-memory {
+        margin-bottom: 70px;
+    }
+
+}
