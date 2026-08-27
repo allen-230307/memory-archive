@@ -109,22 +109,34 @@ function renderTimeline() {
             "timeline-memory";
 
         article.innerHTML = `
-            <p class="timeline-date">
-                ${memory.date}
-            </p>
+    ${
+        memory.images && memory.images.length > 0
+        ? `
+            <img
+                class="timeline-image"
+                src="./${memory.images[0]}"
+                alt="${memory.title}"
+            >
+        `
+        : ""
+    }
 
-            <h2>
-                ${memory.title}
-            </h2>
+    <p class="timeline-date">
+        ${memory.date}
+    </p>
 
-            <p class="timeline-location">
-                ${memory.location}
-            </p>
+    <h2>
+        ${memory.title}
+    </h2>
 
-            <p class="timeline-description">
-                ${memory.description}
-            </p>
-        `;
+    <p class="timeline-location">
+        ${memory.location}
+    </p>
+
+    <p class="timeline-description">
+        ${memory.description}
+    </p>
+`;
 
         // Open individual memory
         article.addEventListener("click", () => {
