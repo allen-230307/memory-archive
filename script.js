@@ -303,3 +303,4 @@ async function init() {
 
 // Start
 init();
+setupMobileMenu();
