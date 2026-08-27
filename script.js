@@ -204,14 +204,14 @@ function renderMemoryPage() {
         ${memory.location}
     </p>
 
+    ${memory.images && memory.images.length > 0 ? `
     <div class="memory-photo">
-
         <img
-            src="${memory.images[0]}"
+            src="./${memory.images[0]}"
             alt="${memory.title}"
         >
-
     </div>
+` : ""}
 
     <div class="memory-story">
         ${memory.description}
