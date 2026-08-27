@@ -71,11 +71,8 @@ function setupRandomMemory() {
             const selectedMemory =
                 memories[randomIndex];
 
-            alert(
-                `${selectedMemory.title}\n\n` +
-                `${selectedMemory.date} · ` +
-                `${selectedMemory.location}`
-            );
+            window.location.href =
+                `memory.html?id=${selectedMemory.id}`;
 
         }
     );
@@ -91,7 +88,6 @@ function renderTimeline() {
     const timeline =
         document.getElementById("timeline");
 
-    // Only run on story.html
     if (!timeline) return;
 
     timeline.innerHTML = "";
@@ -130,9 +126,157 @@ function renderTimeline() {
             </p>
         `;
 
+        // Open individual memory
+        article.addEventListener("click", () => {
+
+            window.location.href =
+                `memory.html?id=${memory.id}`;
+
+        });
+
         timeline.appendChild(article);
 
     });
+}
+
+
+// ================================
+// MEMORY PAGE
+// ================================
+
+function renderMemoryPage() {
+
+    const memoryContent =
+        document.getElementById("memoryContent");
+
+    // Only run on memory.html
+    if (!memoryContent) return;
+
+    // Get ?id= from URL
+    const params =
+        new URLSearchParams(window.location.search);
+
+    const memoryId =
+        params.get("id");
+
+    if (!memoryId) {
+
+        memoryContent.innerHTML = `
+            <p class="loading">
+                Memory not found.
+            </p>
+        `;
+
+        return;
+
+    }
+
+    // Find selected memory
+    const memory =
+        memories.find(
+            item => String(item.id) === String(memoryId)
+        );
+
+    if (!memory) {
+
+        memoryContent.innerHTML = `
+            <p class="loading">
+                Memory not found.
+            </p>
+        `;
+
+        return;
+
+    }
+
+    // Display memory
+    memoryContent.innerHTML = `
+
+        <p class="memory-date">
+            ${memory.date}
+        </p>
+
+        <h1>
+            ${memory.title}
+        </h1>
+
+        <p class="memory-location">
+            ${memory.location}
+        </p>
+
+        <div class="memory-story">
+            ${memory.description}
+        </div>
+
+    `;
+
+    setupMemoryNavigation(memory);
+
+}
+
+
+// ================================
+// PREVIOUS / NEXT MEMORY
+// ================================
+
+function setupMemoryNavigation(currentMemory) {
+
+    const previousButton =
+        document.getElementById("previousMemory");
+
+    const nextButton =
+        document.getElementById("nextMemory");
+
+    if (!previousButton || !nextButton) return;
+
+    const sortedMemories =
+        [...memories].sort(
+            (a, b) =>
+                new Date(b.date) -
+                new Date(a.date)
+        );
+
+    const currentIndex =
+        sortedMemories.findIndex(
+            memory =>
+                String(memory.id) ===
+                String(currentMemory.id)
+        );
+
+
+    // Previous
+    if (currentIndex < sortedMemories.length - 1) {
+
+        const previous =
+            sortedMemories[currentIndex + 1];
+
+        previousButton.href =
+            `memory.html?id=${previous.id}`;
+
+    } else {
+
+        previousButton.style.visibility =
+            "hidden";
+
+    }
+
+
+    // Next
+    if (currentIndex > 0) {
+
+        const next =
+            sortedMemories[currentIndex - 1];
+
+        nextButton.href =
+            `memory.html?id=${next.id}`;
+
+    } else {
+
+        nextButton.style.visibility =
+            "hidden";
+
+    }
+
 }
 
 
@@ -142,105 +286,20 @@ function renderTimeline() {
 
 async function init() {
 
-    // Load memories first
+    // Load memory data
     await loadMemories();
 
-    // Then activate features
+    // Activate random memory
     setupRandomMemory();
 
-    // Then create timeline
+    // Build timeline if on story.html
     renderTimeline();
 
-}
-
-init();        document.getElementById("memoryCount");
-
-    if (memoryCount) {
-        memoryCount.textContent = memories.length;
-    }
-}
-
-
-// ================================
-// RANDOM MEMORY
-// ================================
-
-function setupRandomMemory() {
-
-    const randomMemoryButton =
-        document.getElementById("randomMemory");
-
-    if (!randomMemoryButton) return;
-
-    randomMemoryButton.addEventListener("click", () => {
-
-        if (memories.length === 0) return;
-
-        const randomIndex =
-            Math.floor(Math.random() * memories.length);
-
-        const selectedMemory =
-            memories[randomIndex];
-
-        alert(
-            `${selectedMemory.title}\n\n` +
-            `${selectedMemory.date} · ${selectedMemory.location}`
-        );
-
-    });
-}
-
-
-// ================================
-// START
-// ================================
-
-async function init() {
-
-    await loadMemories();
-
-    setupRandomMemory();
+    // Build memory page if on memory.html
+    renderMemoryPage();
 
 }
 
+
+// Start
 init();
-
-// ================================
-// MEMORY COUNTER
-// ================================
-
-
-
-init();
-const memoryCount = document.getElementById("memoryCount");
-
-if (memoryCount) {
-    memoryCount.textContent = memories.length;
-}
-
-
-// ================================
-// RANDOM MEMORY
-// ================================
-
-const randomMemoryButton =
-    document.getElementById("randomMemory");
-
-if (randomMemoryButton) {
-
-    randomMemoryButton.addEventListener("click", () => {
-
-        const randomIndex =
-            Math.floor(Math.random() * memories.length);
-
-        const selectedMemory =
-            memories[randomIndex];
-
-        alert(
-            `${selectedMemory.title}\n\n` +
-            `${selectedMemory.date} · ${selectedMemory.location}`
-        );
-
-    });
-
-}
