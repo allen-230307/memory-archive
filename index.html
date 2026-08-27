@@ -1,1 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
 
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>The Archive</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500&family=Caveat:wght@400;500&display=swap"
+        rel="stylesheet"
+    >
+</head>
+
+<body>
+
+    <!-- Navigation -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <span class="brand-title">THE ARCHIVE</span>
+            <span class="brand-subtitle">A collection of moments.</span>
+        </div>
+
+        <nav class="navigation">
+
+            <a href="index.html" class="nav-link active">
+                Our Story
+            </a>
+
+            <a href="#" class="nav-link">
+                Memory Pages
+            </a>
+
+            <a href="#" class="nav-link">
+                The Little Things
+            </a>
+
+            <a href="#" class="nav-link">
+                The Gallery
+            </a>
+
+            <a href="#" class="nav-link">
+                Places We've Been
+            </a>
+
+            <a href="#" class="nav-link">
+                Things I Love About You
+            </a>
+
+            <a href="#" class="nav-link">
+                The Growing Tree
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <button id="randomMemory" class="random-button">
+                ↻ Random Memory
+            </button>
+
+            <div class="memory-counter">
+                <span id="memoryCount">0</span>
+                <span>memories preserved</span>
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- Mobile Header -->
+
+    <header class="mobile-header">
+
+        <span>THE ARCHIVE</span>
+
+        <button id="menuButton" aria-label="Open navigation">
+            ☰
+        </button>
+
+    </header>
+
+
+    <!-- Main Content -->
+
+    <main class="main-content">
+
+        <section class="hero">
+
+            <p class="handwritten">A place to remember</p>
+
+            <h1>
+                Some things<br>
+                are worth keeping.
+            </h1>
+
+            <p class="hero-description">
+                A quiet collection of moments, photographs,
+                places, and little things that became important.
+            </p>
+
+        </section>
+
+
+        <!-- Latest Memory -->
+
+        <section class="latest-memory">
+
+            <div class="section-heading">
+
+                <span>THE LATEST MEMORY</span>
+
+                <span class="line"></span>
+
+            </div>
+
+
+            <article class="memory-preview">
+
+                <div class="memory-image">
+
+                    <div class="image-placeholder">
+                        Your photograph
+                    </div>
+
+                </div>
+
+
+                <div class="memory-information">
+
+                    <p class="memory-date">
+                        14 AUGUST 2026
+                    </p>
+
+                    <h2>
+                        That Rainy Evening
+                    </h2>
+
+                    <p class="memory-location">
+                        Kochi
+                    </p>
+
+                    <p class="memory-excerpt">
+                        We weren't supposed to stay that long,
+                        but somehow the evening became one
+                        worth remembering.
+                    </p>
+
+                    <a href="#" class="read-memory">
+                        Open memory →
+                    </a>
+
+                </div>
+
+            </article>
+
+        </section>
+
+
+        <!-- Archive Introduction -->
+
+        <section class="archive-introduction">
+
+            <p class="handwritten">
+                Keep looking.
+            </p>
+
+            <h2>
+                There is more here.
+            </h2>
+
+            <p>
+                Every photograph, place, little object and
+                passing thought can become part of the archive.
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
