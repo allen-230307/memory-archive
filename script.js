@@ -297,10 +297,10 @@ async function init() {
 
     // Build memory page if on memory.html
     renderMemoryPage();
+    setupMobileMenu();
 
 }
 
 
 // Start
 init();
-setupMobileMenu();
