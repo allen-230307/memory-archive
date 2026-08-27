@@ -342,6 +342,34 @@ async function init() {
 
 }
 
+// ================================
+// HOME — LATEST MEMORY
+// ================================
 
+function setupLatestMemory() {
+
+    const image =
+        document.getElementById("latestMemoryImage");
+
+    if (!image || memories.length === 0) return;
+
+    const latest =
+        [...memories].sort(
+            (a, b) =>
+                new Date(b.date) -
+                new Date(a.date)
+        )[0];
+
+    if (latest.images && latest.images.length > 0) {
+
+        image.src =
+            `./${latest.images[0]}`;
+
+        image.alt =
+            latest.title;
+
+    }
+
+}
 // Start
 init();
