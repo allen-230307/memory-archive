@@ -283,7 +283,27 @@ function setupMemoryNavigation(currentMemory) {
 // ================================
 // START WEBSITE
 // ================================
+// ================================
+// MOBILE NAVIGATION
+// ================================
 
+function setupMobileMenu() {
+
+    const menuButton =
+        document.getElementById("menuButton");
+
+    const sidebar =
+        document.querySelector(".sidebar");
+
+    if (!menuButton || !sidebar) return;
+
+    menuButton.addEventListener("click", () => {
+
+        sidebar.classList.toggle("mobile-open");
+
+    });
+
+}
 async function init() {
 
     // Load memory data
