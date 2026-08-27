@@ -843,3 +843,32 @@ body {
     }
 
 }
+/* =========================
+   MOBILE MENU
+   ========================= */
+
+@media (max-width: 800px) {
+
+    .sidebar.mobile-open {
+        display: flex;
+
+        position: fixed;
+
+        top: 65px;
+        left: 0;
+
+        width: 100%;
+        height: calc(100vh - 65px);
+
+        padding: 35px 25px;
+
+        z-index: 99;
+
+        border-right: none;
+    }
+
+    .sidebar.mobile-open .brand {
+        margin-bottom: 40px;
+    }
+
+}
