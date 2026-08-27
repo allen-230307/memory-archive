@@ -903,3 +903,12 @@ body {
 
     object-fit: cover;
 }
+.memory-image img,
+#latestMemoryImage {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
