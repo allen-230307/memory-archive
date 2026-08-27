@@ -90,15 +90,7 @@ init();
 // MEMORY COUNTER
 // ================================
 
-async function init() {
 
-    await loadMemories();
-
-    setupRandomMemory();
-
-    renderTimeline();
-
-}
 
 init();
 const memoryCount = document.getElementById("memoryCount");
