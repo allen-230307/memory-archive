@@ -1,40 +1,234 @@
-<!DOCTYPE html>
-<html lang="en">
+/* =================================
+   EDITORIAL MEMORY PAGE
+   ================================= */
 
-<head>
-
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Memory — The Archive</title>
-
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500&family=Caveat:wght@400;500&display=swap"
-        rel="stylesheet"
-    >
-
-</head>
+.memory-page {
+    max-width: 1200px;
+}
 
 
-<body>
+/* Memory introduction */
 
-    <!-- Navigation -->
+.memory-page article {
+    max-width: 1000px;
+}
 
-    <aside class="sidebar">
 
-        <div class="brand">
+.memory-page .memory-date {
+    font-family: "Caveat", cursive;
 
-            <span class="brand-title">
-                THE ARCHIVE
+    font-size: 24px;
+
+    color: var(--muted);
+
+    margin-bottom: 12px;
+}
+
+
+.memory-page h1 {
+    max-width: 900px;
+
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: clamp(60px, 9vw, 120px);
+
+    font-weight: 400;
+
+    line-height: 0.88;
+
+    letter-spacing: -3px;
+
+    margin-bottom: 18px;
+}
+
+
+.memory-page .memory-location {
+    font-size: 10px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 2px;
+
+    color: var(--muted);
+
+    margin-bottom: 80px;
+}
+
+
+/* =================================
+   MEMORY PHOTOGRAPHS
+   ================================= */
+
+.memory-photo {
+    width: 100%;
+
+    margin: 0 0 90px 0;
+}
+
+
+.memory-photo img {
+    display: block;
+
+    width: 100%;
+
+    height: auto;
+
+    max-width: 100%;
+}
+
+
+.memory-photo figcaption {
+    margin-top: 14px;
+
+    color: var(--muted);
+
+    font-family: "Caveat", cursive;
+
+    font-size: 18px;
+}
+
+
+/* =================================
+   MEMORY STORY
+   ================================= */
+
+.memory-story {
+    max-width: 650px;
+
+    margin: 20px auto 120px;
+
+    color: var(--muted);
+
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 26px;
+
+    line-height: 1.65;
+}
+
+
+/* =================================
+   MEMORY VIDEO
+   ================================= */
+
+.memory-video {
+    width: 100%;
+
+    margin: 0 0 90px 0;
+}
+
+
+.memory-video video {
+    display: block;
+
+    width: 100%;
+
+    height: auto;
+
+    max-width: 100%;
+}
+
+
+.memory-video figcaption {
+    margin-top: 14px;
+
+    color: var(--muted);
+
+    font-family: "Caveat", cursive;
+
+    font-size: 18px;
+}
+
+
+/* =================================
+   MEMORY NAVIGATION
+   ================================= */
+
+.memory-navigation {
+    display: flex;
+
+    justify-content: space-between;
+
+    max-width: 1000px;
+
+    margin-top: 160px;
+
+    padding-top: 30px;
+
+    border-top: 1px solid var(--border);
+}
+
+
+.memory-navigation a {
+    color: var(--text);
+
+    text-decoration: none;
+
+    font-family: "Caveat", cursive;
+
+    font-size: 22px;
+
+    transition: opacity 0.3s ease;
+}
+
+
+.memory-navigation a:hover {
+    opacity: 0.5;
+}
+
+
+/* =================================
+   MOBILE MEMORY PAGE
+   ================================= */
+
+@media (max-width: 800px) {
+
+    .memory-page {
+        padding-top: 100px;
+    }
+
+
+    .back-link {
+        margin-bottom: 70px;
+    }
+
+
+    .memory-page h1 {
+        font-size: 64px;
+
+        letter-spacing: -1.5px;
+    }
+
+
+    .memory-page .memory-location {
+        margin-bottom: 55px;
+    }
+
+
+    .memory-photo {
+        margin-bottom: 65px;
+    }
+
+
+    .memory-story {
+        font-size: 22px;
+
+        margin-top: 10px;
+
+        margin-bottom: 80px;
+    }
+
+
+    .memory-video {
+        margin-bottom: 65px;
+    }
+
+
+    .memory-navigation {
+        margin-top: 100px;
+    }
+
+}                THE ARCHIVE
             </span>
 
             <span class="brand-subtitle">
