@@ -9,7 +9,7 @@ async function loadMemories() {
 
     try {
 
-        const response = await fetch("./data/memories.json");
+        const response = await fetch("data/memories.json?v=3");
 
         if (!response.ok) {
             throw new Error("Could not load memories.json");
@@ -27,7 +27,7 @@ async function loadMemories() {
 
     } catch (error) {
 
-        console.error(error);
+        console.error("MEMORY ERROR:", error);
 
         const timeline = document.getElementById("timeline");
 
