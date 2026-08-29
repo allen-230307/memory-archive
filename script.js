@@ -27,18 +27,21 @@ async function loadMemories() {
 
     } catch (error) {
 
-        console.error("MEMORY ERROR:", error);
+    console.error("MEMORY ERROR:", error);
 
-        const timeline = document.getElementById("timeline");
+    const timeline =
+        document.getElementById("timeline");
 
-        if (timeline) {
-            timeline.innerHTML = `
-                <p class="loading">
-                    Unable to load memories.
-                </p>
-            `;
-        }
+    if (timeline) {
+
+        timeline.innerHTML = `
+            <p class="loading">
+                Error: ${error.message}
+            </p>
+        `;
+
     }
+}
 }
 
 
