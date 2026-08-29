@@ -9,21 +9,35 @@ async function loadMemories() {
 
     try {
 
-        const response =
-            await fetch("./data/memories.json");
+        const response = await fetch("./data/memories.json");
 
         if (!response.ok) {
-            throw new Error("Could not load memories.");
+            throw new Error("Could not load memories.json");
         }
 
         memories = await response.json();
 
         updateMemoryCounter();
 
+        renderTimeline();
+
+        renderMemoryPage();
+
+        setupLatestMemory();
+
     } catch (error) {
 
-        console.error("Memory loading error:", error);
+        console.error(error);
 
+        const timeline = document.getElementById("timeline");
+
+        if (timeline) {
+            timeline.innerHTML = `
+                <p class="loading">
+                    Unable to load memories.
+                </p>
+            `;
+        }
     }
 }
 
@@ -34,12 +48,62 @@ async function loadMemories() {
 
 function updateMemoryCounter() {
 
-    const memoryCount =
+    const counter =
         document.getElementById("memoryCount");
 
-    if (memoryCount) {
-        memoryCount.textContent = memories.length;
+    if (counter) {
+        counter.textContent = memories.length;
     }
+}
+
+
+// ================================
+// MEDIA HELPER
+// ================================
+
+function getMedia(memory) {
+
+    if (Array.isArray(memory.media)) {
+        return memory.media;
+    }
+
+    if (Array.isArray(memory.images)) {
+
+        return memory.images.map(src => ({
+            type: "image",
+            src: src,
+            caption: ""
+        }));
+
+    }
+
+    return [];
+}
+
+
+// ================================
+// FIRST IMAGE
+// ================================
+
+function getFirstImage(memory) {
+
+    const media = getMedia(memory);
+
+    const image =
+        media.find(item => item.type === "image");
+
+    return image ? image.src : null;
+}
+
+
+// ================================
+// DATE
+// ================================
+
+function memoryTime(memory) {
+
+    return new Date(memory.date).getTime();
+
 }
 
 
@@ -54,44 +118,24 @@ function setupRandomMemory() {
 
     if (!button) return;
 
-    button.addEventListener("click", () => {
+    button.onclick = function () {
 
         if (memories.length === 0) return;
 
-        const randomIndex =
+        const index =
             Math.floor(
                 Math.random() * memories.length
             );
 
-        const memory =
-            memories[randomIndex];
-
         window.location.href =
-            `memory.html?id=${memory.id}`;
+            "memory.html?id=" + memories[index].id;
 
-    });
+    };
 }
 
 
 // ================================
-// GET FIRST IMAGE
-// ================================
-
-function getFirstImage(memory) {
-
-    if (!memory.media) return null;
-
-    const image =
-        memory.media.find(
-            item => item.type === "image"
-        );
-
-    return image ? image.src : null;
-}
-
-
-// ================================
-// HOME — LATEST MEMORY
+// HOME IMAGE
 // ================================
 
 function setupLatestMemory() {
@@ -101,34 +145,27 @@ function setupLatestMemory() {
 
     if (!image || memories.length === 0) return;
 
-    const sortedMemories =
+    const sorted =
         [...memories].sort(
-            (a, b) =>
-                new Date(b.date) -
-                new Date(a.date)
+            (a, b) => memoryTime(b) - memoryTime(a)
         );
 
-    const latest =
-        sortedMemories[0];
+    const latest = sorted[0];
 
-    const imageSource =
-        getFirstImage(latest);
+    const src = getFirstImage(latest);
 
-    if (imageSource) {
+    if (src) {
 
-        image.src =
-            `./${imageSource}`;
+        image.src = "./" + src;
 
-        image.alt =
-            latest.title;
+        image.alt = latest.title;
 
     }
-
 }
 
 
 // ================================
-// OUR STORY — TIMELINE
+// OUR STORY
 // ================================
 
 function renderTimeline() {
@@ -140,14 +177,13 @@ function renderTimeline() {
 
     timeline.innerHTML = "";
 
-    const sortedMemories =
+    const sorted =
         [...memories].sort(
-            (a, b) =>
-                new Date(b.date) -
-                new Date(a.date)
+            (a, b) => memoryTime(b) - memoryTime(a)
         );
 
-    sortedMemories.forEach(memory => {
+
+    sorted.forEach(memory => {
 
         const article =
             document.createElement("article");
@@ -156,53 +192,78 @@ function renderTimeline() {
             "timeline-memory";
 
 
-        const imageSource =
+        const imageSrc =
             getFirstImage(memory);
 
 
-        const imageHTML =
-            imageSource
+        if (imageSrc) {
 
-            ? `
-                <img
-                    class="timeline-image"
-                    src="./${imageSource}"
-                    alt="${memory.title}"
-                >
-            `
+            const image =
+                document.createElement("img");
 
-            : "";
+            image.className =
+                "timeline-image";
 
+            image.src =
+                "./" + imageSrc;
 
-        article.innerHTML = `
+            image.alt =
+                memory.title;
 
-            ${imageHTML}
+            article.appendChild(image);
 
-            <p class="timeline-date">
-                ${memory.date}
-            </p>
-
-            <h2>
-                ${memory.title}
-            </h2>
-
-            <p class="timeline-location">
-                ${memory.location}
-            </p>
-
-            <p class="timeline-description">
-                ${memory.description}
-            </p>
-
-        `;
+        }
 
 
-        article.addEventListener("click", () => {
+        const date =
+            document.createElement("p");
+
+        date.className =
+            "timeline-date";
+
+        date.textContent =
+            memory.date;
+
+
+        const title =
+            document.createElement("h2");
+
+        title.textContent =
+            memory.title;
+
+
+        const location =
+            document.createElement("p");
+
+        location.className =
+            "timeline-location";
+
+        location.textContent =
+            memory.location;
+
+
+        const description =
+            document.createElement("p");
+
+        description.className =
+            "timeline-description";
+
+        description.textContent =
+            memory.description;
+
+
+        article.appendChild(date);
+        article.appendChild(title);
+        article.appendChild(location);
+        article.appendChild(description);
+
+
+        article.onclick = function () {
 
             window.location.href =
-                `memory.html?id=${memory.id}`;
+                "memory.html?id=" + memory.id;
 
-        });
+        };
 
 
         timeline.appendChild(article);
@@ -218,10 +279,10 @@ function renderTimeline() {
 
 function renderMemoryPage() {
 
-    const memoryContent =
+    const container =
         document.getElementById("memoryContent");
 
-    if (!memoryContent) return;
+    if (!container) return;
 
 
     const params =
@@ -229,125 +290,82 @@ function renderMemoryPage() {
             window.location.search
         );
 
-    const memoryId =
+    const id =
         params.get("id");
 
 
-    if (!memoryId) {
-
-        memoryContent.innerHTML = `
-            <p class="loading">
-                Memory not found.
-            </p>
-        `;
-
-        return;
-
-    }
+    if (!id) return;
 
 
     const memory =
         memories.find(
-            item =>
-                String(item.id) ===
-                String(memoryId)
+            item => String(item.id) === String(id)
         );
 
 
     if (!memory) {
 
-        memoryContent.innerHTML = `
-            <p class="loading">
-                Memory not found.
-            </p>
-        `;
+        container.innerHTML =
+            "<p class='loading'>Memory not found.</p>";
 
         return;
 
     }
 
 
-    // ================================
-    // BUILD MEDIA
-    // ================================
-
     let mediaHTML = "";
 
 
-    if (memory.media) {
+    getMedia(memory).forEach(item => {
 
-        mediaHTML =
-            memory.media.map(item => {
+        if (item.type === "image") {
 
-                if (item.type === "image") {
+            mediaHTML += `
+                <figure class="memory-photo">
 
-                    return `
-                        <figure class="memory-photo">
+                    <img
+                        src="./${item.src}"
+                        alt="${item.caption || memory.title}"
+                    >
 
-                            <img
-                                src="./${item.src}"
-                                alt="${item.caption || memory.title}"
-                            >
+                    ${
+                        item.caption
+                        ? `<figcaption>${item.caption}</figcaption>`
+                        : ""
+                    }
 
-                            ${
-                                item.caption
-                                ? `
-                                    <figcaption>
-                                        ${item.caption}
-                                    </figcaption>
-                                `
-                                : ""
-                            }
+                </figure>
+            `;
 
-                        </figure>
-                    `;
-
-                }
+        }
 
 
-                if (item.type === "video") {
+        if (item.type === "video") {
 
-                    return `
-                        <figure class="memory-video">
+            mediaHTML += `
+                <figure class="memory-video">
 
-                            <video
-                                controls
-                                preload="metadata"
-                            >
-                                <source
-                                    src="./${item.src}"
-                                >
-                                Your browser does not support video playback.
-                            </video>
+                    <video controls preload="metadata">
 
-                            ${
-                                item.caption
-                                ? `
-                                    <figcaption>
-                                        ${item.caption}
-                                    </figcaption>
-                                `
-                                : ""
-                            }
+                        <source src="./${item.src}">
 
-                        </figure>
-                    `;
+                    </video>
 
-                }
+                    ${
+                        item.caption
+                        ? `<figcaption>${item.caption}</figcaption>`
+                        : ""
+                    }
+
+                </figure>
+            `;
+
+        }
+
+    });
 
 
-                return "";
-
-            }).join("");
-
-    }
-
-
-    // ================================
-    // DISPLAY MEMORY
-    // ================================
-
-    memoryContent.innerHTML = `
+    container.innerHTML = `
 
         <p class="memory-date">
             ${memory.date}
@@ -369,517 +387,44 @@ function renderMemoryPage() {
 
     `;
 
-
-    setupMemoryNavigation(memory);
-
 }
 
 
 // ================================
-// PREVIOUS / NEXT MEMORY
-// ================================
-
-function setupMemoryNavigation(currentMemory) {
-
-    const previousButton =
-        document.getElementById("previousMemory");
-
-    const nextButton =
-        document.getElementById("nextMemory");
-
-    if (!previousButton || !nextButton) return;
-
-
-    const sortedMemories =
-        [...memories].sort(
-            (a, b) =>
-                new Date(b.date) -
-                new Date(a.date)
-        );
-
-
-    const currentIndex =
-        sortedMemories.findIndex(
-            memory =>
-                String(memory.id) ===
-                String(currentMemory.id)
-        );
-
-
-    // Previous
-
-    if (
-        currentIndex <
-        sortedMemories.length - 1
-    ) {
-
-        const previous =
-            sortedMemories[
-                currentIndex + 1
-            ];
-
-        previousButton.href =
-            `memory.html?id=${previous.id}`;
-
-        previousButton.style.visibility =
-            "visible";
-
-    } else {
-
-        previousButton.style.visibility =
-            "hidden";
-
-    }
-
-
-    // Next
-
-    if (currentIndex > 0) {
-
-        const next =
-            sortedMemories[
-                currentIndex - 1
-            ];
-
-        nextButton.href =
-            `memory.html?id=${next.id}`;
-
-        nextButton.style.visibility =
-            "visible";
-
-    } else {
-
-        nextButton.style.visibility =
-            "hidden";
-
-    }
-
-}
-
-
-// ================================
-// MOBILE NAVIGATION
+// MOBILE MENU
 // ================================
 
 function setupMobileMenu() {
 
-    const menuButton =
+    const button =
         document.getElementById("menuButton");
 
     const sidebar =
         document.querySelector(".sidebar");
 
-    if (!menuButton || !sidebar) return;
+    if (!button || !sidebar) return;
 
 
-    menuButton.addEventListener("click", () => {
+    button.onclick = function () {
 
-        sidebar.classList.toggle(
-            "mobile-open"
-        );
+        sidebar.classList.toggle("mobile-open");
 
-    });
+    };
 
 }
 
 
 // ================================
-// START WEBSITE
+// START
 // ================================
 
 async function init() {
 
-    await loadMemories();
+    setupMobileMenu();
 
     setupRandomMemory();
 
-    setupLatestMemory();
-
-    renderTimeline();
-
-    renderMemoryPage();
-
-    setupMobileMenu();
-
-}
-
-
-init();    const memoryCount =
-        document.getElementById("memoryCount");
-
-    if (memoryCount) {
-        memoryCount.textContent = memories.length;
-    }
-}
-
-
-// ================================
-// RANDOM MEMORY
-// ================================
-
-function setupRandomMemory() {
-
-    const randomMemoryButton =
-        document.getElementById("randomMemory");
-
-    if (!randomMemoryButton) return;
-
-    randomMemoryButton.addEventListener("click", () => {
-
-        if (memories.length === 0) return;
-
-        const randomIndex =
-            Math.floor(
-                Math.random() * memories.length
-            );
-
-        const selectedMemory =
-            memories[randomIndex];
-
-        window.location.href =
-            `memory.html?id=${selectedMemory.id}`;
-
-    });
-}
-
-
-// ================================
-// HOME — LATEST MEMORY
-// ================================
-
-function setupLatestMemory() {
-
-    const image =
-        document.getElementById("latestMemoryImage");
-
-    if (!image || memories.length === 0) return;
-
-    const sortedMemories =
-        [...memories].sort(
-            (a, b) =>
-                new Date(b.date) -
-                new Date(a.date)
-        );
-
-    const latest =
-        sortedMemories[0];
-
-    if (
-        latest.images &&
-        latest.images.length > 0
-    ) {
-
-        image.src =
-            `./${latest.images[0]}`;
-
-        image.alt =
-            latest.title;
-
-    }
-
-}
-
-
-// ================================
-// OUR STORY — TIMELINE
-// ================================
-
-function renderTimeline() {
-
-    const timeline =
-        document.getElementById("timeline");
-
-    if (!timeline) return;
-
-    timeline.innerHTML = "";
-
-    const sortedMemories =
-        [...memories].sort(
-            (a, b) =>
-                new Date(b.date) -
-                new Date(a.date)
-        );
-
-    sortedMemories.forEach(memory => {
-
-        const article =
-            document.createElement("article");
-
-        article.className =
-            "timeline-memory";
-
-
-        const imageHTML =
-            memory.images &&
-            memory.images.length > 0
-
-            ? `
-                <img
-                    class="timeline-image"
-                    src="./${memory.images[0]}"
-                    alt="${memory.title}"
-                >
-            `
-
-            : "";
-
-
-        article.innerHTML = `
-
-            ${imageHTML}
-
-            <p class="timeline-date">
-                ${memory.date}
-            </p>
-
-            <h2>
-                ${memory.title}
-            </h2>
-
-            <p class="timeline-location">
-                ${memory.location}
-            </p>
-
-            <p class="timeline-description">
-                ${memory.description}
-            </p>
-
-        `;
-
-
-        article.addEventListener("click", () => {
-
-            window.location.href =
-                `memory.html?id=${memory.id}`;
-
-        });
-
-
-        timeline.appendChild(article);
-
-    });
-
-}
-
-
-// ================================
-// MEMORY PAGE
-// ================================
-
-function renderMemoryPage() {
-
-    const memoryContent =
-        document.getElementById("memoryContent");
-
-    if (!memoryContent) return;
-
-
-    const params =
-        new URLSearchParams(
-            window.location.search
-        );
-
-    const memoryId =
-        params.get("id");
-
-
-    if (!memoryId) {
-
-        memoryContent.innerHTML = `
-            <p class="loading">
-                Memory not found.
-            </p>
-        `;
-
-        return;
-
-    }
-
-
-    const memory =
-        memories.find(
-            item =>
-                String(item.id) ===
-                String(memoryId)
-        );
-
-
-    if (!memory) {
-
-        memoryContent.innerHTML = `
-            <p class="loading">
-                Memory not found.
-            </p>
-        `;
-
-        return;
-
-    }
-
-
-    const imagesHTML =
-        memory.images &&
-        memory.images.length > 0
-
-        ? memory.images.map(image => `
-            <div class="memory-photo">
-                <img
-                    src="./${image}"
-                    alt="${memory.title}"
-                >
-            </div>
-        `).join("")
-
-        : "";
-
-
-    memoryContent.innerHTML = `
-
-        <p class="memory-date">
-            ${memory.date}
-        </p>
-
-        <h1>
-            ${memory.title}
-        </h1>
-
-        <p class="memory-location">
-            ${memory.location}
-        </p>
-
-        ${imagesHTML}
-
-        <div class="memory-story">
-            ${memory.description}
-        </div>
-
-    `;
-
-
-    setupMemoryNavigation(memory);
-
-}
-
-
-// ================================
-// PREVIOUS / NEXT MEMORY
-// ================================
-
-function setupMemoryNavigation(currentMemory) {
-
-    const previousButton =
-        document.getElementById("previousMemory");
-
-    const nextButton =
-        document.getElementById("nextMemory");
-
-    if (!previousButton || !nextButton) return;
-
-
-    const sortedMemories =
-        [...memories].sort(
-            (a, b) =>
-                new Date(b.date) -
-                new Date(a.date)
-        );
-
-
-    const currentIndex =
-        sortedMemories.findIndex(
-            memory =>
-                String(memory.id) ===
-                String(currentMemory.id)
-        );
-
-
-    // Previous
-
-    if (
-        currentIndex <
-        sortedMemories.length - 1
-    ) {
-
-        const previous =
-            sortedMemories[
-                currentIndex + 1
-            ];
-
-        previousButton.href =
-            `memory.html?id=${previous.id}`;
-
-    } else {
-
-        previousButton.style.visibility =
-            "hidden";
-
-    }
-
-
-    // Next
-
-    if (currentIndex > 0) {
-
-        const next =
-            sortedMemories[
-                currentIndex - 1
-            ];
-
-        nextButton.href =
-            `memory.html?id=${next.id}`;
-
-    } else {
-
-        nextButton.style.visibility =
-            "hidden";
-
-    }
-
-}
-
-
-// ================================
-// MOBILE NAVIGATION
-// ================================
-
-function setupMobileMenu() {
-
-    const menuButton =
-        document.getElementById("menuButton");
-
-    const sidebar =
-        document.querySelector(".sidebar");
-
-    if (!menuButton || !sidebar) return;
-
-
-    menuButton.addEventListener("click", () => {
-
-        sidebar.classList.toggle(
-            "mobile-open"
-        );
-
-    });
-
-}
-
-
-// ================================
-// START WEBSITE
-// ================================
-
-async function init() {
-
     await loadMemories();
-
-    setupRandomMemory();
-
-    setupLatestMemory();
-
-    renderTimeline();
-
-    renderMemoryPage();
-
-    setupMobileMenu();
 
 }
 
