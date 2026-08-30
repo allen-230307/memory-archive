@@ -384,10 +384,11 @@ function renderMemoryPage() {
 
         ${mediaHTML}
 
-        <div class="memory-story">
-            ${memory.description}
-        </div>
+        <div class="memory-media">
+    ${mediaHTML}
+</div>
 
+<div class="memory-story">
     `;
 
 }
