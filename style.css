@@ -1245,3 +1245,57 @@ body {
     }
 
 }
+/* =========================
+   MEMORY MEDIA GALLERY
+   ========================= */
+
+.memory-media {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 0 100px;
+}
+
+.memory-photo {
+    width: 100%;
+    margin: 0 0 70px;
+}
+
+.memory-photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.memory-photo figcaption {
+    margin-top: 12px;
+    color: var(--muted);
+    font-family: "Caveat", cursive;
+    font-size: 17px;
+}
+
+.memory-video {
+    width: 100%;
+    margin: 0 0 70px;
+}
+
+.memory-video video {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+}
+
+@media (max-width: 800px) {
+
+    .memory-media {
+        margin-bottom: 70px;
+    }
+
+    .memory-photo,
+    .memory-video {
+        margin-bottom: 45px;
+    }
+
+}
