@@ -1,37 +1,69 @@
 [
   {
     "id": 1,
-    "title": "That Rainy Evening",
-    "date": "14 August 2026",
-    "location": "Kochi",
-    "description": "We weren't supposed to stay that long, but somehow the evening became one worth remembering.",
-    "media": [
-  {
-    "type": "image",
-    "src": "images/memory-01/011.jpg",
-    "caption": ""
-  },
-  {
-    "type": "image",
-    "src": "images/memory-01/012.jpg",
-    "caption": ""
-  }
-]
-  },
-  {
-    "id": 2,
-    "title": "The Long Ride",
-    "date": "20 August 2026",
-    "location": "Bangalore",
-    "description": "A long journey, unfamiliar streets, and a day that ended far too quickly.",
+    "title": "The Night I Told You",
+    "date": "21 August 2026",
+    "time": "3:00 AM",
+    "location": "Kerala",
+    "description": "The full-night bike ride, the warmth of the night, and the moment I finally confessed my love to you.",
     "media": []
   },
   {
+    "id": 2,
+    "title": "Thattekad — Mini Switzerland",
+    "date": "21 August 2026",
+    "time": "6:00 AM",
+    "location": "Thattekad, Kerala",
+    "description": "A cool morning at Thattekad. The atmosphere was calm, the grounds felt almost unreal, and we spent the morning being playful together.",
+    "media": [
+      {
+        "type": "image",
+        "src": "images/memory-02/011.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/memory-02/012.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/memory-02/013.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/memory-02/014.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/memory-02/015.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/memory-02/016.jpg",
+        "caption": ""
+      }
+    ]
+  },
+  {
     "id": 3,
-    "title": "An Ordinary Afternoon",
-    "date": "25 August 2026",
+    "title": "Four Hours Close",
+    "date": "28 August 2026",
+    "time": "3:30 PM",
     "location": "Kochi",
-    "description": "Nothing particularly extraordinary happened. Maybe that's exactly why it stayed with us.",
+    "description": "Our first time cuddling. We were together for about four hours. But what stayed with me wasn't simply the closeness. My love for you was sincere. It was about you, not just the moment.",
+    "media": []
+  },
+  {
+    "id": 4,
+    "title": "The First Goodbye",
+    "date": "30 August 2026",
+    "time": "10:00 PM",
+    "location": "Perumbavoor",
+    "description": "I followed your bus till Perumbavoor just to have another twenty minutes with you. When it was time for you to leave, I felt like I was breaking down from inside. But I stood there still, watching you for those last few minutes.",
     "media": []
   }
 ]
