@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
 
@@ -21,9 +22,12 @@
     >
 </head>
 
+
 <body>
 
-    <!-- Navigation -->
+    <!-- =========================
+         NAVIGATION
+         ========================= -->
 
     <aside class="sidebar">
 
@@ -32,10 +36,13 @@
             <span class="brand-subtitle">A collection of moments.</span>
         </div>
 
+
         <nav class="navigation">
+
             <a href="index.html" class="nav-link active">
                 Home
             </a>
+
             <a href="story.html" class="nav-link">
                 Our Story
             </a>
@@ -66,15 +73,26 @@
 
         </nav>
 
+
         <div class="sidebar-bottom">
 
-            <button id="randomMemory" class="random-button">
+            <button
+                id="randomMemory"
+                class="random-button"
+                type="button"
+            >
                 ↻ Random Memory
             </button>
 
+
             <div class="memory-counter">
+
                 <span id="memoryCount">0</span>
-                <span>memories preserved</span>
+
+                <span>
+                    memories preserved
+                </span>
+
             </div>
 
         </div>
@@ -82,26 +100,39 @@
     </aside>
 
 
-    <!-- Mobile Header -->
+    <!-- =========================
+         MOBILE HEADER
+         ========================= -->
 
     <header class="mobile-header">
 
         <span>THE ARCHIVE</span>
 
-        <button id="menuButton" aria-label="Open navigation">
+        <button
+            id="menuButton"
+            type="button"
+            aria-label="Open navigation"
+        >
             ☰
         </button>
 
     </header>
 
 
-    <!-- Main Content -->
+    <!-- =========================
+         MAIN CONTENT
+         ========================= -->
 
     <main class="main-content">
 
+
+        <!-- HERO -->
+
         <section class="hero">
 
-            <p class="handwritten">A place to remember</p>
+            <p class="handwritten">
+                A place to remember
+            </p>
 
             <h1>
                 Some things<br>
@@ -116,13 +147,17 @@
         </section>
 
 
-        <!-- Latest Memory -->
+        <!-- =========================
+             LATEST MEMORY
+             ========================= -->
 
         <section class="latest-memory">
 
             <div class="section-heading">
 
-                <span>THE LATEST MEMORY</span>
+                <span>
+                    THE LATEST MEMORY
+                </span>
 
                 <span class="line"></span>
 
@@ -131,36 +166,54 @@
 
             <article class="memory-preview">
 
+
+                <!-- IMAGE -->
+
                 <div class="memory-image">
 
-    <img
-        id="latestMemoryImage"
-        src="./images/memory-01/011.jpg"
-        alt="That Rainy Evening"
-    >
+                    <img
+                        id="latestMemoryImage"
+                        src=""
+                        alt=""
+                    >
 
                 </div>
+
+
+                <!-- INFORMATION -->
+
                 <div class="memory-information">
 
-                    <p class="memory-date">
-                        14 AUGUST 2026
+                    <p
+                        id="latestMemoryDate"
+                        class="memory-date"
+                    >
                     </p>
 
-                    <h2>
-                        That Rainy Evening
+
+                    <h2 id="latestMemoryTitle">
                     </h2>
 
-                    <p class="memory-location">
-                        Kochi
+
+                    <p
+                        id="latestMemoryLocation"
+                        class="memory-location"
+                    >
                     </p>
 
-                    <p class="memory-excerpt">
-                        We weren't supposed to stay that long,
-                        but somehow the evening became one
-                        worth remembering.
+
+                    <p
+                        id="latestMemoryDescription"
+                        class="memory-excerpt"
+                    >
                     </p>
 
-                    <a href="#" class="read-memory">
+
+                    <a
+                        id="latestMemoryLink"
+                        href="#"
+                        class="read-memory"
+                    >
                         Open memory →
                     </a>
 
@@ -171,7 +224,9 @@
         </section>
 
 
-        <!-- Archive Introduction -->
+        <!-- =========================
+             ARCHIVE INTRODUCTION
+             ========================= -->
 
         <section class="archive-introduction">
 
@@ -190,10 +245,16 @@
 
         </section>
 
+
     </main>
 
 
-    <script src="./script.js?v=3"></script>
+    <!-- =========================
+         JAVASCRIPT
+         ========================= -->
+
+    <script src="./script.js?v=4"></script>
 
 </body>
+
 </html>
