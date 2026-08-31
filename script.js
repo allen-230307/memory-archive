@@ -20,11 +20,13 @@ async function loadMemories() {
 
         updateMemoryCounter();
 
-        renderTimeline();
+renderTimeline();
 
-        renderMemoryPage();
+renderGallery();
 
-        setupLatestMemory();
+renderMemoryPage();
+
+setupLatestMemory();
 
     } catch (error) {
 
@@ -397,6 +399,140 @@ function renderGallery() {
         `;
 
     }
+    // ======================================================
+// GALLERY LIGHTBOX
+// ======================================================
+
+function openLightbox(src, caption) {
+
+    const lightbox =
+        document.getElementById("lightbox");
+
+    const image =
+        document.getElementById("lightboxImage");
+
+    const captionElement =
+        document.getElementById("lightboxCaption");
+
+    if (!lightbox || !image) {
+        return;
+    }
+
+
+    image.src =
+        "./" + src;
+
+    image.alt =
+        caption || "";
+
+
+    if (captionElement) {
+
+        captionElement.textContent =
+            caption || "";
+
+    }
+
+
+    lightbox.classList.add(
+        "open"
+    );
+
+    lightbox.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+}
+
+
+function closeLightbox() {
+
+    const lightbox =
+        document.getElementById("lightbox");
+
+    const image =
+        document.getElementById("lightboxImage");
+
+    if (!lightbox) {
+        return;
+    }
+
+
+    lightbox.classList.remove(
+        "open"
+    );
+
+    lightbox.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+
+    if (image) {
+        image.src = "";
+    }
+
+}
+
+
+function setupLightbox() {
+
+    const lightbox =
+        document.getElementById("lightbox");
+
+    const closeButton =
+        document.getElementById("lightboxClose");
+
+    if (!lightbox) {
+        return;
+    }
+
+
+    if (closeButton) {
+
+        closeButton.onclick =
+            closeLightbox;
+
+    }
+
+
+    // Close by clicking outside image
+
+    lightbox.addEventListener(
+        "click",
+        function (event) {
+
+            if (
+                event.target === lightbox
+            ) {
+
+                closeLightbox();
+
+            }
+
+        }
+    );
+
+
+    // Close with Escape
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                closeLightbox();
+
+            }
+
+        }
+    );
+
+}
         // ------------------------------
         // First photograph
         // ------------------------------
@@ -817,6 +953,8 @@ function setupMobileMenu() {
 async function init() {
 
     setupMobileMenu();
+
+    setupLightbox();
 
     await loadMemories();
 
