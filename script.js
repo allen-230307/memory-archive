@@ -235,8 +235,168 @@ function renderTimeline() {
 
         article.className =
             "timeline-memory";
+// ======================================================
+// GALLERY
+// ======================================================
+
+function renderGallery() {
+
+    const gallery =
+        document.getElementById("gallery");
+
+    if (!gallery) return;
+
+    gallery.innerHTML = "";
+
+    let photoCount = 0;
 
 
+    memories.forEach(memory => {
+
+        const media =
+            getMedia(memory);
+
+        const images =
+            media.filter(
+                item => item.type === "image"
+            );
+
+        // Skip memories without photographs
+        if (images.length === 0) {
+            return;
+        }
+
+        const group =
+            document.createElement("section");
+
+        group.className =
+            "gallery-memory";
+
+
+        // Memory heading
+
+        const heading =
+            document.createElement("div");
+
+        heading.className =
+            "gallery-memory-heading";
+
+        heading.innerHTML = `
+            <p class="gallery-date">
+                ${memory.date}
+            </p>
+
+            <h2>
+                ${memory.title}
+            </h2>
+
+            <p class="gallery-location">
+                ${memory.location}
+            </p>
+        `;
+
+        group.appendChild(heading);
+
+
+        // Photos
+
+        const grid =
+            document.createElement("div");
+
+        grid.className =
+            "gallery-grid";
+
+
+        images.forEach(item => {
+
+            const figure =
+                document.createElement("figure");
+
+            figure.className =
+                "gallery-photo";
+
+
+            const image =
+                document.createElement("img");
+
+            image.src =
+                "./" + item.src;
+
+            image.alt =
+                item.caption ||
+                memory.title;
+
+            image.loading =
+                "lazy";
+
+
+            // Open lightbox
+
+            image.addEventListener(
+                "click",
+                function () {
+
+                    openLightbox(
+                        item.src,
+                        item.caption ||
+                        memory.title
+                    );
+
+                }
+            );
+
+
+            figure.appendChild(image);
+
+
+            if (item.caption) {
+
+                const caption =
+                    document.createElement("figcaption");
+
+                caption.textContent =
+                    item.caption;
+
+                figure.appendChild(
+                    caption
+                );
+
+            }
+
+
+            grid.appendChild(figure);
+
+            photoCount++;
+
+        });
+
+
+        group.appendChild(grid);
+
+        gallery.appendChild(group);
+
+    });
+
+
+    // No photographs yet
+
+    if (photoCount === 0) {
+
+        gallery.innerHTML = `
+
+            <div class="gallery-empty">
+
+                <span>—</span>
+
+                <p>
+                    The photographs are still waiting to be added.
+                </p>
+
+            </div>
+
+        `;
+
+    }
         // ------------------------------
         // First photograph
         // ------------------------------
