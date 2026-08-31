@@ -297,58 +297,160 @@ function renderTimeline() {
 
         const location =
             document.createElement("p");
+// ======================================================
+// HOME — LATEST MEMORY
+// ======================================================
 
-        location.className =
-            "timeline-location";
+function setupLatestMemory() {
 
+    const section =
+        document.querySelector(".latest-memory");
+
+    if (!section || memories.length === 0) {
+        return;
+    }
+
+    const image =
+        document.getElementById("latestMemoryImage");
+
+    const title =
+        section.querySelector(".memory-information h2");
+
+    const date =
+        section.querySelector(".memory-information .memory-date");
+
+    const location =
+        section.querySelector(".memory-information .memory-location");
+
+    const excerpt =
+        section.querySelector(".memory-information .memory-excerpt");
+
+    const openLink =
+        section.querySelector(".read-memory");
+
+
+    // --------------------------------------------------
+    // Find latest memory
+    // --------------------------------------------------
+
+    const sorted =
+        [...memories].sort(
+            (a, b) =>
+                memoryTime(b) -
+                memoryTime(a)
+        );
+
+    const latest =
+        sorted[0];
+
+
+    // --------------------------------------------------
+    // Update text
+    // --------------------------------------------------
+
+    if (date) {
+        date.textContent =
+            latest.date;
+    }
+
+    if (title) {
+        title.textContent =
+            latest.title;
+    }
+
+    if (location) {
         location.textContent =
-            memory.location;
+            latest.location;
+    }
+
+    if (excerpt) {
+        excerpt.textContent =
+            latest.description;
+    }
 
 
-        // ------------------------------
-        // Description
-        // ------------------------------
+    // --------------------------------------------------
+    // Open memory link
+    // --------------------------------------------------
 
-        const description =
-            document.createElement("p");
+    if (openLink) {
 
-        description.className =
-            "timeline-description";
+        openLink.href =
+            "memory.html?id=" +
+            latest.id;
 
-        description.textContent =
-            memory.description;
-
-
-        // ------------------------------
-        // Add content
-        // ------------------------------
-
-        article.appendChild(date);
-
-        article.appendChild(title);
-
-        article.appendChild(location);
-
-        article.appendChild(description);
+    }
 
 
-        // ------------------------------
-        // Open memory
-        // ------------------------------
+    // --------------------------------------------------
+    // Handle photograph
+    // --------------------------------------------------
 
-        article.onclick =
-            function () {
-
-                window.location.href =
-                    "memory.html?id=" +
-                    memory.id;
-
-            };
+    const src =
+        getFirstImage(latest);
 
 
-        timeline.appendChild(article);
+    if (src) {
 
-    });
+        // A photograph exists
+
+        if (image) {
+
+            image.src =
+                "./" + src;
+
+            image.alt =
+                latest.title;
+
+            image.style.display =
+                "block";
+
+        }
+
+    } else {
+
+        // ------------------------------------------------
+        // No photograph
+        // ------------------------------------------------
+
+        if (image) {
+
+            image.removeAttribute("src");
+
+            image.alt = "";
+
+            image.style.display =
+                "none";
+
+        }
+
+
+        const imageContainer =
+            section.querySelector(".memory-image");
+
+
+        if (imageContainer) {
+
+            imageContainer.innerHTML = `
+
+                <div class="memory-no-photo">
+
+                    <span class="memory-no-photo-mark">
+                        —
+                    </span>
+
+                    <p>
+                        A memory kept in words.
+                    </p>
+
+                </div>
+
+            `;
+
+        }
+
+    }
+
 }
 
 
