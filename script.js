@@ -166,7 +166,7 @@ function setupRandomMemory() {
 // HOME — LATEST MEMORY
 // ======================================================
 
-function setupLatestMemory() {
+/* function setupLatestMemory() {
 
     const image =
         document.getElementById("latestMemoryImage");
@@ -205,7 +205,7 @@ function setupLatestMemory() {
 
     }
 }
-
+*/
 
 // ======================================================
 // OUR STORY — TIMELINE
