@@ -972,3 +972,57 @@ body {
         animation: none !important;
     }
 }
+/* ======================================================
+   LATEST MEMORY — TEXT ONLY
+   ====================================================== */
+
+.memory-no-photo {
+    width: 100%;
+    min-height: 360px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+
+    color: var(--muted);
+}
+
+
+.memory-no-photo-mark {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 42px;
+
+    line-height: 1;
+
+    margin-bottom: 18px;
+
+    color: var(--accent);
+}
+
+
+.memory-no-photo p {
+    font-family: "Caveat", cursive;
+
+    font-size: 21px;
+
+    color: var(--muted);
+}
+
+
+/* Mobile */
+
+@media (max-width: 800px) {
+
+    .memory-no-photo {
+        min-height: 260px;
+    }
+
+}
