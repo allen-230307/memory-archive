@@ -817,89 +817,92 @@ function renderMemoryPage() {
 
 
     // ==================================================
-    // BUILD MEDIA
+// BUILD MEDIA — EDITORIAL LAYOUT
+// ==================================================
+
+let mediaHTML = "";
+
+const mediaItems = getMedia(memory);
+
+mediaItems.forEach((item, index) => {
+
+    const itemClass =
+        `memory-media-item media-${index + 1} media-${item.type}`;
+
+    // ==================================================
+    // IMAGE
     // ==================================================
 
-    let mediaHTML = "";
+    if (item.type === "image") {
+
+        mediaHTML += `
+
+            <figure class="${itemClass}">
+
+                <img
+                    src="./${item.src}"
+                    alt="${item.caption || memory.title}"
+                    loading="lazy"
+                >
+
+                ${
+                    item.caption
+                    ? `
+                        <figcaption>
+                            ${item.caption}
+                        </figcaption>
+                      `
+                    : ""
+                }
+
+            </figure>
+
+        `;
+
+    }
 
 
-    getMedia(memory).forEach(item => {
+    // ==================================================
+    // VIDEO
+    // ==================================================
 
+    if (item.type === "video") {
 
-        // ==================================================
-        // IMAGE
-        // ==================================================
+        mediaHTML += `
 
-        if (item.type === "image") {
+            <figure class="${itemClass}">
 
-            mediaHTML += `
+                <video
+                    controls
+                    preload="metadata"
+                >
 
-                <figure class="memory-photo">
-
-                    <img
+                    <source
                         src="./${item.src}"
-                        alt="${item.caption || memory.title}"
-                        loading="lazy"
                     >
 
-                    ${
-                        item.caption
-                        ? `
-                            <figcaption>
-                                ${item.caption}
-                            </figcaption>
-                          `
-                        : ""
-                    }
+                    Your browser does not support
+                    video playback.
 
-                </figure>
+                </video>
 
-            `;
+                ${
+                    item.caption
+                    ? `
+                        <figcaption>
+                            ${item.caption}
+                        </figcaption>
+                      `
+                    : ""
+                }
 
-        }
+            </figure>
 
+        `;
 
-        // ==================================================
-        // VIDEO
-        // ==================================================
+    }
 
-        if (item.type === "video") {
-
-            mediaHTML += `
-
-                <figure class="memory-video">
-
-                    <video
-                        controls
-                        preload="metadata"
-                    >
-
-                        <source
-                            src="./${item.src}"
-                        >
-
-                        Your browser does not support
-                        video playback.
-
-                    </video>
-
-                    ${
-                        item.caption
-                        ? `
-                            <figcaption>
-                                ${item.caption}
-                            </figcaption>
-                          `
-                        : ""
-                    }
-
-                </figure>
-
-            `;
-
-        }
-
-    });
+});
 
 
     // ==================================================
