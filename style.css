@@ -865,6 +865,19 @@ body {
         gap: 35px;
     }
 
+    .memory-image {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .memory-image img,
+    #latestMemoryImage {
+        width: 100%;
+        height: auto;
+        max-height: 65vh;
+        object-fit: contain;
+    }
+
     .memory-information {
         padding-right: 0;
     }
@@ -912,6 +925,14 @@ body {
         margin-bottom: 70px;
     }
 
+    .timeline-image {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        max-height: 50vh;
+        object-fit: contain;
+    }
+
 
     /* Individual memory */
 
@@ -942,11 +963,20 @@ body {
 
     .memory-media {
         margin-bottom: 70px;
+        width: 100%;
     }
 
     .memory-photo,
     .memory-video {
         margin-bottom: 45px;
+        width: 100%;
+    }
+
+    .memory-photo img {
+        width: 100%;
+        height: auto;
+        max-height: 70vh;
+        object-fit: contain;
     }
 
     .memory-navigation {
@@ -1218,6 +1248,11 @@ body {
     .gallery-grid {
         grid-template-columns: 1fr;
         gap: 18px;
+    }
+
+    .gallery-photo img {
+        max-height: 60vh;
+        object-fit: cover;
     }
 
     .lightbox {
