@@ -10,7 +10,7 @@ async function loadMemories() {
     try {
 
         const response =
-            await fetch("data/memories.json?v=5");
+            await fetch("data/memories.json?v=6");
 
         if (!response.ok) {
             throw new Error("Could not load memories.json");
@@ -86,8 +86,11 @@ function getMedia(memory) {
 
     // New format
     if (Array.isArray(memory.media)) {
+
         return memory.media;
+
     }
+
 
     // Older image format
     if (Array.isArray(memory.images)) {
@@ -104,7 +107,9 @@ function getMedia(memory) {
 
     }
 
+
     return [];
+
 }
 
 
@@ -125,6 +130,7 @@ function getFirstImage(memory) {
     return image
         ? image.src
         : null;
+
 }
 
 
@@ -150,22 +156,31 @@ function setupRandomMemory() {
 
     if (!button) return;
 
-    button.onclick = function () {
 
-        if (memories.length === 0) return;
+    button.onclick =
+        function () {
 
-        const index =
-            Math.floor(
-                Math.random() * memories.length
-            );
+            if (memories.length === 0) {
+                return;
+            }
 
-        const selected =
-            memories[index];
 
-        window.location.href =
-            "memory.html?id=" + selected.id;
+            const index =
+                Math.floor(
+                    Math.random() * memories.length
+                );
 
-    };
+
+            const selected =
+                memories[index];
+
+
+            window.location.href =
+                "memory.html?id=" +
+                selected.id;
+
+        };
+
 }
 
 
@@ -180,7 +195,9 @@ function renderTimeline() {
 
     if (!timeline) return;
 
+
     timeline.innerHTML = "";
+
 
     const sorted =
         [...memories].sort(
@@ -195,108 +212,144 @@ function renderTimeline() {
         const article =
             document.createElement("article");
 
+
         article.className =
             "timeline-memory";
 
 
-        // ------------------------------
-        // First photograph
-        // ------------------------------
+        // ==================================================
+        // FIRST PHOTOGRAPH
+        // ==================================================
 
         const imageSrc =
             getFirstImage(memory);
+
 
         if (imageSrc) {
 
             const image =
                 document.createElement("img");
 
+
             image.className =
                 "timeline-image";
+
 
             image.src =
                 "./" + imageSrc;
 
+
             image.alt =
                 memory.title;
 
+
             image.loading =
                 "lazy";
+
 
             article.appendChild(image);
 
         }
 
 
-        // ------------------------------
-        // Date
-        // ------------------------------
+        // ==================================================
+        // DATE
+        // ==================================================
 
         const date =
             document.createElement("p");
 
+
         date.className =
             "timeline-date";
+
 
         date.textContent =
             memory.date;
 
 
-        // ------------------------------
-        // Title
-        // ------------------------------
+        article.appendChild(date);
+
+
+        // ==================================================
+        // TIME
+        // ==================================================
+
+        if (memory.time) {
+
+            const time =
+                document.createElement("span");
+
+
+            time.className =
+                "timeline-time";
+
+
+            time.textContent =
+                memory.time;
+
+
+            article.appendChild(time);
+
+        }
+
+
+        // ==================================================
+        // TITLE
+        // ==================================================
 
         const title =
             document.createElement("h2");
+
 
         title.textContent =
             memory.title;
 
 
-        // ------------------------------
-        // Location
-        // ------------------------------
+        article.appendChild(title);
+
+
+        // ==================================================
+        // LOCATION
+        // ==================================================
 
         const location =
             document.createElement("p");
 
+
         location.className =
             "timeline-location";
+
 
         location.textContent =
             memory.location;
 
 
-        // ------------------------------
-        // Description
-        // ------------------------------
+        article.appendChild(location);
+
+
+        // ==================================================
+        // DESCRIPTION
+        // ==================================================
 
         const description =
             document.createElement("p");
 
+
         description.className =
             "timeline-description";
+
 
         description.textContent =
             memory.description;
 
 
-        // ------------------------------
-        // Add content
-        // ------------------------------
-
-        article.appendChild(date);
-
-        article.appendChild(title);
-
-        article.appendChild(location);
-
         article.appendChild(description);
 
 
-        // ------------------------------
-        // Open memory
-        // ------------------------------
+        // ==================================================
+        // OPEN MEMORY
+        // ==================================================
 
         article.onclick =
             function () {
@@ -311,6 +364,7 @@ function renderTimeline() {
         timeline.appendChild(article);
 
     });
+
 }
 
 
@@ -325,7 +379,9 @@ function renderGallery() {
 
     if (!gallery) return;
 
+
     gallery.innerHTML = "";
+
 
     let photoCount = 0;
 
@@ -334,6 +390,7 @@ function renderGallery() {
 
         const media =
             getMedia(memory);
+
 
         const images =
             media.filter(
@@ -348,28 +405,32 @@ function renderGallery() {
         }
 
 
-        // ------------------------------
-        // Memory group
-        // ------------------------------
+        // ==================================================
+        // MEMORY GROUP
+        // ==================================================
 
         const group =
             document.createElement("section");
+
 
         group.className =
             "gallery-memory";
 
 
-        // ------------------------------
-        // Memory heading
-        // ------------------------------
+        // ==================================================
+        // MEMORY HEADING
+        // ==================================================
 
         const heading =
             document.createElement("div");
 
+
         heading.className =
             "gallery-memory-heading";
 
+
         heading.innerHTML = `
+
             <p class="gallery-date">
                 ${memory.date}
             </p>
@@ -381,17 +442,20 @@ function renderGallery() {
             <p class="gallery-location">
                 ${memory.location}
             </p>
+
         `;
+
 
         group.appendChild(heading);
 
 
-        // ------------------------------
-        // Photo grid
-        // ------------------------------
+        // ==================================================
+        // PHOTO GRID
+        // ==================================================
 
         const grid =
             document.createElement("div");
+
 
         grid.className =
             "gallery-grid";
@@ -402,6 +466,7 @@ function renderGallery() {
             const figure =
                 document.createElement("figure");
 
+
             figure.className =
                 "gallery-photo";
 
@@ -409,20 +474,23 @@ function renderGallery() {
             const image =
                 document.createElement("img");
 
+
             image.src =
                 "./" + item.src;
+
 
             image.alt =
                 item.caption ||
                 memory.title;
 
+
             image.loading =
                 "lazy";
 
 
-            // --------------------------
-            // Lightbox
-            // --------------------------
+            // ==================================================
+            // LIGHTBOX
+            // ==================================================
 
             image.addEventListener(
                 "click",
@@ -441,17 +509,19 @@ function renderGallery() {
             figure.appendChild(image);
 
 
-            // --------------------------
-            // Caption
-            // --------------------------
+            // ==================================================
+            // CAPTION
+            // ==================================================
 
             if (item.caption) {
 
                 const caption =
                     document.createElement("figcaption");
 
+
                 caption.textContent =
                     item.caption;
+
 
                 figure.appendChild(
                     caption
@@ -462,6 +532,7 @@ function renderGallery() {
 
             grid.appendChild(figure);
 
+
             photoCount++;
 
         });
@@ -469,14 +540,15 @@ function renderGallery() {
 
         group.appendChild(grid);
 
+
         gallery.appendChild(group);
 
     });
 
 
-    // ------------------------------
-    // Empty gallery
-    // ------------------------------
+    // ==================================================
+    // EMPTY GALLERY
+    // ==================================================
 
     if (photoCount === 0) {
 
@@ -496,6 +568,7 @@ function renderGallery() {
         `;
 
     }
+
 }
 
 
@@ -508,11 +581,14 @@ function openLightbox(src, caption) {
     const lightbox =
         document.getElementById("lightbox");
 
+
     const image =
         document.getElementById("lightboxImage");
 
+
     const captionElement =
         document.getElementById("lightboxCaption");
+
 
     if (!lightbox || !image) {
         return;
@@ -521,6 +597,7 @@ function openLightbox(src, caption) {
 
     image.src =
         "./" + src;
+
 
     image.alt =
         caption || "";
@@ -535,6 +612,7 @@ function openLightbox(src, caption) {
 
 
     lightbox.classList.add("open");
+
 
     lightbox.setAttribute(
         "aria-hidden",
@@ -553,8 +631,10 @@ function closeLightbox() {
     const lightbox =
         document.getElementById("lightbox");
 
+
     const image =
         document.getElementById("lightboxImage");
+
 
     if (!lightbox) {
         return;
@@ -563,6 +643,7 @@ function closeLightbox() {
 
     lightbox.classList.remove("open");
 
+
     lightbox.setAttribute(
         "aria-hidden",
         "true"
@@ -570,7 +651,9 @@ function closeLightbox() {
 
 
     if (image) {
+
         image.src = "";
+
     }
 
 }
@@ -585,15 +668,19 @@ function setupLightbox() {
     const lightbox =
         document.getElementById("lightbox");
 
+
     const closeButton =
         document.getElementById("lightboxClose");
+
 
     if (!lightbox) {
         return;
     }
 
 
-    // Close button
+    // ==================================================
+    // CLOSE BUTTON
+    // ==================================================
 
     if (closeButton) {
 
@@ -603,7 +690,9 @@ function setupLightbox() {
     }
 
 
-    // Click outside image
+    // ==================================================
+    // CLICK OUTSIDE IMAGE
+    // ==================================================
 
     lightbox.addEventListener(
         "click",
@@ -621,7 +710,9 @@ function setupLightbox() {
     );
 
 
-    // Escape key
+    // ==================================================
+    // ESCAPE KEY
+    // ==================================================
 
     document.addEventListener(
         "keydown",
@@ -650,17 +741,21 @@ function renderMemoryPage() {
     const container =
         document.getElementById("memoryContent");
 
-    if (!container) return;
+
+    if (!container) {
+        return;
+    }
 
 
-    // ------------------------------
-    // Get memory ID
-    // ------------------------------
+    // ==================================================
+    // GET MEMORY ID
+    // ==================================================
 
     const params =
         new URLSearchParams(
             window.location.search
         );
+
 
     const id =
         params.get("id");
@@ -669,18 +764,21 @@ function renderMemoryPage() {
     if (!id) {
 
         container.innerHTML = `
+
             <p class="loading">
                 Memory not selected.
             </p>
+
         `;
 
         return;
+
     }
 
 
-    // ------------------------------
-    // Find memory
-    // ------------------------------
+    // ==================================================
+    // FIND MEMORY
+    // ==================================================
 
     const memory =
         memories.find(
@@ -693,18 +791,21 @@ function renderMemoryPage() {
     if (!memory) {
 
         container.innerHTML = `
+
             <p class="loading">
                 Memory not found.
             </p>
+
         `;
 
         return;
+
     }
 
 
-    // ------------------------------
-    // Build media
-    // ------------------------------
+    // ==================================================
+    // BUILD MEDIA
+    // ==================================================
 
     let mediaHTML = "";
 
@@ -712,7 +813,9 @@ function renderMemoryPage() {
     getMedia(memory).forEach(item => {
 
 
+        // ==================================================
         // IMAGE
+        // ==================================================
 
         if (item.type === "image") {
 
@@ -743,7 +846,9 @@ function renderMemoryPage() {
         }
 
 
+        // ==================================================
         // VIDEO
+        // ==================================================
 
         if (item.type === "video") {
 
@@ -784,9 +889,9 @@ function renderMemoryPage() {
     });
 
 
-    // ------------------------------
-    // Build page
-    // ------------------------------
+    // ==================================================
+    // BUILD MEMORY PAGE
+    // ==================================================
 
     container.innerHTML = `
 
@@ -794,13 +899,27 @@ function renderMemoryPage() {
             ${memory.date}
         </p>
 
+
+        ${
+            memory.time
+            ? `
+                <p class="memory-time">
+                    ${memory.time}
+                </p>
+              `
+            : ""
+        }
+
+
         <h1>
             ${memory.title}
         </h1>
 
+
         <p class="memory-location">
             ${memory.location}
         </p>
+
 
         ${
             mediaHTML
@@ -812,16 +931,19 @@ function renderMemoryPage() {
             : ""
         }
 
+
         <div class="memory-story">
+
             ${memory.description || ""}
+
         </div>
 
     `;
 
 
-    // ------------------------------
-    // Navigation
-    // ------------------------------
+    // ==================================================
+    // MEMORY NAVIGATION
+    // ==================================================
 
     setupMemoryNavigation(memory);
 
@@ -839,10 +961,12 @@ function setupMemoryNavigation(currentMemory) {
             "previousMemory"
         );
 
+
     const next =
         document.getElementById(
             "nextMemory"
         );
+
 
     if (!previous || !next) {
         return;
@@ -865,15 +989,16 @@ function setupMemoryNavigation(currentMemory) {
         );
 
 
-    // ------------------------------
-    // Previous
-    // ------------------------------
+    // ==================================================
+    // PREVIOUS
+    // ==================================================
 
     if (index > 0) {
 
         previous.href =
             "memory.html?id=" +
             sorted[index - 1].id;
+
 
         previous.style.visibility =
             "visible";
@@ -886,15 +1011,16 @@ function setupMemoryNavigation(currentMemory) {
     }
 
 
-    // ------------------------------
-    // Next
-    // ------------------------------
+    // ==================================================
+    // NEXT
+    // ==================================================
 
     if (index < sorted.length - 1) {
 
         next.href =
             "memory.html?id=" +
             sorted[index + 1].id;
+
 
         next.style.visibility =
             "visible";
@@ -920,10 +1046,12 @@ function setupMobileMenu() {
             "menuButton"
         );
 
+
     const sidebar =
         document.querySelector(
             ".sidebar"
         );
+
 
     if (!button || !sidebar) {
         return;
