@@ -1,4 +1,3 @@
-
 /* =========================================================
    THE ARCHIVE — GLOBAL STYLES
    ========================================================= */
@@ -54,7 +53,9 @@ body {
 }
 
 
-/* Brand */
+/* =========================================================
+   BRAND
+   ========================================================= */
 
 .brand {
     display: flex;
@@ -72,12 +73,15 @@ body {
 
 .brand-subtitle {
     color: var(--muted);
+
     font-family: "Caveat", cursive;
     font-size: 17px;
 }
 
 
-/* Navigation */
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
 
 .navigation {
     display: flex;
@@ -87,6 +91,7 @@ body {
 
 .nav-link {
     color: var(--muted);
+
     text-decoration: none;
 
     font-size: 12px;
@@ -115,7 +120,9 @@ body {
 }
 
 
-/* Sidebar bottom */
+/* =========================================================
+   SIDEBAR BOTTOM
+   ========================================================= */
 
 .sidebar-bottom {
     margin-top: auto;
@@ -126,7 +133,7 @@ body {
 }
 
 
-/* Random Memory */
+/* Random memory */
 
 .random-button {
     border: none;
@@ -149,7 +156,7 @@ body {
 }
 
 
-/* Memory Counter */
+/* Memory counter */
 
 .memory-counter {
     display: flex;
@@ -264,7 +271,7 @@ body {
 
 
 /* =========================================================
-   MEMORY PREVIEW — HOME
+   HOME MEMORY PREVIEW
    ========================================================= */
 
 .memory-preview {
@@ -276,19 +283,10 @@ body {
     align-items: center;
 }
 
-
-/* Image container */
-
 .memory-image {
     width: 100%;
-
     overflow: visible;
 }
-
-
-/* Homepage image
-   No fixed aspect ratio.
-   Original proportions are preserved. */
 
 .memory-image img,
 #latestMemoryImage {
@@ -301,9 +299,6 @@ body {
 
     object-fit: contain;
 }
-
-
-/* Memory information */
 
 .memory-information {
     padding-right: 30px;
@@ -347,9 +342,6 @@ body {
     font-size: 14px;
     line-height: 1.8;
 }
-
-
-/* Read memory */
 
 .read-memory {
     display: inline-block;
@@ -435,9 +427,6 @@ body {
     padding-left: 45px;
 }
 
-
-/* Timeline line */
-
 .timeline::before {
     content: "";
 
@@ -452,9 +441,6 @@ body {
     background: var(--border);
 }
 
-
-/* Timeline memory */
-
 .timeline-memory {
     position: relative;
 
@@ -462,9 +448,6 @@ body {
 
     cursor: pointer;
 }
-
-
-/* Timeline dot */
 
 .timeline-memory::before {
     content: "";
@@ -482,11 +465,10 @@ body {
     background: var(--accent);
 }
 
-
-/* Timeline date */
-
 .timeline-date {
-    margin-bottom: 12px;
+    display: inline-block;
+
+    margin-bottom: 4px;
 
     color: var(--muted);
 
@@ -494,8 +476,16 @@ body {
     font-size: 21px;
 }
 
+.timeline-time {
+    display: inline-block;
 
-/* Timeline title */
+    margin-left: 10px;
+
+    color: var(--muted);
+
+    font-family: "Caveat", cursive;
+    font-size: 18px;
+}
 
 .timeline-memory h2 {
     margin-bottom: 8px;
@@ -511,9 +501,6 @@ body {
     opacity: 0.55;
 }
 
-
-/* Timeline location */
-
 .timeline-location {
     margin-bottom: 18px;
 
@@ -525,9 +512,6 @@ body {
     text-transform: uppercase;
 }
 
-
-/* Timeline description */
-
 .timeline-description {
     max-width: 520px;
 
@@ -536,9 +520,6 @@ body {
     font-size: 14px;
     line-height: 1.8;
 }
-
-
-/* Timeline image */
 
 .timeline-image {
     display: block;
@@ -551,7 +532,9 @@ body {
 }
 
 
-/* Loading */
+/* =========================================================
+   LOADING
+   ========================================================= */
 
 .loading {
     color: var(--muted);
@@ -568,9 +551,6 @@ body {
 .memory-page {
     max-width: 1200px;
 }
-
-
-/* Back link */
 
 .back-link {
     display: inline-block;
@@ -591,18 +571,17 @@ body {
     opacity: 0.5;
 }
 
-
-/* Memory content */
-
 .memory-page article {
     max-width: 1000px;
 }
 
 
-/* Date */
+/* =========================================================
+   MEMORY HEADER
+   ========================================================= */
 
 .memory-page .memory-date {
-    margin-bottom: 12px;
+    margin-bottom: 4px;
 
     color: var(--muted);
 
@@ -610,8 +589,14 @@ body {
     font-size: 24px;
 }
 
+.memory-page .memory-time {
+    margin-bottom: 18px;
 
-/* Title */
+    color: var(--accent);
+
+    font-family: "Caveat", cursive;
+    font-size: 20px;
+}
 
 .memory-page h1 {
     max-width: 900px;
@@ -626,11 +611,8 @@ body {
     letter-spacing: -3px;
 }
 
-
-/* Location */
-
 .memory-page .memory-location {
-    margin-bottom: 80px;
+    margin-bottom: 70px;
 
     color: var(--muted);
 
@@ -638,6 +620,103 @@ body {
     letter-spacing: 2px;
 
     text-transform: uppercase;
+}
+
+
+/* =========================================================
+   MEMORY MEDIA — EDITORIAL LAYOUT
+   ========================================================= */
+
+.memory-media {
+    width: 100%;
+    max-width: 1000px;
+
+    margin: 0 auto 100px;
+
+    display: grid;
+
+    /*
+       Two-column editorial composition.
+       Each media item occupies one grid cell.
+    */
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 28px;
+}
+
+
+/* Individual media items */
+
+.memory-photo,
+.memory-video {
+    width: 100%;
+
+    margin: 0;
+
+    break-inside: avoid;
+}
+
+
+/* First media item becomes the feature */
+
+.memory-media > :first-child {
+    grid-column: 1 / -1;
+}
+
+
+/* Images */
+
+.memory-photo img {
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    max-width: 100%;
+
+    object-fit: contain;
+
+    cursor: pointer;
+
+    transition:
+        opacity 0.35s ease,
+        transform 0.35s ease;
+}
+
+.memory-photo img:hover {
+    opacity: 0.92;
+
+    transform: scale(1.008);
+}
+
+
+/* Videos */
+
+.memory-video video {
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    max-width: 100%;
+
+    background: #1f1d1a;
+}
+
+
+/* Captions */
+
+.memory-photo figcaption,
+.memory-video figcaption {
+    margin-top: 10px;
+
+    color: var(--muted);
+
+    font-family: "Caveat", cursive;
+    font-size: 17px;
+
+    line-height: 1.4;
 }
 
 
@@ -656,75 +735,6 @@ body {
     font-size: 26px;
 
     line-height: 1.65;
-}
-
-
-/* =========================================================
-   MEMORY MEDIA
-   ========================================================= */
-
-.memory-media {
-    width: 100%;
-    max-width: 900px;
-
-    margin-bottom: 100px;
-}
-
-
-/* Photos */
-
-.memory-photo {
-    width: 100%;
-
-    margin: 0 0 70px;
-}
-
-.memory-photo img {
-    display: block;
-
-    width: 100%;
-    height: auto;
-
-    max-width: 100%;
-
-    /* Preserve original image proportions */
-    object-fit: contain;
-}
-
-.memory-photo figcaption {
-    margin-top: 12px;
-
-    color: var(--muted);
-
-    font-family: "Caveat", cursive;
-    font-size: 17px;
-}
-
-
-/* Videos */
-
-.memory-video {
-    width: 100%;
-
-    margin: 0 0 70px;
-}
-
-.memory-video video {
-    display: block;
-
-    width: 100%;
-    height: auto;
-
-    max-width: 100%;
-}
-
-.memory-video figcaption {
-    margin-top: 12px;
-
-    color: var(--muted);
-
-    font-family: "Caveat", cursive;
-    font-size: 17px;
 }
 
 
@@ -761,10 +771,225 @@ body {
 
 
 /* =========================================================
-   MOBILE MENU
+   GALLERY PAGE
+   ========================================================= */
+
+.gallery-page {
+    max-width: 1200px;
+}
+
+.gallery-header {
+    max-width: 700px;
+
+    margin-bottom: 100px;
+}
+
+.gallery-header h1 {
+    margin-bottom: 30px;
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(60px, 8vw, 100px);
+    font-weight: 400;
+
+    line-height: 0.9;
+    letter-spacing: -2px;
+}
+
+
+/* Memory group */
+
+.gallery-memory {
+    margin-bottom: 110px;
+}
+
+.gallery-memory-heading {
+    margin-bottom: 35px;
+}
+
+.gallery-date {
+    margin-bottom: 8px;
+
+    color: var(--muted);
+
+    font-family: "Caveat", cursive;
+    font-size: 20px;
+}
+
+.gallery-memory h2 {
+    margin-bottom: 8px;
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: 46px;
+    font-weight: 400;
+}
+
+.gallery-location {
+    color: var(--muted);
+
+    font-size: 10px;
+    letter-spacing: 1.5px;
+
+    text-transform: uppercase;
+}
+
+
+/* Gallery grid */
+
+.gallery-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 22px;
+}
+
+.gallery-photo {
+    margin: 0;
+
+    cursor: pointer;
+}
+
+.gallery-photo img {
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    border-radius: 2px;
+
+    transition:
+        transform 0.35s ease,
+        opacity 0.35s ease;
+}
+
+.gallery-photo:hover img {
+    transform: scale(1.015);
+
+    opacity: 0.92;
+}
+
+.gallery-photo figcaption {
+    margin-top: 10px;
+
+    color: var(--muted);
+
+    font-family: "Caveat", cursive;
+    font-size: 16px;
+}
+
+
+/* =========================================================
+   EMPTY GALLERY
+   ========================================================= */
+
+.gallery-empty {
+    min-height: 300px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+
+    color: var(--muted);
+}
+
+.gallery-empty span {
+    margin-bottom: 15px;
+
+    color: var(--accent);
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: 44px;
+}
+
+.gallery-empty p {
+    font-family: "Caveat", cursive;
+    font-size: 21px;
+}
+
+
+/* =========================================================
+   LIGHTBOX
+   ========================================================= */
+
+.lightbox {
+    position: fixed;
+
+    inset: 0;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 30px;
+
+    background: rgba(20, 18, 15, 0.92);
+
+    z-index: 1000;
+}
+
+.lightbox.open {
+    display: flex;
+}
+
+.lightbox-content {
+    width: 100%;
+    max-width: 1000px;
+
+    text-align: center;
+}
+
+.lightbox-content img {
+    max-width: 100%;
+    max-height: 80vh;
+
+    height: auto;
+
+    border-radius: 3px;
+}
+
+.lightbox-caption {
+    margin-top: 15px;
+
+    color: #eee8dc;
+
+    font-family: "Caveat", cursive;
+    font-size: 19px;
+}
+
+.lightbox-close {
+    position: absolute;
+
+    top: 22px;
+    right: 28px;
+
+    border: none;
+    background: transparent;
+
+    color: white;
+
+    font-size: 38px;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   MOBILE
    ========================================================= */
 
 @media (max-width: 800px) {
+
+    /* -----------------------------------------------------
+       Sidebar
+       ----------------------------------------------------- */
 
     .sidebar {
         display: none;
@@ -793,7 +1018,9 @@ body {
     }
 
 
-    /* Mobile header */
+    /* -----------------------------------------------------
+       Mobile header
+       ----------------------------------------------------- */
 
     .mobile-header {
         display: flex;
@@ -839,7 +1066,9 @@ body {
     }
 
 
-    /* Main */
+    /* -----------------------------------------------------
+       Main
+       ----------------------------------------------------- */
 
     .main-content {
         margin-left: 0;
@@ -848,7 +1077,9 @@ body {
     }
 
 
-    /* Home */
+    /* -----------------------------------------------------
+       Home
+       ----------------------------------------------------- */
 
     .hero {
         margin-bottom: 100px;
@@ -883,7 +1114,9 @@ body {
     }
 
 
-    /* Our Story */
+    /* -----------------------------------------------------
+       Our Story
+       ----------------------------------------------------- */
 
     .story-header {
         margin-bottom: 80px;
@@ -914,7 +1147,9 @@ body {
     }
 
 
-    /* Individual memory */
+    /* -----------------------------------------------------
+       Individual memory
+       ----------------------------------------------------- */
 
     .memory-page {
         padding-top: 100px;
@@ -930,9 +1165,54 @@ body {
         letter-spacing: -1.5px;
     }
 
+    .memory-page .memory-date {
+        font-size: 22px;
+    }
+
+    .memory-page .memory-time {
+        font-size: 19px;
+    }
+
     .memory-page .memory-location {
         margin-bottom: 55px;
     }
+
+
+    /* -----------------------------------------------------
+       Mobile memory media
+       ----------------------------------------------------- */
+
+    .memory-media {
+        grid-template-columns: 1fr;
+
+        gap: 32px;
+
+        margin-bottom: 70px;
+    }
+
+    /*
+       On mobile, don't force the first item
+       across columns because there is only one.
+    */
+
+    .memory-media > :first-child {
+        grid-column: auto;
+    }
+
+    .memory-photo,
+    .memory-video {
+        margin-bottom: 0;
+    }
+
+    .memory-photo figcaption,
+    .memory-video figcaption {
+        font-size: 16px;
+    }
+
+
+    /* -----------------------------------------------------
+       Memory story
+       ----------------------------------------------------- */
 
     .memory-story {
         margin-top: 10px;
@@ -941,17 +1221,51 @@ body {
         font-size: 22px;
     }
 
-    .memory-media {
+    .memory-navigation {
+        margin-top: 100px;
+    }
+
+
+    /* -----------------------------------------------------
+       Gallery
+       ----------------------------------------------------- */
+
+    .gallery-header {
         margin-bottom: 70px;
     }
 
-    .memory-photo,
-    .memory-video {
-        margin-bottom: 45px;
+    .gallery-header h1 {
+        font-size: 64px;
     }
 
-    .memory-navigation {
-        margin-top: 100px;
+    .gallery-memory {
+        margin-bottom: 80px;
+    }
+
+    .gallery-memory h2 {
+        font-size: 38px;
+    }
+
+    .gallery-grid {
+        grid-template-columns: 1fr;
+
+        gap: 18px;
+    }
+
+
+    /* -----------------------------------------------------
+       Lightbox
+       ----------------------------------------------------- */
+
+    .lightbox {
+        padding: 18px;
+    }
+
+    .lightbox-close {
+        top: 12px;
+        right: 18px;
+
+        font-size: 34px;
     }
 }
 
@@ -972,263 +1286,4 @@ body {
         transition: none !important;
         animation: none !important;
     }
-}
-/* ======================================================
-   LATEST MEMORY — TEXT ONLY
-   ====================================================== */
-
-.memory-no-photo {
-    width: 100%;
-    min-height: 360px;
-
-    display: flex;
-    flex-direction: column;
-
-    align-items: center;
-    justify-content: center;
-
-    text-align: center;
-
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-
-    color: var(--muted);
-}
-
-
-.memory-no-photo-mark {
-    font-family: "Cormorant Garamond", serif;
-
-    font-size: 42px;
-
-    line-height: 1;
-
-    margin-bottom: 18px;
-
-    color: var(--accent);
-}
-
-
-.memory-no-photo p {
-    font-family: "Caveat", cursive;
-
-    font-size: 21px;
-
-    color: var(--muted);
-}
-
-
-/* Mobile */
-
-@media (max-width: 800px) {
-
-    .memory-no-photo {
-        min-height: 260px;
-    }
-
-}
-/* =====================================================
-   GALLERY PAGE
-   ===================================================== */
-
-.gallery-page {
-    max-width: 1200px;
-}
-
-.gallery-header {
-    max-width: 700px;
-    margin-bottom: 100px;
-}
-
-.gallery-header h1 {
-    font-family: "Cormorant Garamond", serif;
-    font-size: clamp(60px, 8vw, 100px);
-    font-weight: 400;
-    line-height: 0.9;
-    letter-spacing: -2px;
-    margin-bottom: 30px;
-}
-
-
-/* Memory group */
-
-.gallery-memory {
-    margin-bottom: 110px;
-}
-
-.gallery-memory-heading {
-    margin-bottom: 35px;
-}
-
-.gallery-date {
-    font-family: "Caveat", cursive;
-    font-size: 20px;
-    color: var(--muted);
-    margin-bottom: 8px;
-}
-
-.gallery-memory h2 {
-    font-family: "Cormorant Garamond", serif;
-    font-size: 46px;
-    font-weight: 400;
-    margin-bottom: 8px;
-}
-
-.gallery-location {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--muted);
-}
-
-
-/* Photo grid */
-
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 22px;
-}
-
-.gallery-photo {
-    margin: 0;
-    cursor: pointer;
-}
-
-.gallery-photo img {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-radius: 2px;
-    transition: transform 0.35s ease, opacity 0.35s ease;
-}
-
-.gallery-photo:hover img {
-    transform: scale(1.015);
-    opacity: 0.92;
-}
-
-.gallery-photo figcaption {
-    margin-top: 10px;
-    font-family: "Caveat", cursive;
-    font-size: 16px;
-    color: var(--muted);
-}
-
-
-/* Empty gallery */
-
-.gallery-empty {
-    min-height: 300px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    color: var(--muted);
-}
-
-.gallery-empty span {
-    font-family: "Cormorant Garamond", serif;
-    font-size: 44px;
-    color: var(--accent);
-    margin-bottom: 15px;
-}
-
-.gallery-empty p {
-    font-family: "Caveat", cursive;
-    font-size: 21px;
-}
-
-
-/* =====================================================
-   LIGHTBOX
-   ===================================================== */
-
-.lightbox {
-    position: fixed;
-    inset: 0;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 30px;
-    background: rgba(20, 18, 15, 0.92);
-    z-index: 1000;
-}
-
-.lightbox.open {
-    display: flex;
-}
-
-.lightbox-content {
-    max-width: 1000px;
-    width: 100%;
-    text-align: center;
-}
-
-.lightbox-content img {
-    max-width: 100%;
-    max-height: 80vh;
-    height: auto;
-    border-radius: 3px;
-}
-
-.lightbox-caption {
-    margin-top: 15px;
-    color: #eee8dc;
-    font-family: "Caveat", cursive;
-    font-size: 19px;
-}
-
-.lightbox-close {
-    position: absolute;
-    top: 22px;
-    right: 28px;
-    border: none;
-    background: transparent;
-    color: white;
-    font-size: 38px;
-    cursor: pointer;
-}
-
-
-/* =====================================================
-   MOBILE GALLERY
-   ===================================================== */
-
-@media (max-width: 800px) {
-
-    .gallery-header {
-        margin-bottom: 70px;
-    }
-
-    .gallery-header h1 {
-        font-size: 64px;
-    }
-
-    .gallery-memory {
-        margin-bottom: 80px;
-    }
-
-    .gallery-memory h2 {
-        font-size: 38px;
-    }
-
-    .gallery-grid {
-        grid-template-columns: 1fr;
-        gap: 18px;
-    }
-
-    .lightbox {
-        padding: 18px;
-    }
-
-    .lightbox-close {
-        top: 12px;
-        right: 18px;
-        font-size: 34px;
-    }
-
-       }
+   }
