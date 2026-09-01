@@ -16,7 +16,7 @@
         "type": "video",
         "src": "images/memory-00/012.mp4",
         "caption": ""
-      }, 
+      },
       {
         "type": "image",
         "src": "images/memory-00/013.jpg",
@@ -26,7 +26,7 @@
         "type": "image",
         "src": "images/memory-00/014.jpg",
         "caption": ""
-      },
+      }
     ]
   },
   {
