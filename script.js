@@ -10,7 +10,7 @@ async function loadMemories() {
     try {
 
         const response =
-            await fetch("data/memories.json?v=4");
+            await fetch("data/memories.json?v=5");
 
         if (!response.ok) {
             throw new Error("Could not load memories.json");
@@ -20,13 +20,11 @@ async function loadMemories() {
 
         updateMemoryCounter();
 
-renderTimeline();
+        renderTimeline();
 
-renderGallery();
+        renderGallery();
 
-renderMemoryPage();
-
-setupLatestMemory();
+        renderMemoryPage();
 
     } catch (error) {
 
@@ -34,6 +32,9 @@ setupLatestMemory();
 
         const timeline =
             document.getElementById("timeline");
+
+        const gallery =
+            document.getElementById("gallery");
 
         const memoryContent =
             document.getElementById("memoryContent");
@@ -46,6 +47,10 @@ setupLatestMemory();
 
         if (timeline) {
             timeline.innerHTML = message;
+        }
+
+        if (gallery) {
+            gallery.innerHTML = message;
         }
 
         if (memoryContent) {
@@ -165,51 +170,6 @@ function setupRandomMemory() {
 
 
 // ======================================================
-// HOME — LATEST MEMORY
-// ======================================================
-
-/* function setupLatestMemory() {
-
-    const image =
-        document.getElementById("latestMemoryImage");
-
-    if (!image || memories.length === 0) {
-        return;
-    }
-
-    const sorted =
-        [...memories].sort(
-            (a, b) =>
-                memoryTime(b) -
-                memoryTime(a)
-        );
-
-    const latest =
-        sorted[0];
-
-    const src =
-        getFirstImage(latest);
-
-    if (src) {
-
-        image.src =
-            "./" + src;
-
-        image.alt =
-            latest.title;
-
-    } else {
-
-        image.removeAttribute("src");
-
-        image.alt =
-            "No photograph available";
-
-    }
-}
-*/
-
-// ======================================================
 // OUR STORY — TIMELINE
 // ======================================================
 
@@ -237,302 +197,8 @@ function renderTimeline() {
 
         article.className =
             "timeline-memory";
-// ======================================================
-// GALLERY
-// ======================================================
 
-function renderGallery() {
 
-    const gallery =
-        document.getElementById("gallery");
-
-    if (!gallery) return;
-
-    gallery.innerHTML = "";
-
-    let photoCount = 0;
-
-
-    memories.forEach(memory => {
-
-        const media =
-            getMedia(memory);
-
-        const images =
-            media.filter(
-                item => item.type === "image"
-            );
-
-        // Skip memories without photographs
-        if (images.length === 0) {
-            return;
-        }
-
-        const group =
-            document.createElement("section");
-
-        group.className =
-            "gallery-memory";
-
-
-        // Memory heading
-
-        const heading =
-            document.createElement("div");
-
-        heading.className =
-            "gallery-memory-heading";
-
-        heading.innerHTML = `
-            <p class="gallery-date">
-                ${memory.date}
-            </p>
-
-            <h2>
-                ${memory.title}
-            </h2>
-
-            <p class="gallery-location">
-                ${memory.location}
-            </p>
-        `;
-
-        group.appendChild(heading);
-
-
-        // Photos
-
-        const grid =
-            document.createElement("div");
-
-        grid.className =
-            "gallery-grid";
-
-
-        images.forEach(item => {
-
-            const figure =
-                document.createElement("figure");
-
-            figure.className =
-                "gallery-photo";
-
-
-            const image =
-                document.createElement("img");
-
-            image.src =
-                "./" + item.src;
-
-            image.alt =
-                item.caption ||
-                memory.title;
-
-            image.loading =
-                "lazy";
-
-
-            // Open lightbox
-
-            image.addEventListener(
-                "click",
-                function () {
-
-                    openLightbox(
-                        item.src,
-                        item.caption ||
-                        memory.title
-                    );
-
-                }
-            );
-
-
-            figure.appendChild(image);
-
-
-            if (item.caption) {
-
-                const caption =
-                    document.createElement("figcaption");
-
-                caption.textContent =
-                    item.caption;
-
-                figure.appendChild(
-                    caption
-                );
-
-            }
-
-
-            grid.appendChild(figure);
-
-            photoCount++;
-
-        });
-
-
-        group.appendChild(grid);
-
-        gallery.appendChild(group);
-
-    });
-
-
-    // No photographs yet
-
-    if (photoCount === 0) {
-
-        gallery.innerHTML = `
-
-            <div class="gallery-empty">
-
-                <span>—</span>
-
-                <p>
-                    The photographs are still waiting to be added.
-                </p>
-
-            </div>
-
-        `;
-
-    }
-    // ======================================================
-// GALLERY LIGHTBOX
-// ======================================================
-
-function openLightbox(src, caption) {
-
-    const lightbox =
-        document.getElementById("lightbox");
-
-    const image =
-        document.getElementById("lightboxImage");
-
-    const captionElement =
-        document.getElementById("lightboxCaption");
-
-    if (!lightbox || !image) {
-        return;
-    }
-
-
-    image.src =
-        "./" + src;
-
-    image.alt =
-        caption || "";
-
-
-    if (captionElement) {
-
-        captionElement.textContent =
-            caption || "";
-
-    }
-
-
-    lightbox.classList.add(
-        "open"
-    );
-
-    lightbox.setAttribute(
-        "aria-hidden",
-        "false"
-    );
-
-}
-
-
-function closeLightbox() {
-
-    const lightbox =
-        document.getElementById("lightbox");
-
-    const image =
-        document.getElementById("lightboxImage");
-
-    if (!lightbox) {
-        return;
-    }
-
-
-    lightbox.classList.remove(
-        "open"
-    );
-
-    lightbox.setAttribute(
-        "aria-hidden",
-        "true"
-    );
-
-
-    if (image) {
-        image.src = "";
-    }
-
-}
-
-
-function setupLightbox() {
-
-    const lightbox =
-        document.getElementById("lightbox");
-
-    const closeButton =
-        document.getElementById("lightboxClose");
-
-    if (!lightbox) {
-        return;
-    }
-
-
-    if (closeButton) {
-
-        closeButton.onclick =
-            closeLightbox;
-
-    }
-
-
-    // Close by clicking outside image
-
-    lightbox.addEventListener(
-        "click",
-        function (event) {
-
-            if (
-                event.target === lightbox
-            ) {
-
-                closeLightbox();
-
-            }
-
-        }
-    );
-
-
-    // Close with Escape
-
-    document.addEventListener(
-        "keydown",
-        function (event) {
-
-            if (
-                event.key === "Escape"
-            ) {
-
-                closeLightbox();
-
-            }
-
-        }
-    );
-
-}
         // ------------------------------
         // First photograph
         // ------------------------------
@@ -649,6 +315,333 @@ function setupLightbox() {
 
 
 // ======================================================
+// GALLERY
+// ======================================================
+
+function renderGallery() {
+
+    const gallery =
+        document.getElementById("gallery");
+
+    if (!gallery) return;
+
+    gallery.innerHTML = "";
+
+    let photoCount = 0;
+
+
+    memories.forEach(memory => {
+
+        const media =
+            getMedia(memory);
+
+        const images =
+            media.filter(
+                item => item.type === "image"
+            );
+
+
+        // Skip memories without photographs
+
+        if (images.length === 0) {
+            return;
+        }
+
+
+        // ------------------------------
+        // Memory group
+        // ------------------------------
+
+        const group =
+            document.createElement("section");
+
+        group.className =
+            "gallery-memory";
+
+
+        // ------------------------------
+        // Memory heading
+        // ------------------------------
+
+        const heading =
+            document.createElement("div");
+
+        heading.className =
+            "gallery-memory-heading";
+
+        heading.innerHTML = `
+            <p class="gallery-date">
+                ${memory.date}
+            </p>
+
+            <h2>
+                ${memory.title}
+            </h2>
+
+            <p class="gallery-location">
+                ${memory.location}
+            </p>
+        `;
+
+        group.appendChild(heading);
+
+
+        // ------------------------------
+        // Photo grid
+        // ------------------------------
+
+        const grid =
+            document.createElement("div");
+
+        grid.className =
+            "gallery-grid";
+
+
+        images.forEach(item => {
+
+            const figure =
+                document.createElement("figure");
+
+            figure.className =
+                "gallery-photo";
+
+
+            const image =
+                document.createElement("img");
+
+            image.src =
+                "./" + item.src;
+
+            image.alt =
+                item.caption ||
+                memory.title;
+
+            image.loading =
+                "lazy";
+
+
+            // --------------------------
+            // Lightbox
+            // --------------------------
+
+            image.addEventListener(
+                "click",
+                function () {
+
+                    openLightbox(
+                        item.src,
+                        item.caption ||
+                        memory.title
+                    );
+
+                }
+            );
+
+
+            figure.appendChild(image);
+
+
+            // --------------------------
+            // Caption
+            // --------------------------
+
+            if (item.caption) {
+
+                const caption =
+                    document.createElement("figcaption");
+
+                caption.textContent =
+                    item.caption;
+
+                figure.appendChild(
+                    caption
+                );
+
+            }
+
+
+            grid.appendChild(figure);
+
+            photoCount++;
+
+        });
+
+
+        group.appendChild(grid);
+
+        gallery.appendChild(group);
+
+    });
+
+
+    // ------------------------------
+    // Empty gallery
+    // ------------------------------
+
+    if (photoCount === 0) {
+
+        gallery.innerHTML = `
+
+            <div class="gallery-empty">
+
+                <span>—</span>
+
+                <p>
+                    The photographs are still waiting
+                    to be added.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+}
+
+
+// ======================================================
+// GALLERY LIGHTBOX
+// ======================================================
+
+function openLightbox(src, caption) {
+
+    const lightbox =
+        document.getElementById("lightbox");
+
+    const image =
+        document.getElementById("lightboxImage");
+
+    const captionElement =
+        document.getElementById("lightboxCaption");
+
+    if (!lightbox || !image) {
+        return;
+    }
+
+
+    image.src =
+        "./" + src;
+
+    image.alt =
+        caption || "";
+
+
+    if (captionElement) {
+
+        captionElement.textContent =
+            caption || "";
+
+    }
+
+
+    lightbox.classList.add("open");
+
+    lightbox.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+}
+
+
+// ======================================================
+// CLOSE LIGHTBOX
+// ======================================================
+
+function closeLightbox() {
+
+    const lightbox =
+        document.getElementById("lightbox");
+
+    const image =
+        document.getElementById("lightboxImage");
+
+    if (!lightbox) {
+        return;
+    }
+
+
+    lightbox.classList.remove("open");
+
+    lightbox.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+
+    if (image) {
+        image.src = "";
+    }
+
+}
+
+
+// ======================================================
+// SETUP LIGHTBOX
+// ======================================================
+
+function setupLightbox() {
+
+    const lightbox =
+        document.getElementById("lightbox");
+
+    const closeButton =
+        document.getElementById("lightboxClose");
+
+    if (!lightbox) {
+        return;
+    }
+
+
+    // Close button
+
+    if (closeButton) {
+
+        closeButton.onclick =
+            closeLightbox;
+
+    }
+
+
+    // Click outside image
+
+    lightbox.addEventListener(
+        "click",
+        function (event) {
+
+            if (
+                event.target === lightbox
+            ) {
+
+                closeLightbox();
+
+            }
+
+        }
+    );
+
+
+    // Escape key
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                closeLightbox();
+
+            }
+
+        }
+    );
+
+}
+
+
+// ======================================================
 // INDIVIDUAL MEMORY PAGE
 // ======================================================
 
@@ -671,6 +664,7 @@ function renderMemoryPage() {
 
     const id =
         params.get("id");
+
 
     if (!id) {
 
@@ -719,6 +713,7 @@ function renderMemoryPage() {
 
 
         // IMAGE
+
         if (item.type === "image") {
 
             mediaHTML += `
@@ -744,10 +739,12 @@ function renderMemoryPage() {
                 </figure>
 
             `;
+
         }
 
 
         // VIDEO
+
         if (item.type === "video") {
 
             mediaHTML += `
@@ -781,13 +778,14 @@ function renderMemoryPage() {
                 </figure>
 
             `;
+
         }
 
     });
 
 
     // ------------------------------
-    // Build memory page
+    // Build page
     // ------------------------------
 
     container.innerHTML = `
@@ -796,16 +794,13 @@ function renderMemoryPage() {
             ${memory.date}
         </p>
 
-
         <h1>
             ${memory.title}
         </h1>
 
-
         <p class="memory-location">
             ${memory.location}
         </p>
-
 
         ${
             mediaHTML
@@ -817,18 +812,15 @@ function renderMemoryPage() {
             : ""
         }
 
-
         <div class="memory-story">
-
             ${memory.description || ""}
-
         </div>
 
     `;
 
 
     // ------------------------------
-    // Previous / Next
+    // Navigation
     // ------------------------------
 
     setupMemoryNavigation(memory);
@@ -873,7 +865,9 @@ function setupMemoryNavigation(currentMemory) {
         );
 
 
+    // ------------------------------
     // Previous
+    // ------------------------------
 
     if (index > 0) {
 
@@ -892,7 +886,9 @@ function setupMemoryNavigation(currentMemory) {
     }
 
 
+    // ------------------------------
     // Next
+    // ------------------------------
 
     if (index < sorted.length - 1) {
 
