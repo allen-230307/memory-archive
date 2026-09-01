@@ -135,12 +135,25 @@ function getFirstImage(memory) {
 
 
 // ======================================================
-// DATE
+// DATE HELPER (FIXED FOR DATE + TIME COMBINATIONS)
 // ======================================================
 
 function memoryTime(memory) {
 
-    return new Date(memory.date).getTime();
+    if (!memory.date) return 0;
+
+    const fullDateString = memory.time 
+        ? `${memory.date} ${memory.time}` 
+        : memory.date;
+
+    const parsedTime = Date.parse(fullDateString);
+
+    if (!isNaN(parsedTime)) {
+        return parsedTime;
+    }
+
+    // Fallback to parsing date only if full timestamp fails
+    return Date.parse(memory.date) || 0;
 
 }
 
