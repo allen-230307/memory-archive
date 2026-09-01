@@ -1,5 +1,24 @@
 [
   {
+    "id": 0,
+    "title": "The Journey That Started Something",
+    "date": "1 August 2026, 9:00 AM",
+    "location": "Kerala → Bangalore",
+    "description": "I travelled all the way from Kerala to Bangalore just to prove that I could. It wasn't meant to be about love, but somehow that little ego-driven journey became the moment that set everything else in motion.",
+    "media": [
+      {
+        "type": "image",
+        "src": "images/memory-00/001.jpg",
+        "caption": ""
+      },
+      {
+        "type": "image",
+        "src": "images/memory-00/002.jpg",
+        "caption": ""
+      }
+    ]
+  },
+  {
     "id": 1,
     "title": "The Night I Told You",
     "date": "21 August 2026",
