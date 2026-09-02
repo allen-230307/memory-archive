@@ -13,10 +13,18 @@ async function loadMemories() {
             await fetch("data/memories.json?v=8");
 
         if (!response.ok) {
-            throw new Error("Could not load memories.json");
+            throw new Error(
+                "Could not load memories.json"
+            );
         }
 
         memories = await response.json();
+
+        if (!Array.isArray(memories)) {
+            throw new Error(
+                "memories.json does not contain an array"
+            );
+        }
 
         updateMemoryCounter();
 
@@ -28,7 +36,10 @@ async function loadMemories() {
 
     } catch (error) {
 
-        console.error("MEMORY ERROR:", error);
+        console.error(
+            "MEMORY ERROR:",
+            error
+        );
 
         const timeline =
             document.getElementById("timeline");
@@ -37,7 +48,9 @@ async function loadMemories() {
             document.getElementById("gallery");
 
         const memoryContent =
-            document.getElementById("memoryContent");
+            document.getElementById(
+                "memoryContent"
+            );
 
         const message = `
             <p class="loading">
@@ -67,7 +80,9 @@ async function loadMemories() {
 function updateMemoryCounter() {
 
     const counter =
-        document.getElementById("memoryCount");
+        document.getElementById(
+            "memoryCount"
+        );
 
     if (counter) {
 
@@ -84,7 +99,8 @@ function updateMemoryCounter() {
 
 function getMedia(memory) {
 
-    // New format
+    // New media format
+
     if (Array.isArray(memory.media)) {
 
         return memory.media;
@@ -92,18 +108,21 @@ function getMedia(memory) {
     }
 
 
-    // Older image format
+    // Legacy image format
+
     if (Array.isArray(memory.images)) {
 
-        return memory.images.map(src => ({
+        return memory.images.map(
+            src => ({
 
-            type: "image",
+                type: "image",
 
-            src: src,
+                src: src,
 
-            caption: ""
+                caption: ""
 
-        }));
+            })
+        );
 
     }
 
@@ -114,9 +133,8 @@ function getMedia(memory) {
 
 
 // ======================================================
-// MEDIA SORTING
-// Videos first, then images.
-// Original order is preserved within each type.
+// PRIORITIZE VIDEOS
+// Videos first, images after.
 // ======================================================
 
 function prioritizeVideos(media) {
@@ -124,22 +142,19 @@ function prioritizeVideos(media) {
     return [...media].sort(
         (a, b) => {
 
-            const aIsVideo =
-                a.type === "video";
-
-            const bIsVideo =
-                b.type === "video";
-
-
-            if (aIsVideo && !bIsVideo) {
+            if (
+                a.type === "video" &&
+                b.type !== "video"
+            ) {
                 return -1;
             }
 
-
-            if (!aIsVideo && bIsVideo) {
+            if (
+                a.type !== "video" &&
+                b.type === "video"
+            ) {
                 return 1;
             }
-
 
             return 0;
 
@@ -167,7 +182,9 @@ function memoryTime(memory) {
 
 
     const parsedTime =
-        Date.parse(fullDateString);
+        Date.parse(
+            fullDateString
+        );
 
 
     if (!isNaN(parsedTime)) {
@@ -176,7 +193,9 @@ function memoryTime(memory) {
 
 
     const dateOnly =
-        Date.parse(memory.date);
+        Date.parse(
+            memory.date
+        );
 
 
     return isNaN(dateOnly)
@@ -193,22 +212,29 @@ function memoryTime(memory) {
 function setupRandomMemory() {
 
     const button =
-        document.getElementById("randomMemory");
+        document.getElementById(
+            "randomMemory"
+        );
 
-    if (!button) return;
+    if (!button) {
+        return;
+    }
 
 
     button.onclick =
         function () {
 
-            if (memories.length === 0) {
+            if (
+                memories.length === 0
+            ) {
                 return;
             }
 
 
             const index =
                 Math.floor(
-                    Math.random() * memories.length
+                    Math.random() *
+                    memories.length
                 );
 
 
@@ -216,9 +242,16 @@ function setupRandomMemory() {
                 memories[index];
 
 
+            if (!selected || !selected.id) {
+                return;
+            }
+
+
             window.location.href =
                 "memory.html?id=" +
-                selected.id;
+                encodeURIComponent(
+                    selected.id
+                );
 
         };
 
@@ -232,9 +265,13 @@ function setupRandomMemory() {
 function renderTimeline() {
 
     const timeline =
-        document.getElementById("timeline");
+        document.getElementById(
+            "timeline"
+        );
 
-    if (!timeline) return;
+    if (!timeline) {
+        return;
+    }
 
 
     timeline.innerHTML = "";
@@ -250,152 +287,186 @@ function renderTimeline() {
         );
 
 
-    sorted.forEach(memory => {
+    sorted.forEach(
+        memory => {
 
-        const article =
-            document.createElement("article");
-
-
-        article.className =
-            "timeline-memory";
-
-
-        // ==================================================
-        // DATE
-        // ==================================================
-
-        const date =
-            document.createElement("p");
+            const article =
+                document.createElement(
+                    "article"
+                );
 
 
-        date.className =
-            "timeline-date";
+            article.className =
+                "timeline-memory";
 
 
-        date.textContent =
-            memory.date || "";
+            // ==================================================
+            // DATE
+            // ==================================================
+
+            const date =
+                document.createElement(
+                    "p"
+                );
 
 
-        article.appendChild(date);
+            date.className =
+                "timeline-date";
 
 
-        // ==================================================
-        // TIME
-        // ==================================================
-
-        if (memory.time) {
-
-            const time =
-                document.createElement("span");
+            date.textContent =
+                memory.date || "";
 
 
-            time.className =
-                "timeline-time";
+            article.appendChild(
+                date
+            );
 
 
-            time.textContent =
-                memory.time;
+            // ==================================================
+            // TIME
+            // ==================================================
+
+            if (memory.time) {
+
+                const time =
+                    document.createElement(
+                        "span"
+                    );
 
 
-            article.appendChild(time);
-
-        }
-
-
-        // ==================================================
-        // TITLE
-        // ==================================================
-
-        const title =
-            document.createElement("h2");
+                time.className =
+                    "timeline-time";
 
 
-        title.textContent =
-            memory.title || "";
+                time.textContent =
+                    memory.time;
 
 
-        article.appendChild(title);
-
-
-        // ==================================================
-        // LOCATION
-        // ==================================================
-
-        if (memory.location) {
-
-            const location =
-                document.createElement("p");
-
-
-            location.className =
-                "timeline-location";
-
-
-            location.textContent =
-                memory.location;
-
-
-            article.appendChild(location);
-
-        }
-
-
-        // ==================================================
-        // DESCRIPTION
-        // ==================================================
-
-        if (memory.description) {
-
-            const description =
-                document.createElement("p");
-
-
-            description.className =
-                "timeline-description";
-
-
-            description.textContent =
-                memory.description;
-
-
-            article.appendChild(description);
-
-        }
-
-
-        // ==================================================
-        // OPEN MEMORY
-        // ==================================================
-
-        article.addEventListener(
-            "click",
-            function () {
-
-                window.location.href =
-                    "memory.html?id=" +
-                    memory.id;
+                article.appendChild(
+                    time
+                );
 
             }
-        );
 
 
-        timeline.appendChild(article);
+            // ==================================================
+            // TITLE
+            // ==================================================
 
-    });
+            const title =
+                document.createElement(
+                    "h2"
+                );
+
+
+            title.textContent =
+                memory.title || "";
+
+
+            article.appendChild(
+                title
+            );
+
+
+            // ==================================================
+            // LOCATION
+            // ==================================================
+
+            if (memory.location) {
+
+                const location =
+                    document.createElement(
+                        "p"
+                    );
+
+
+                location.className =
+                    "timeline-location";
+
+
+                location.textContent =
+                    memory.location;
+
+
+                article.appendChild(
+                    location
+                );
+
+            }
+
+
+            // ==================================================
+            // DESCRIPTION
+            // ==================================================
+
+            if (memory.description) {
+
+                const description =
+                    document.createElement(
+                        "p"
+                    );
+
+
+                description.className =
+                    "timeline-description";
+
+
+                description.textContent =
+                    memory.description;
+
+
+                article.appendChild(
+                    description
+                );
+
+            }
+
+
+            // ==================================================
+            // OPEN MEMORY
+            // ==================================================
+
+            article.addEventListener(
+                "click",
+                function () {
+
+                    window.location.href =
+                        "memory.html?id=" +
+                        encodeURIComponent(
+                            memory.id
+                        );
+
+                }
+            );
+
+
+            timeline.appendChild(
+                article
+            );
+
+        }
+    );
 
 }
 
 
 // ======================================================
 // GALLERY
+// Images + videos
+// Videos appear first within each memory.
 // ======================================================
 
 function renderGallery() {
 
     const gallery =
-        document.getElementById("gallery");
+        document.getElementById(
+            "gallery"
+        );
 
-    if (!gallery) return;
+    if (!gallery) {
+        return;
+    }
 
 
     gallery.innerHTML = "";
@@ -404,302 +475,342 @@ function renderGallery() {
     let mediaCount = 0;
 
 
-    memories.forEach(memory => {
+    memories.forEach(
+        memory => {
 
-        // ==================================================
-        // GET MEDIA
-        // ==================================================
+            const media =
+                prioritizeVideos(
+                    getMedia(memory)
+                );
 
-        const media =
-            prioritizeVideos(
-                getMedia(memory)
+
+            const usableMedia =
+                media.filter(
+                    item =>
+                        item.type === "image" ||
+                        item.type === "video"
+                );
+
+
+            // No media
+
+            if (
+                usableMedia.length === 0
+            ) {
+                return;
+            }
+
+
+            // ==================================================
+            // MEMORY GROUP
+            // ==================================================
+
+            const group =
+                document.createElement(
+                    "section"
+                );
+
+
+            group.className =
+                "gallery-memory";
+
+
+            // ==================================================
+            // HEADING
+            // ==================================================
+
+            const heading =
+                document.createElement(
+                    "div"
+                );
+
+
+            heading.className =
+                "gallery-memory-heading";
+
+
+            // DATE
+
+            const date =
+                document.createElement(
+                    "p"
+                );
+
+
+            date.className =
+                "gallery-date";
+
+
+            date.textContent =
+                memory.date || "";
+
+
+            heading.appendChild(
+                date
             );
 
 
-        // Only image/video media
+            // TIME
 
-        const usableMedia =
-            media.filter(
-                item =>
-                    item.type === "image" ||
-                    item.type === "video"
-            );
+            if (memory.time) {
 
-
-        // Skip memories without media
-
-        if (usableMedia.length === 0) {
-            return;
-        }
-
-
-        // ==================================================
-        // MEMORY GROUP
-        // ==================================================
-
-        const group =
-            document.createElement("section");
-
-
-        group.className =
-            "gallery-memory";
-
-
-        // ==================================================
-        // MEMORY HEADING
-        // ==================================================
-
-        const heading =
-            document.createElement("div");
-
-
-        heading.className =
-            "gallery-memory-heading";
-
-
-        // DATE
-
-        const date =
-            document.createElement("p");
-
-
-        date.className =
-            "gallery-date";
-
-
-        date.textContent =
-            memory.date || "";
-
-
-        heading.appendChild(date);
-
-
-        // TIME
-
-        if (memory.time) {
-
-            const time =
-                document.createElement("span");
-
-
-            time.className =
-                "gallery-time";
-
-
-            time.textContent =
-                memory.time;
-
-
-            heading.appendChild(time);
-
-        }
-
-
-        // TITLE
-
-        const title =
-            document.createElement("h2");
-
-
-        title.textContent =
-            memory.title || "";
-
-
-        heading.appendChild(title);
-
-
-        // LOCATION
-
-        if (memory.location) {
-
-            const location =
-                document.createElement("p");
-
-
-            location.className =
-                "gallery-location";
-
-
-            location.textContent =
-                memory.location;
-
-
-            heading.appendChild(location);
-
-        }
-
-
-        group.appendChild(heading);
-
-
-        // ==================================================
-        // GALLERY GRID
-        // ==================================================
-
-        const grid =
-            document.createElement("div");
-
-
-        grid.className =
-            "gallery-grid";
-
-
-        usableMedia.forEach(item => {
-
-            const figure =
-                document.createElement("figure");
-
-
-            figure.className =
-                "gallery-photo";
-
-
-            // Add video class
-
-            if (item.type === "video") {
-
-                figure.classList.add(
-                    "is-video"
-                );
-
-            }
-
-
-            // ==================================================
-            // IMAGE
-            // ==================================================
-
-            if (item.type === "image") {
-
-                const image =
-                    document.createElement("img");
-
-
-                image.src =
-                    "./" + item.src;
-
-
-                image.alt =
-                    item.caption ||
-                    memory.title ||
-                    "Memory photograph";
-
-
-                image.loading =
-                    "lazy";
-
-
-                figure.appendChild(image);
-
-            }
-
-
-            // ==================================================
-            // VIDEO
-            // ==================================================
-
-            if (item.type === "video") {
-
-                const video =
-                    document.createElement("video");
-
-
-                video.preload =
-                    "metadata";
-
-
-                video.muted =
-                    true;
-
-
-                video.playsInline =
-                    true;
-
-
-                /*
-                   Controls are intentionally hidden here.
-                   Clicking the preview opens the full
-                   video viewer with controls.
-                */
-
-                const source =
-                    document.createElement("source");
-
-
-                source.src =
-                    "./" + item.src;
-
-
-                video.appendChild(source);
-
-
-                figure.appendChild(video);
-
-            }
-
-
-            // ==================================================
-            // CAPTION
-            // ==================================================
-
-            if (item.caption) {
-
-                const caption =
-                    document.createElement("figcaption");
-
-
-                caption.textContent =
-                    item.caption;
-
-
-                figure.appendChild(
-                    caption
-                );
-
-            }
-
-
-            // ==================================================
-            // OPEN FULL MEDIA
-            // ==================================================
-
-            figure.addEventListener(
-                "click",
-                function () {
-
-                    openLightbox(
-                        item.src,
-                        item.caption ||
-                        memory.title ||
-                        "",
-                        item.type
+                const time =
+                    document.createElement(
+                        "span"
                     );
+
+
+                time.className =
+                    "gallery-time";
+
+
+                time.textContent =
+                    memory.time;
+
+
+                heading.appendChild(
+                    time
+                );
+
+            }
+
+
+            // TITLE
+
+            const title =
+                document.createElement(
+                    "h2"
+                );
+
+
+            title.textContent =
+                memory.title || "";
+
+
+            heading.appendChild(
+                title
+            );
+
+
+            // LOCATION
+
+            if (memory.location) {
+
+                const location =
+                    document.createElement(
+                        "p"
+                    );
+
+
+                location.className =
+                    "gallery-location";
+
+
+                location.textContent =
+                    memory.location;
+
+
+                heading.appendChild(
+                    location
+                );
+
+            }
+
+
+            group.appendChild(
+                heading
+            );
+
+
+            // ==================================================
+            // GRID
+            // ==================================================
+
+            const grid =
+                document.createElement(
+                    "div"
+                );
+
+
+            grid.className =
+                "gallery-grid";
+
+
+            usableMedia.forEach(
+                item => {
+
+                    const figure =
+                        document.createElement(
+                            "figure"
+                        );
+
+
+                    figure.className =
+                        "gallery-photo";
+
+
+                    // ==================================================
+                    // IMAGE
+                    // ==================================================
+
+                    if (
+                        item.type === "image"
+                    ) {
+
+                        const image =
+                            document.createElement(
+                                "img"
+                            );
+
+
+                        image.src =
+                            "./" + item.src;
+
+
+                        image.alt =
+                            item.caption ||
+                            memory.title ||
+                            "Memory photograph";
+
+
+                        image.loading =
+                            "lazy";
+
+
+                        figure.appendChild(
+                            image
+                        );
+
+                    }
+
+
+                    // ==================================================
+                    // VIDEO
+                    // ==================================================
+
+                    else if (
+                        item.type === "video"
+                    ) {
+
+                        figure.classList.add(
+                            "is-video"
+                        );
+
+
+                        const video =
+                            document.createElement(
+                                "video"
+                            );
+
+
+                        video.preload =
+                            "metadata";
+
+
+                        video.muted =
+                            true;
+
+
+                        video.playsInline =
+                            true;
+
+
+                        const source =
+                            document.createElement(
+                                "source"
+                            );
+
+
+                        source.src =
+                            "./" + item.src;
+
+
+                        video.appendChild(
+                            source
+                        );
+
+
+                        figure.appendChild(
+                            video
+                        );
+
+                    }
+
+
+                    // ==================================================
+                    // CAPTION
+                    // ==================================================
+
+                    if (item.caption) {
+
+                        const caption =
+                            document.createElement(
+                                "figcaption"
+                            );
+
+
+                        caption.textContent =
+                            item.caption;
+
+
+                        figure.appendChild(
+                            caption
+                        );
+
+                    }
+
+
+                    // ==================================================
+                    // OPEN LIGHTBOX
+                    // ==================================================
+
+                    figure.addEventListener(
+                        "click",
+                        function () {
+
+                            openLightbox(
+                                item.src,
+                                item.caption ||
+                                memory.title ||
+                                "",
+                                item.type
+                            );
+
+                        }
+                    );
+
+
+                    grid.appendChild(
+                        figure
+                    );
+
+
+                    mediaCount++;
 
                 }
             );
 
 
-            grid.appendChild(figure);
+            group.appendChild(
+                grid
+            );
 
 
-            mediaCount++;
+            gallery.appendChild(
+                group
+            );
 
-        });
-
-
-        group.appendChild(grid);
-
-
-        gallery.appendChild(group);
-
-    });
+        }
+    );
 
 
     // ==================================================
     // EMPTY GALLERY
     // ==================================================
 
-    if (mediaCount === 0) {
+    if (
+        mediaCount === 0
+    ) {
 
         gallery.innerHTML = `
 
@@ -722,22 +833,26 @@ function renderGallery() {
 
 
 // ======================================================
-// GALLERY / MEMORY LIGHTBOX
-// Supports images AND videos
+// LIGHTBOX
+// Supports image + video.
 // ======================================================
 
 function openLightbox(
     src,
     caption,
-    type = "image"
+    type
 ) {
 
     const lightbox =
-        document.getElementById("lightbox");
+        document.getElementById(
+            "lightbox"
+        );
 
 
     const image =
-        document.getElementById("lightboxImage");
+        document.getElementById(
+            "lightboxImage"
+        );
 
 
     const captionElement =
@@ -746,34 +861,37 @@ function openLightbox(
         );
 
 
+    if (!lightbox) {
+        return;
+    }
+
+
     const content =
-        lightbox
-            ? lightbox.querySelector(
-                ".lightbox-content"
-            )
-            : null;
+        lightbox.querySelector(
+            ".lightbox-content"
+        );
 
 
-    if (!lightbox || !content) {
+    if (!content) {
         return;
     }
 
 
     // ==================================================
-    // REMOVE OLD LIGHTBOX VIDEO
+    // REMOVE EXISTING LIGHTBOX VIDEO
     // ==================================================
 
-    const oldVideo =
+    const existingVideo =
         content.querySelector(
             ".lightbox-video"
         );
 
 
-    if (oldVideo) {
+    if (existingVideo) {
 
-        oldVideo.pause();
+        existingVideo.pause();
 
-        oldVideo.remove();
+        existingVideo.remove();
 
     }
 
@@ -782,22 +900,26 @@ function openLightbox(
     // VIDEO
     // ==================================================
 
-    if (type === "video") {
+    if (
+        type === "video"
+    ) {
 
-        // Hide image
+        // Hide normal image
 
         if (image) {
 
+            image.src = "";
+
             image.style.display =
                 "none";
-
-            image.src = "";
 
         }
 
 
         const video =
-            document.createElement("video");
+            document.createElement(
+                "video"
+            );
 
 
         video.className =
@@ -816,26 +938,20 @@ function openLightbox(
             true;
 
 
-        video.setAttribute(
-            "aria-label",
-            caption || "Memory video"
-        );
-
-
         const source =
-            document.createElement("source");
+            document.createElement(
+                "source"
+            );
 
 
         source.src =
             "./" + src;
 
 
-        video.appendChild(source);
+        video.appendChild(
+            source
+        );
 
-
-        /*
-           Put video before caption.
-        */
 
         if (captionElement) {
 
@@ -846,7 +962,9 @@ function openLightbox(
 
         } else {
 
-            content.appendChild(video);
+            content.appendChild(
+                video
+            );
 
         }
 
@@ -858,17 +976,6 @@ function openLightbox(
     // ==================================================
 
     else {
-
-        // Remove any previous video
-
-        if (oldVideo) {
-
-            oldVideo.pause();
-
-            oldVideo.remove();
-
-        }
-
 
         if (image) {
 
@@ -915,7 +1022,10 @@ function openLightbox(
     );
 
 
-    // Prevent background scrolling
+    /*
+       Prevent the page underneath from
+       scrolling while the lightbox is open.
+    */
 
     document.body.style.overflow =
         "hidden";
@@ -930,11 +1040,15 @@ function openLightbox(
 function closeLightbox() {
 
     const lightbox =
-        document.getElementById("lightbox");
+        document.getElementById(
+            "lightbox"
+        );
 
 
     const image =
-        document.getElementById("lightboxImage");
+        document.getElementById(
+            "lightboxImage"
+        );
 
 
     const captionElement =
@@ -1017,7 +1131,7 @@ function closeLightbox() {
 
 
 // ======================================================
-// SETUP LIGHTBOX
+// LIGHTBOX SETUP
 // ======================================================
 
 function setupLightbox() {
@@ -1039,21 +1153,19 @@ function setupLightbox() {
     }
 
 
-    // ==================================================
-    // CLOSE BUTTON
-    // ==================================================
+    // Close button
 
     if (closeButton) {
 
-        closeButton.onclick =
-            closeLightbox;
+        closeButton.addEventListener(
+            "click",
+            closeLightbox
+        );
 
     }
 
 
-    // ==================================================
-    // CLICK OUTSIDE MEDIA
-    // ==================================================
+    // Click outside media
 
     lightbox.addEventListener(
         "click",
@@ -1061,26 +1173,6 @@ function setupLightbox() {
 
             if (
                 event.target === lightbox
-            ) {
-
-                closeLightbox();
-
-            }
-
-        }
-    );
-
-
-    // ==================================================
-    // ESCAPE KEY
-    // ==================================================
-
-    document.addEventListener(
-        "keydown",
-        function (event) {
-
-            if (
-                event.key === "Escape"
             ) {
 
                 closeLightbox();
@@ -1111,7 +1203,7 @@ function renderMemoryPage() {
 
 
     // ==================================================
-    // GET MEMORY ID
+    // GET ID FROM URL
     // ==================================================
 
     const params =
@@ -1167,7 +1259,7 @@ function renderMemoryPage() {
 
 
     // ==================================================
-    // GET + PRIORITIZE MEDIA
+    // MEDIA
     // ==================================================
 
     const mediaItems =
@@ -1177,29 +1269,48 @@ function renderMemoryPage() {
 
 
     // ==================================================
-    // BUILD MEDIA
+    // BUILD PAGE MEDIA
     // ==================================================
 
-    let mediaHTML = "";
+    const mediaContainer =
+        document.createElement(
+            "div"
+        );
+
+
+    mediaContainer.className =
+        "memory-media";
 
 
     mediaItems.forEach(
         (item, index) => {
 
-            // Ignore unsupported media types
-
             if (
                 item.type !== "image" &&
                 item.type !== "video"
             ) {
-
                 return;
-
             }
 
 
-            const itemClass =
-                `memory-media-item media-${index + 1} media-${item.type}`;
+            const figure =
+                document.createElement(
+                    "figure"
+                );
+
+
+            figure.className =
+                "memory-media-item";
+
+
+            figure.classList.add(
+                "media-" + item.type
+            );
+
+
+            figure.classList.add(
+                "media-" + (index + 1)
+            );
 
 
             // ==================================================
@@ -1210,37 +1321,29 @@ function renderMemoryPage() {
                 item.type === "image"
             ) {
 
-                mediaHTML += `
+                const image =
+                    document.createElement(
+                        "img"
+                    );
 
-                    <figure
-                        class="${itemClass}"
-                        data-src="${item.src}"
-                        data-type="image"
-                        data-caption="${item.caption || ""}"
-                        tabindex="0"
-                        role="button"
-                        aria-label="Open image"
-                    >
 
-                        <img
-                            src="./${item.src}"
-                            alt="${item.caption || memory.title || "Memory photograph"}"
-                            loading="lazy"
-                        >
+                image.src =
+                    "./" + item.src;
 
-                        ${
-                            item.caption
-                            ? `
-                                <figcaption>
-                                    ${item.caption}
-                                </figcaption>
-                              `
-                            : ""
-                        }
 
-                    </figure>
+                image.alt =
+                    item.caption ||
+                    memory.title ||
+                    "Memory photograph";
 
-                `;
+
+                image.loading =
+                    "lazy";
+
+
+                figure.appendChild(
+                    image
+                );
 
             }
 
@@ -1249,124 +1352,284 @@ function renderMemoryPage() {
             // VIDEO
             // ==================================================
 
-            if (
+            else if (
                 item.type === "video"
             ) {
 
-                mediaHTML += `
+                figure.classList.add(
+                    "is-video"
+                );
 
-                    <figure
-                        class="${itemClass}"
-                        data-src="${item.src}"
-                        data-type="video"
-                        data-caption="${item.caption || ""}"
-                        tabindex="0"
-                        role="button"
-                        aria-label="Open video"
-                    >
 
-                        <video
-                            preload="metadata"
-                            muted
-                            playsinline
-                        >
+                const video =
+                    document.createElement(
+                        "video"
+                    );
 
-                            <source
-                                src="./${item.src}"
-                            >
 
-                            Your browser does not support
-                            video playback.
+                video.preload =
+                    "metadata";
 
-                        </video>
 
-                        ${
-                            item.caption
-                            ? `
-                                <figcaption>
-                                    ${item.caption}
-                                </figcaption>
-                              `
-                            : ""
-                        }
+                video.muted =
+                    true;
 
-                    </figure>
 
-                `;
+                video.playsInline =
+                    true;
+
+
+                const source =
+                    document.createElement(
+                        "source"
+                    );
+
+
+                source.src =
+                    "./" + item.src;
+
+
+                video.appendChild(
+                    source
+                );
+
+
+                figure.appendChild(
+                    video
+                );
 
             }
+
+
+            // ==================================================
+            // CAPTION
+            // ==================================================
+
+            if (item.caption) {
+
+                const caption =
+                    document.createElement(
+                        "figcaption"
+                    );
+
+
+                caption.textContent =
+                    item.caption;
+
+
+                figure.appendChild(
+                    caption
+                );
+
+            }
+
+
+            // ==================================================
+            // CLICK → FULL MEDIA
+            // ==================================================
+
+            figure.addEventListener(
+                "click",
+                function () {
+
+                    openLightbox(
+                        item.src,
+                        item.caption ||
+                        memory.title ||
+                        "",
+                        item.type
+                    );
+
+                }
+            );
+
+
+            // ==================================================
+            // KEYBOARD ACCESS
+            // ==================================================
+
+            figure.setAttribute(
+                "tabindex",
+                "0"
+            );
+
+
+            figure.addEventListener(
+                "keydown",
+                function (event) {
+
+                    if (
+                        event.key === "Enter" ||
+                        event.key === " "
+                    ) {
+
+                        event.preventDefault();
+
+                        openLightbox(
+                            item.src,
+                            item.caption ||
+                            memory.title ||
+                            "",
+                            item.type
+                        );
+
+                    }
+
+                }
+            );
+
+
+            mediaContainer.appendChild(
+                figure
+            );
 
         }
     );
 
 
     // ==================================================
-    // BUILD MEMORY PAGE
+    // CLEAR OLD CONTENT
     // ==================================================
 
-    container.innerHTML = `
-
-        <p class="memory-date">
-            ${memory.date || ""}
-        </p>
-
-
-        ${
-            memory.time
-            ? `
-                <p class="memory-time">
-                    ${memory.time}
-                </p>
-              `
-            : ""
-        }
-
-
-        <h1>
-            ${memory.title || ""}
-        </h1>
-
-
-        ${
-            memory.location
-            ? `
-                <p class="memory-location">
-                    ${memory.location}
-                </p>
-              `
-            : ""
-        }
-
-
-        ${
-            mediaHTML
-            ? `
-                <div class="memory-media">
-                    ${mediaHTML}
-                </div>
-              `
-            : ""
-        }
-
-
-        <div class="memory-story">
-
-            ${memory.description || ""}
-
-        </div>
-
-    `;
+    container.innerHTML = "";
 
 
     // ==================================================
-    // ENABLE FULL MEDIA VIEWER
+    // DATE
     // ==================================================
 
-    setupMemoryMedia();
+    const date =
+        document.createElement(
+            "p"
+        );
+
+
+    date.className =
+        "memory-date";
+
+
+    date.textContent =
+        memory.date || "";
+
+
+    container.appendChild(
+        date
+    );
 
 
     // ==================================================
-    // PREVIOUS / NEXT
+    // TIME
+    // ==================================================
+
+    if (memory.time) {
+
+        const time =
+            document.createElement(
+                "p"
+            );
+
+
+        time.className =
+            "memory-time";
+
+
+        time.textContent =
+            memory.time;
+
+
+        container.appendChild(
+            time
+        );
+
+    }
+
+
+    // ==================================================
+    // TITLE
+    // ==================================================
+
+    const title =
+        document.createElement(
+            "h1"
+        );
+
+
+    title.textContent =
+        memory.title || "";
+
+
+    container.appendChild(
+        title
+    );
+
+
+    // ==================================================
+    // LOCATION
+    // ==================================================
+
+    if (memory.location) {
+
+        const location =
+            document.createElement(
+                "p"
+            );
+
+
+        location.className =
+            "memory-location";
+
+
+        location.textContent =
+            memory.location;
+
+
+        container.appendChild(
+            location
+        );
+
+    }
+
+
+    // ==================================================
+    // MEDIA
+    // ==================================================
+
+    if (
+        mediaContainer.children.length > 0
+    ) {
+
+        container.appendChild(
+            mediaContainer
+        );
+
+    }
+
+
+    // ==================================================
+    // STORY
+    // ==================================================
+
+    const story =
+        document.createElement(
+            "div"
+        );
+
+
+    story.className =
+        "memory-story";
+
+
+    story.innerHTML =
+        memory.description || "";
+
+
+    container.appendChild(
+        story
+    );
+
+
+    // ==================================================
+    // NAVIGATION
     // ==================================================
 
     setupMemoryNavigation(
@@ -1377,64 +1640,194 @@ function renderMemoryPage() {
 
 
 // ======================================================
-// INDIVIDUAL MEMORY MEDIA CLICK
+// PREVIOUS / NEXT MEMORY
 // ======================================================
 
-function setupMemoryMedia() {
+function setupMemoryNavigation(
+    currentMemory
+) {
 
-    const mediaItems =
-        document.querySelectorAll(
-            ".memory-media-item"
+    const previous =
+        document.getElementById(
+            "previousMemory"
         );
 
 
-    mediaItems.forEach(
-        function (item) {
-
-            const src =
-                item.dataset.src;
-
-
-            const type =
-                item.dataset.type ||
-                "image";
+    const next =
+        document.getElementById(
+            "nextMemory"
+        );
 
 
-            const caption =
-                item.dataset.caption ||
-                "";
+    if (!previous || !next) {
+        return;
+    }
 
 
-            if (!src) {
-                return;
-            }
+    const sorted =
+        [...memories].sort(
+            (a, b) =>
+                memoryTime(a) -
+                memoryTime(b)
+        );
 
 
-            // ==================================================
-            // MOUSE / TOUCH
-            // ==================================================
+    const index =
+        sorted.findIndex(
+            memory =>
+                String(memory.id) ===
+                String(currentMemory.id)
+        );
 
-            item.addEventListener(
-                "click",
-                function () {
 
-                    openLightbox(
-                        src,
-                        caption,
-                        type
-                    );
+    // ==================================================
+    // PREVIOUS
+    // ==================================================
 
-                }
+    if (index > 0) {
+
+        previous.href =
+            "memory.html?id=" +
+            encodeURIComponent(
+                sorted[index - 1].id
             );
 
 
-            // ==================================================
-            // KEYBOARD
-            // ==================================================
+        previous.style.visibility =
+            "visible";
 
-            item.addEventListener(
-                "keydown",
-                function (event) {
+    } else {
 
-                    if (
-                        event.key === "Enter
+        previous.style.visibility =
+            "hidden";
+
+    }
+
+
+    // ==================================================
+    // NEXT
+    // ==================================================
+
+    if (
+        index >= 0 &&
+        index < sorted.length - 1
+    ) {
+
+        next.href =
+            "memory.html?id=" +
+            encodeURIComponent(
+                sorted[index + 1].id
+            );
+
+
+        next.style.visibility =
+            "visible";
+
+    } else {
+
+        next.style.visibility =
+            "hidden";
+
+    }
+
+}
+
+
+// ======================================================
+// MOBILE MENU
+// ======================================================
+
+function setupMobileMenu() {
+
+    const button =
+        document.getElementById(
+            "menuButton"
+        );
+
+
+    const sidebar =
+        document.querySelector(
+            ".sidebar"
+        );
+
+
+    if (!button || !sidebar) {
+        return;
+    }
+
+
+    button.addEventListener(
+        "click",
+        function () {
+
+            sidebar.classList.toggle(
+                "mobile-open"
+            );
+
+        }
+    );
+
+}
+
+
+// ======================================================
+// KEYBOARD LIGHTBOX
+// ======================================================
+
+function setupKeyboard() {
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                closeLightbox();
+
+            }
+
+        }
+    );
+
+}
+
+
+// ======================================================
+// INITIALIZE
+// ======================================================
+
+async function init() {
+
+    setupMobileMenu();
+
+    setupLightbox();
+
+    setupKeyboard();
+
+    await loadMemories();
+
+    setupRandomMemory();
+
+}
+
+
+// ======================================================
+// WAIT FOR DOM
+// ======================================================
+
+if (
+    document.readyState === "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        init
+    );
+
+} else {
+
+    init();
+
+            }
