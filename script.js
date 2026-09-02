@@ -10,7 +10,7 @@ async function loadMemories() {
     try {
 
         const response =
-            await fetch("data/memories.json?v=7");
+            await fetch("data/memories.json?v=8");
 
         if (!response.ok) {
             throw new Error("Could not load memories.json");
@@ -109,6 +109,42 @@ function getMedia(memory) {
 
 
     return [];
+
+}
+
+
+// ======================================================
+// MEDIA SORTING
+// Videos first, then images.
+// Original order is preserved within each type.
+// ======================================================
+
+function prioritizeVideos(media) {
+
+    return [...media].sort(
+        (a, b) => {
+
+            const aIsVideo =
+                a.type === "video";
+
+            const bIsVideo =
+                b.type === "video";
+
+
+            if (aIsVideo && !bIsVideo) {
+                return -1;
+            }
+
+
+            if (!aIsVideo && bIsVideo) {
+                return 1;
+            }
+
+
+            return 0;
+
+        }
+    );
 
 }
 
@@ -365,25 +401,34 @@ function renderGallery() {
     gallery.innerHTML = "";
 
 
-    let photoCount = 0;
+    let mediaCount = 0;
 
 
     memories.forEach(memory => {
 
+        // ==================================================
+        // GET MEDIA
+        // ==================================================
+
         const media =
-            getMedia(memory);
-
-
-        const images =
-            media.filter(
-                item =>
-                    item.type === "image"
+            prioritizeVideos(
+                getMedia(memory)
             );
 
 
-        // Skip memories without photographs
+        // Only image/video media
 
-        if (images.length === 0) {
+        const usableMedia =
+            media.filter(
+                item =>
+                    item.type === "image" ||
+                    item.type === "video"
+            );
+
+
+        // Skip memories without media
+
+        if (usableMedia.length === 0) {
             return;
         }
 
@@ -412,6 +457,8 @@ function renderGallery() {
             "gallery-memory-heading";
 
 
+        // DATE
+
         const date =
             document.createElement("p");
 
@@ -426,6 +473,8 @@ function renderGallery() {
 
         heading.appendChild(date);
 
+
+        // TIME
 
         if (memory.time) {
 
@@ -446,6 +495,8 @@ function renderGallery() {
         }
 
 
+        // TITLE
+
         const title =
             document.createElement("h2");
 
@@ -456,6 +507,8 @@ function renderGallery() {
 
         heading.appendChild(title);
 
+
+        // LOCATION
 
         if (memory.location) {
 
@@ -480,7 +533,7 @@ function renderGallery() {
 
 
         // ==================================================
-        // SQUARE PHOTO GRID
+        // GALLERY GRID
         // ==================================================
 
         const grid =
@@ -491,7 +544,7 @@ function renderGallery() {
             "gallery-grid";
 
 
-        images.forEach(item => {
+        usableMedia.forEach(item => {
 
             const figure =
                 document.createElement("figure");
@@ -501,43 +554,88 @@ function renderGallery() {
                 "gallery-photo";
 
 
-            const image =
-                document.createElement("img");
+            // Add video class
 
+            if (item.type === "video") {
 
-            image.src =
-                "./" + item.src;
+                figure.classList.add(
+                    "is-video"
+                );
 
-
-            image.alt =
-                item.caption ||
-                memory.title ||
-                "Memory photograph";
-
-
-            image.loading =
-                "lazy";
+            }
 
 
             // ==================================================
-            // OPEN FULL IMAGE
+            // IMAGE
             // ==================================================
 
-            image.addEventListener(
-                "click",
-                function () {
+            if (item.type === "image") {
 
-                    openLightbox(
-                        item.src,
-                        item.caption ||
-                        memory.title
-                    );
-
-                }
-            );
+                const image =
+                    document.createElement("img");
 
 
-            figure.appendChild(image);
+                image.src =
+                    "./" + item.src;
+
+
+                image.alt =
+                    item.caption ||
+                    memory.title ||
+                    "Memory photograph";
+
+
+                image.loading =
+                    "lazy";
+
+
+                figure.appendChild(image);
+
+            }
+
+
+            // ==================================================
+            // VIDEO
+            // ==================================================
+
+            if (item.type === "video") {
+
+                const video =
+                    document.createElement("video");
+
+
+                video.preload =
+                    "metadata";
+
+
+                video.muted =
+                    true;
+
+
+                video.playsInline =
+                    true;
+
+
+                /*
+                   Controls are intentionally hidden here.
+                   Clicking the preview opens the full
+                   video viewer with controls.
+                */
+
+                const source =
+                    document.createElement("source");
+
+
+                source.src =
+                    "./" + item.src;
+
+
+                video.appendChild(source);
+
+
+                figure.appendChild(video);
+
+            }
 
 
             // ==================================================
@@ -561,10 +659,30 @@ function renderGallery() {
             }
 
 
+            // ==================================================
+            // OPEN FULL MEDIA
+            // ==================================================
+
+            figure.addEventListener(
+                "click",
+                function () {
+
+                    openLightbox(
+                        item.src,
+                        item.caption ||
+                        memory.title ||
+                        "",
+                        item.type
+                    );
+
+                }
+            );
+
+
             grid.appendChild(figure);
 
 
-            photoCount++;
+            mediaCount++;
 
         });
 
@@ -581,7 +699,7 @@ function renderGallery() {
     // EMPTY GALLERY
     // ==================================================
 
-    if (photoCount === 0) {
+    if (mediaCount === 0) {
 
         gallery.innerHTML = `
 
@@ -604,10 +722,15 @@ function renderGallery() {
 
 
 // ======================================================
-// GALLERY LIGHTBOX
+// GALLERY / MEMORY LIGHTBOX
+// Supports images AND videos
 // ======================================================
 
-function openLightbox(src, caption) {
+function openLightbox(
+    src,
+    caption,
+    type = "image"
+) {
 
     const lightbox =
         document.getElementById("lightbox");
@@ -618,21 +741,156 @@ function openLightbox(src, caption) {
 
 
     const captionElement =
-        document.getElementById("lightboxCaption");
+        document.getElementById(
+            "lightboxCaption"
+        );
 
 
-    if (!lightbox || !image) {
+    const content =
+        lightbox
+            ? lightbox.querySelector(
+                ".lightbox-content"
+            )
+            : null;
+
+
+    if (!lightbox || !content) {
         return;
     }
 
 
-    image.src =
-        "./" + src;
+    // ==================================================
+    // REMOVE OLD LIGHTBOX VIDEO
+    // ==================================================
+
+    const oldVideo =
+        content.querySelector(
+            ".lightbox-video"
+        );
 
 
-    image.alt =
-        caption || "";
+    if (oldVideo) {
 
+        oldVideo.pause();
+
+        oldVideo.remove();
+
+    }
+
+
+    // ==================================================
+    // VIDEO
+    // ==================================================
+
+    if (type === "video") {
+
+        // Hide image
+
+        if (image) {
+
+            image.style.display =
+                "none";
+
+            image.src = "";
+
+        }
+
+
+        const video =
+            document.createElement("video");
+
+
+        video.className =
+            "lightbox-video lightbox-media";
+
+
+        video.controls =
+            true;
+
+
+        video.preload =
+            "metadata";
+
+
+        video.playsInline =
+            true;
+
+
+        video.setAttribute(
+            "aria-label",
+            caption || "Memory video"
+        );
+
+
+        const source =
+            document.createElement("source");
+
+
+        source.src =
+            "./" + src;
+
+
+        video.appendChild(source);
+
+
+        /*
+           Put video before caption.
+        */
+
+        if (captionElement) {
+
+            content.insertBefore(
+                video,
+                captionElement
+            );
+
+        } else {
+
+            content.appendChild(video);
+
+        }
+
+    }
+
+
+    // ==================================================
+    // IMAGE
+    // ==================================================
+
+    else {
+
+        // Remove any previous video
+
+        if (oldVideo) {
+
+            oldVideo.pause();
+
+            oldVideo.remove();
+
+        }
+
+
+        if (image) {
+
+            image.style.display =
+                "block";
+
+
+            image.src =
+                "./" + src;
+
+
+            image.alt =
+                caption || "";
+
+        }
+
+    }
+
+
+    // ==================================================
+    // CAPTION
+    // ==================================================
 
     if (captionElement) {
 
@@ -642,13 +900,25 @@ function openLightbox(src, caption) {
     }
 
 
-    lightbox.classList.add("open");
+    // ==================================================
+    // OPEN
+    // ==================================================
+
+    lightbox.classList.add(
+        "open"
+    );
 
 
     lightbox.setAttribute(
         "aria-hidden",
         "false"
     );
+
+
+    // Prevent background scrolling
+
+    document.body.style.overflow =
+        "hidden";
 
 }
 
@@ -667,12 +937,43 @@ function closeLightbox() {
         document.getElementById("lightboxImage");
 
 
+    const captionElement =
+        document.getElementById(
+            "lightboxCaption"
+        );
+
+
     if (!lightbox) {
         return;
     }
 
 
-    lightbox.classList.remove("open");
+    // ==================================================
+    // STOP VIDEO
+    // ==================================================
+
+    const video =
+        lightbox.querySelector(
+            ".lightbox-video"
+        );
+
+
+    if (video) {
+
+        video.pause();
+
+        video.remove();
+
+    }
+
+
+    // ==================================================
+    // CLOSE
+    // ==================================================
+
+    lightbox.classList.remove(
+        "open"
+    );
 
 
     lightbox.setAttribute(
@@ -681,11 +982,36 @@ function closeLightbox() {
     );
 
 
+    // ==================================================
+    // RESET IMAGE
+    // ==================================================
+
     if (image) {
 
         image.src = "";
 
+        image.style.display =
+            "block";
+
     }
+
+
+    // ==================================================
+    // RESET CAPTION
+    // ==================================================
+
+    if (captionElement) {
+
+        captionElement.textContent =
+            "";
+
+    }
+
+
+    // Restore scrolling
+
+    document.body.style.overflow =
+        "";
 
 }
 
@@ -697,17 +1023,25 @@ function closeLightbox() {
 function setupLightbox() {
 
     const lightbox =
-        document.getElementById("lightbox");
+        document.getElementById(
+            "lightbox"
+        );
 
 
     const closeButton =
-        document.getElementById("lightboxClose");
+        document.getElementById(
+            "lightboxClose"
+        );
 
 
     if (!lightbox) {
         return;
     }
 
+
+    // ==================================================
+    // CLOSE BUTTON
+    // ==================================================
 
     if (closeButton) {
 
@@ -716,6 +1050,10 @@ function setupLightbox() {
 
     }
 
+
+    // ==================================================
+    // CLICK OUTSIDE MEDIA
+    // ==================================================
 
     lightbox.addEventListener(
         "click",
@@ -732,6 +1070,10 @@ function setupLightbox() {
         }
     );
 
+
+    // ==================================================
+    // ESCAPE KEY
+    // ==================================================
 
     document.addEventListener(
         "keydown",
@@ -825,18 +1167,36 @@ function renderMemoryPage() {
 
 
     // ==================================================
+    // GET + PRIORITIZE MEDIA
+    // ==================================================
+
+    const mediaItems =
+        prioritizeVideos(
+            getMedia(memory)
+        );
+
+
+    // ==================================================
     // BUILD MEDIA
     // ==================================================
 
     let mediaHTML = "";
 
 
-    const mediaItems =
-        getMedia(memory);
-
-
     mediaItems.forEach(
         (item, index) => {
+
+            // Ignore unsupported media types
+
+            if (
+                item.type !== "image" &&
+                item.type !== "video"
+            ) {
+
+                return;
+
+            }
+
 
             const itemClass =
                 `memory-media-item media-${index + 1} media-${item.type}`;
@@ -854,11 +1214,17 @@ function renderMemoryPage() {
 
                     <figure
                         class="${itemClass}"
+                        data-src="${item.src}"
+                        data-type="image"
+                        data-caption="${item.caption || ""}"
+                        tabindex="0"
+                        role="button"
+                        aria-label="Open image"
                     >
 
                         <img
                             src="./${item.src}"
-                            alt="${item.caption || memory.title}"
+                            alt="${item.caption || memory.title || "Memory photograph"}"
                             loading="lazy"
                         >
 
@@ -891,11 +1257,18 @@ function renderMemoryPage() {
 
                     <figure
                         class="${itemClass}"
+                        data-src="${item.src}"
+                        data-type="video"
+                        data-caption="${item.caption || ""}"
+                        tabindex="0"
+                        role="button"
+                        aria-label="Open video"
                     >
 
                         <video
-                            controls
                             preload="metadata"
+                            muted
+                            playsinline
                         >
 
                             <source
@@ -985,151 +1358,83 @@ function renderMemoryPage() {
     `;
 
 
-    setupMemoryNavigation(memory);
+    // ==================================================
+    // ENABLE FULL MEDIA VIEWER
+    // ==================================================
+
+    setupMemoryMedia();
+
+
+    // ==================================================
+    // PREVIOUS / NEXT
+    // ==================================================
+
+    setupMemoryNavigation(
+        memory
+    );
 
 }
 
 
 // ======================================================
-// PREVIOUS / NEXT MEMORY
+// INDIVIDUAL MEMORY MEDIA CLICK
 // ======================================================
 
-function setupMemoryNavigation(
-    currentMemory
-) {
+function setupMemoryMedia() {
 
-    const previous =
-        document.getElementById(
-            "previousMemory"
+    const mediaItems =
+        document.querySelectorAll(
+            ".memory-media-item"
         );
 
 
-    const next =
-        document.getElementById(
-            "nextMemory"
-        );
+    mediaItems.forEach(
+        function (item) {
+
+            const src =
+                item.dataset.src;
 
 
-    if (!previous || !next) {
-        return;
-    }
+            const type =
+                item.dataset.type ||
+                "image";
 
 
-    const sorted =
-        [...memories].sort(
-            (a, b) =>
-                memoryTime(a) -
-                memoryTime(b)
-        );
+            const caption =
+                item.dataset.caption ||
+                "";
 
 
-    const index =
-        sorted.findIndex(
-            memory =>
-                String(memory.id) ===
-                String(currentMemory.id)
-        );
+            if (!src) {
+                return;
+            }
 
 
-    // ==================================================
-    // PREVIOUS
-    // ==================================================
+            // ==================================================
+            // MOUSE / TOUCH
+            // ==================================================
 
-    if (index > 0) {
+            item.addEventListener(
+                "click",
+                function () {
 
-        previous.href =
-            "memory.html?id=" +
-            sorted[index - 1].id;
+                    openLightbox(
+                        src,
+                        caption,
+                        type
+                    );
 
-
-        previous.style.visibility =
-            "visible";
-
-    } else {
-
-        previous.style.visibility =
-            "hidden";
-
-    }
-
-
-    // ==================================================
-    // NEXT
-    // ==================================================
-
-    if (
-        index >= 0 &&
-        index < sorted.length - 1
-    ) {
-
-        next.href =
-            "memory.html?id=" +
-            sorted[index + 1].id;
-
-
-        next.style.visibility =
-            "visible";
-
-    } else {
-
-        next.style.visibility =
-            "hidden";
-
-    }
-
-}
-
-
-// ======================================================
-// MOBILE MENU
-// ======================================================
-
-function setupMobileMenu() {
-
-    const button =
-        document.getElementById(
-            "menuButton"
-        );
-
-
-    const sidebar =
-        document.querySelector(
-            ".sidebar"
-        );
-
-
-    if (!button || !sidebar) {
-        return;
-    }
-
-
-    button.onclick =
-        function () {
-
-            sidebar.classList.toggle(
-                "mobile-open"
+                }
             );
 
-        };
 
-}
+            // ==================================================
+            // KEYBOARD
+            // ==================================================
 
+            item.addEventListener(
+                "keydown",
+                function (event) {
 
-// ======================================================
-// START
-// ======================================================
-
-async function init() {
-
-    setupMobileMenu();
-
-    setupLightbox();
-
-    await loadMemories();
-
-    setupRandomMemory();
-
-}
-
-
-init();
+                    if (
+                        event.key === "Enter
