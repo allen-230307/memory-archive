@@ -671,19 +671,8 @@ body {
 
 
 /* =========================================================
-   MEMORY MEDIA
+   MEMORY MEDIA — EXTRA SMALL 2-COLUMN GRID
    ========================================================= */
-
-/*
-   IMPORTANT:
-
-   No collage.
-   No absolute positioning.
-   No viewport-sized images.
-
-   Every photo is treated like a small physical
-   photograph on the page.
-*/
 
 .memory-media {
     width: 100%;
@@ -691,12 +680,11 @@ body {
 
     margin: 0 auto 70px;
 
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
 
-    align-items: center;
-
-    gap: 45px;
+    align-items: start;
 }
 
 
@@ -706,9 +694,9 @@ body {
 
 .memory-photo {
     width: 100%;
-    max-width: 560px;
+    max-width: 100%;
 
-    margin: 0 auto;
+    margin: 0;
 
     display: flex;
     flex-direction: column;
@@ -720,19 +708,10 @@ body {
 .memory-photo img {
     display: block;
 
-    width: auto;
+    width: 100%;
+    height: 180px;
 
-    /*
-       This is the main size control.
-       Images remain visually small.
-    */
-
-    max-width: 100%;
-    max-height: 520px;
-
-    height: auto;
-
-    object-fit: contain;
+    object-fit: cover;
 
     border: 1px solid rgba(216, 208, 195, 0.75);
 
@@ -763,9 +742,9 @@ body {
 
 .memory-video {
     width: 100%;
-    max-width: 560px;
+    max-width: 100%;
 
-    margin: 0 auto;
+    margin: 0;
 
     display: flex;
     flex-direction: column;
@@ -778,11 +757,9 @@ body {
     display: block;
 
     width: 100%;
-    height: auto;
+    height: 180px;
 
-    max-height: 450px;
-
-    object-fit: contain;
+    object-fit: cover;
 
     background: #292622;
 
@@ -1271,13 +1248,6 @@ body {
         justify-content: center;
     }
 
-    /*
-       Small image on mobile.
-
-       The image is NOT allowed to become
-       a full-screen photograph.
-    */
-
     .memory-image img,
     #latestMemoryImage {
         width: auto;
@@ -1485,7 +1455,7 @@ body {
 
 
     /* -----------------------------------------------------
-       MEMORY MEDIA — SMALL MOBILE PHOTOS
+       MEMORY MEDIA — EXTRA SMALL MOBILE 2-COLUMN GRID
        ----------------------------------------------------- */
 
     .memory-media {
@@ -1494,21 +1464,12 @@ body {
 
         margin: 0 auto 60px;
 
-        display: flex;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
 
-        flex-direction: column;
-
-        align-items: center;
-
-        gap: 32px;
+        align-items: start;
     }
-
-    /*
-       The critical rule:
-
-       Photos are deliberately limited in size.
-       They will NOT become giant full-screen images.
-    */
 
     .memory-photo {
         width: 100%;
@@ -1521,26 +1482,23 @@ body {
     .memory-photo img {
         display: block;
 
-        width: auto;
+        width: 100%;
 
-        max-width: 100%;
-
-        max-height: 300px;
-
-        height: auto;
+        height: 140px;
 
         margin: 0 auto;
 
-        object-fit: contain;
+        object-fit: cover;
 
         box-shadow:
             0 6px 15px rgba(41, 38, 34, 0.07);
     }
 
     .memory-photo figcaption {
-        margin-top: 7px;
+        margin-top: 6px;
 
-        font-size: 15px;
+        font-size: 13px;
+        text-align: center;
     }
 
 
@@ -1559,17 +1517,18 @@ body {
     .memory-video video {
         width: 100%;
 
-        max-height: 280px;
+        height: 140px;
 
-        object-fit: contain;
+        object-fit: cover;
 
         margin: 0 auto;
     }
 
     .memory-video figcaption {
-        margin-top: 7px;
+        margin-top: 6px;
 
-        font-size: 15px;
+        font-size: 13px;
+        text-align: center;
     }
 
 
@@ -1769,8 +1728,9 @@ body {
         max-width: 100%;
     }
 
-    .memory-photo img {
-        max-height: 260px;
+    .memory-photo img,
+    .memory-video video {
+        height: 110px;
     }
 
     .gallery-photo img {
