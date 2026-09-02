@@ -10,7 +10,7 @@ async function loadMemories() {
     try {
 
         const response =
-            await fetch("data/memories.json?v=6");
+            await fetch("data/memories.json?v=7");
 
         if (!response.ok) {
             throw new Error("Could not load memories.json");
@@ -114,46 +114,38 @@ function getMedia(memory) {
 
 
 // ======================================================
-// FIRST IMAGE
-// ======================================================
-
-function getFirstImage(memory) {
-
-    const media =
-        getMedia(memory);
-
-    const image =
-        media.find(
-            item => item.type === "image"
-        );
-
-    return image
-        ? image.src
-        : null;
-
-}
-
-
-// ======================================================
-// DATE HELPER (FIXED FOR DATE + TIME COMBINATIONS)
+// DATE + TIME HELPER
 // ======================================================
 
 function memoryTime(memory) {
 
-    if (!memory.date) return 0;
+    if (!memory.date) {
+        return 0;
+    }
 
-    const fullDateString = memory.time 
-        ? `${memory.date} ${memory.time}` 
-        : memory.date;
 
-    const parsedTime = Date.parse(fullDateString);
+    const fullDateString =
+        memory.time
+            ? `${memory.date} ${memory.time}`
+            : memory.date;
+
+
+    const parsedTime =
+        Date.parse(fullDateString);
+
 
     if (!isNaN(parsedTime)) {
         return parsedTime;
     }
 
-    // Fallback to parsing date only if full timestamp fails
-    return Date.parse(memory.date) || 0;
+
+    const dateOnly =
+        Date.parse(memory.date);
+
+
+    return isNaN(dateOnly)
+        ? 0
+        : dateOnly;
 
 }
 
@@ -198,7 +190,7 @@ function setupRandomMemory() {
 
 
 // ======================================================
-// OUR STORY — TIMELINE
+// OUR STORY — TEXT-ONLY TIMELINE
 // ======================================================
 
 function renderTimeline() {
@@ -211,6 +203,8 @@ function renderTimeline() {
 
     timeline.innerHTML = "";
 
+
+    // Newest first
 
     const sorted =
         [...memories].sort(
@@ -231,41 +225,6 @@ function renderTimeline() {
 
 
         // ==================================================
-        // FIRST PHOTOGRAPH
-        // ==================================================
-
-        const imageSrc =
-            getFirstImage(memory);
-
-
-        if (imageSrc) {
-
-            const image =
-                document.createElement("img");
-
-
-            image.className =
-                "timeline-image";
-
-
-            image.src =
-                "./" + imageSrc;
-
-
-            image.alt =
-                memory.title;
-
-
-            image.loading =
-                "lazy";
-
-
-            article.appendChild(image);
-
-        }
-
-
-        // ==================================================
         // DATE
         // ==================================================
 
@@ -278,7 +237,7 @@ function renderTimeline() {
 
 
         date.textContent =
-            memory.date;
+            memory.date || "";
 
 
         article.appendChild(date);
@@ -316,7 +275,7 @@ function renderTimeline() {
 
 
         title.textContent =
-            memory.title;
+            memory.title || "";
 
 
         article.appendChild(title);
@@ -326,52 +285,62 @@ function renderTimeline() {
         // LOCATION
         // ==================================================
 
-        const location =
-            document.createElement("p");
+        if (memory.location) {
+
+            const location =
+                document.createElement("p");
 
 
-        location.className =
-            "timeline-location";
+            location.className =
+                "timeline-location";
 
 
-        location.textContent =
-            memory.location;
+            location.textContent =
+                memory.location;
 
 
-        article.appendChild(location);
+            article.appendChild(location);
+
+        }
 
 
         // ==================================================
         // DESCRIPTION
         // ==================================================
 
-        const description =
-            document.createElement("p");
+        if (memory.description) {
+
+            const description =
+                document.createElement("p");
 
 
-        description.className =
-            "timeline-description";
+            description.className =
+                "timeline-description";
 
 
-        description.textContent =
-            memory.description;
+            description.textContent =
+                memory.description;
 
 
-        article.appendChild(description);
+            article.appendChild(description);
+
+        }
 
 
         // ==================================================
         // OPEN MEMORY
         // ==================================================
 
-        article.onclick =
+        article.addEventListener(
+            "click",
             function () {
 
                 window.location.href =
                     "memory.html?id=" +
                     memory.id;
 
-            };
+            }
+        );
 
 
         timeline.appendChild(article);
@@ -407,7 +376,8 @@ function renderGallery() {
 
         const images =
             media.filter(
-                item => item.type === "image"
+                item =>
+                    item.type === "image"
             );
 
 
@@ -442,28 +412,75 @@ function renderGallery() {
             "gallery-memory-heading";
 
 
-        heading.innerHTML = `
+        const date =
+            document.createElement("p");
 
-            <p class="gallery-date">
-                ${memory.date}
-            </p>
 
-            <h2>
-                ${memory.title}
-            </h2>
+        date.className =
+            "gallery-date";
 
-            <p class="gallery-location">
-                ${memory.location}
-            </p>
 
-        `;
+        date.textContent =
+            memory.date || "";
+
+
+        heading.appendChild(date);
+
+
+        if (memory.time) {
+
+            const time =
+                document.createElement("span");
+
+
+            time.className =
+                "gallery-time";
+
+
+            time.textContent =
+                memory.time;
+
+
+            heading.appendChild(time);
+
+        }
+
+
+        const title =
+            document.createElement("h2");
+
+
+        title.textContent =
+            memory.title || "";
+
+
+        heading.appendChild(title);
+
+
+        if (memory.location) {
+
+            const location =
+                document.createElement("p");
+
+
+            location.className =
+                "gallery-location";
+
+
+            location.textContent =
+                memory.location;
+
+
+            heading.appendChild(location);
+
+        }
 
 
         group.appendChild(heading);
 
 
         // ==================================================
-        // PHOTO GRID
+        // SQUARE PHOTO GRID
         // ==================================================
 
         const grid =
@@ -494,7 +511,8 @@ function renderGallery() {
 
             image.alt =
                 item.caption ||
-                memory.title;
+                memory.title ||
+                "Memory photograph";
 
 
             image.loading =
@@ -502,7 +520,7 @@ function renderGallery() {
 
 
             // ==================================================
-            // LIGHTBOX
+            // OPEN FULL IMAGE
             // ==================================================
 
             image.addEventListener(
@@ -691,10 +709,6 @@ function setupLightbox() {
     }
 
 
-    // ==================================================
-    // CLOSE BUTTON
-    // ==================================================
-
     if (closeButton) {
 
         closeButton.onclick =
@@ -702,10 +716,6 @@ function setupLightbox() {
 
     }
 
-
-    // ==================================================
-    // CLICK OUTSIDE IMAGE
-    // ==================================================
 
     lightbox.addEventListener(
         "click",
@@ -722,10 +732,6 @@ function setupLightbox() {
         }
     );
 
-
-    // ==================================================
-    // ESCAPE KEY
-    // ==================================================
 
     document.addEventListener(
         "keydown",
@@ -752,7 +758,9 @@ function setupLightbox() {
 function renderMemoryPage() {
 
     const container =
-        document.getElementById("memoryContent");
+        document.getElementById(
+            "memoryContent"
+        );
 
 
     if (!container) {
@@ -817,92 +825,106 @@ function renderMemoryPage() {
 
 
     // ==================================================
-// BUILD MEDIA — EDITORIAL LAYOUT
-// ==================================================
-
-let mediaHTML = "";
-
-const mediaItems = getMedia(memory);
-
-mediaItems.forEach((item, index) => {
-
-    const itemClass =
-        `memory-media-item media-${index + 1} media-${item.type}`;
-
-    // ==================================================
-    // IMAGE
+    // BUILD MEDIA
     // ==================================================
 
-    if (item.type === "image") {
-
-        mediaHTML += `
-
-            <figure class="${itemClass}">
-
-                <img
-                    src="./${item.src}"
-                    alt="${item.caption || memory.title}"
-                    loading="lazy"
-                >
-
-                ${
-                    item.caption
-                    ? `
-                        <figcaption>
-                            ${item.caption}
-                        </figcaption>
-                      `
-                    : ""
-                }
-
-            </figure>
-
-        `;
-
-    }
+    let mediaHTML = "";
 
 
-    // ==================================================
-    // VIDEO
-    // ==================================================
+    const mediaItems =
+        getMedia(memory);
 
-    if (item.type === "video") {
 
-        mediaHTML += `
+    mediaItems.forEach(
+        (item, index) => {
 
-            <figure class="${itemClass}">
+            const itemClass =
+                `memory-media-item media-${index + 1} media-${item.type}`;
 
-                <video
-                    controls
-                    preload="metadata"
-                >
 
-                    <source
-                        src="./${item.src}"
+            // ==================================================
+            // IMAGE
+            // ==================================================
+
+            if (
+                item.type === "image"
+            ) {
+
+                mediaHTML += `
+
+                    <figure
+                        class="${itemClass}"
                     >
 
-                    Your browser does not support
-                    video playback.
+                        <img
+                            src="./${item.src}"
+                            alt="${item.caption || memory.title}"
+                            loading="lazy"
+                        >
 
-                </video>
+                        ${
+                            item.caption
+                            ? `
+                                <figcaption>
+                                    ${item.caption}
+                                </figcaption>
+                              `
+                            : ""
+                        }
 
-                ${
-                    item.caption
-                    ? `
-                        <figcaption>
-                            ${item.caption}
-                        </figcaption>
-                      `
-                    : ""
-                }
+                    </figure>
 
-            </figure>
+                `;
 
-        `;
+            }
 
-    }
 
-});
+            // ==================================================
+            // VIDEO
+            // ==================================================
+
+            if (
+                item.type === "video"
+            ) {
+
+                mediaHTML += `
+
+                    <figure
+                        class="${itemClass}"
+                    >
+
+                        <video
+                            controls
+                            preload="metadata"
+                        >
+
+                            <source
+                                src="./${item.src}"
+                            >
+
+                            Your browser does not support
+                            video playback.
+
+                        </video>
+
+                        ${
+                            item.caption
+                            ? `
+                                <figcaption>
+                                    ${item.caption}
+                                </figcaption>
+                              `
+                            : ""
+                        }
+
+                    </figure>
+
+                `;
+
+            }
+
+        }
+    );
 
 
     // ==================================================
@@ -912,7 +934,7 @@ mediaItems.forEach((item, index) => {
     container.innerHTML = `
 
         <p class="memory-date">
-            ${memory.date}
+            ${memory.date || ""}
         </p>
 
 
@@ -928,13 +950,19 @@ mediaItems.forEach((item, index) => {
 
 
         <h1>
-            ${memory.title}
+            ${memory.title || ""}
         </h1>
 
 
-        <p class="memory-location">
-            ${memory.location}
-        </p>
+        ${
+            memory.location
+            ? `
+                <p class="memory-location">
+                    ${memory.location}
+                </p>
+              `
+            : ""
+        }
 
 
         ${
@@ -957,10 +985,6 @@ mediaItems.forEach((item, index) => {
     `;
 
 
-    // ==================================================
-    // MEMORY NAVIGATION
-    // ==================================================
-
     setupMemoryNavigation(memory);
 
 }
@@ -970,7 +994,9 @@ mediaItems.forEach((item, index) => {
 // PREVIOUS / NEXT MEMORY
 // ======================================================
 
-function setupMemoryNavigation(currentMemory) {
+function setupMemoryNavigation(
+    currentMemory
+) {
 
     const previous =
         document.getElementById(
@@ -1031,7 +1057,10 @@ function setupMemoryNavigation(currentMemory) {
     // NEXT
     // ==================================================
 
-    if (index < sorted.length - 1) {
+    if (
+        index >= 0 &&
+        index < sorted.length - 1
+    ) {
 
         next.href =
             "memory.html?id=" +
