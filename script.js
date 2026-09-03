@@ -1,6 +1,7 @@
 let memories = [];
 let lightboxItems = [];
 let lightboxIndex = 0;
+let lightboxMemory = null;
 
 
 // ======================================================
@@ -12,20 +13,30 @@ async function loadMemories() {
     try {
 
         const response =
-            await fetch("./data/memories.json?v=10", { cache: "no-store" });
+            await fetch(
+                "./data/memories.json?v=11",
+                {
+                    cache: "no-store"
+                }
+            );
 
         if (!response.ok) {
+
             throw new Error(
                 "Could not load memories.json"
             );
+
         }
 
-        memories = await response.json();
+        memories =
+            await response.json();
 
         if (!Array.isArray(memories)) {
+
             throw new Error(
                 "memories.json does not contain an array"
             );
+
         }
 
         updateMemoryCounter();
@@ -43,35 +54,47 @@ async function loadMemories() {
             error
         );
 
+        const message =
+            '<p class="loading">Unable to load memories.</p>';
+
         const timeline =
-            document.getElementById("timeline");
+            document.getElementById(
+                "timeline"
+            );
 
         const gallery =
-            document.getElementById("gallery");
+            document.getElementById(
+                "gallery"
+            );
 
         const memoryContent =
             document.getElementById(
                 "memoryContent"
             );
 
-        const message = `
-            <p class="loading">
-                Unable to load memories.
-            </p>
-        `;
-
         if (timeline) {
-            timeline.innerHTML = message;
+
+            timeline.innerHTML =
+                message;
+
         }
 
         if (gallery) {
-            gallery.innerHTML = message;
+
+            gallery.innerHTML =
+                message;
+
         }
 
         if (memoryContent) {
-            memoryContent.innerHTML = message;
+
+            memoryContent.innerHTML =
+                message;
+
         }
+
     }
+
 }
 
 
@@ -92,6 +115,7 @@ function updateMemoryCounter() {
             memories.length;
 
     }
+
 }
 
 
@@ -103,7 +127,11 @@ function getMedia(memory) {
 
     // New media format
 
-    if (Array.isArray(memory.media)) {
+    if (
+        Array.isArray(
+            memory.media
+        )
+    ) {
 
         return memory.media;
 
@@ -112,7 +140,11 @@ function getMedia(memory) {
 
     // Legacy image format
 
-    if (Array.isArray(memory.images)) {
+    if (
+        Array.isArray(
+            memory.images
+        )
+    ) {
 
         return memory.images.map(
             src => ({
@@ -135,8 +167,9 @@ function getMedia(memory) {
 
 
 // ======================================================
-// PRIORITIZE VIDEOS
-// Videos first, images after.
+// VIDEO PRIORITIZER
+// Gallery only.
+// Individual memory pages preserve JSON order.
 // ======================================================
 
 function prioritizeVideos(media) {
@@ -148,14 +181,18 @@ function prioritizeVideos(media) {
                 a.type === "video" &&
                 b.type !== "video"
             ) {
+
                 return -1;
+
             }
 
             if (
                 a.type !== "video" &&
                 b.type === "video"
             ) {
+
                 return 1;
+
             }
 
             return 0;
@@ -173,7 +210,9 @@ function prioritizeVideos(media) {
 function memoryTime(memory) {
 
     if (!memory.date) {
+
         return 0;
+
     }
 
 
@@ -190,7 +229,9 @@ function memoryTime(memory) {
 
 
     if (!isNaN(parsedTime)) {
+
         return parsedTime;
+
     }
 
 
@@ -218,8 +259,11 @@ function setupRandomMemory() {
             "randomMemory"
         );
 
+
     if (!button) {
+
         return;
+
     }
 
 
@@ -229,7 +273,9 @@ function setupRandomMemory() {
             if (
                 memories.length === 0
             ) {
+
                 return;
+
             }
 
 
@@ -244,8 +290,14 @@ function setupRandomMemory() {
                 memories[index];
 
 
-            if (!selected || !selected.id) {
+            if (
+                !selected ||
+                selected.id === undefined ||
+                selected.id === null
+            ) {
+
                 return;
+
             }
 
 
@@ -271,12 +323,16 @@ function renderTimeline() {
             "timeline"
         );
 
+
     if (!timeline) {
+
         return;
+
     }
 
 
-    timeline.innerHTML = "";
+    timeline.innerHTML =
+        "";
 
 
     // Newest first
@@ -302,9 +358,7 @@ function renderTimeline() {
                 "timeline-memory";
 
 
-            // ==================================================
             // DATE
-            // ==================================================
 
             const date =
                 document.createElement(
@@ -325,9 +379,7 @@ function renderTimeline() {
             );
 
 
-            // ==================================================
             // TIME
-            // ==================================================
 
             if (memory.time) {
 
@@ -352,9 +404,7 @@ function renderTimeline() {
             }
 
 
-            // ==================================================
             // TITLE
-            // ==================================================
 
             const title =
                 document.createElement(
@@ -371,9 +421,7 @@ function renderTimeline() {
             );
 
 
-            // ==================================================
             // LOCATION
-            // ==================================================
 
             if (memory.location) {
 
@@ -398,9 +446,7 @@ function renderTimeline() {
             }
 
 
-            // ==================================================
             // DESCRIPTION
-            // ==================================================
 
             if (memory.description) {
 
@@ -425,9 +471,7 @@ function renderTimeline() {
             }
 
 
-            // ==================================================
             // OPEN MEMORY
-            // ==================================================
 
             article.addEventListener(
                 "click",
@@ -455,213 +499,443 @@ function renderTimeline() {
 
 // ======================================================
 // GALLERY
-// Images + videos
 // Videos appear first within each memory.
 // ======================================================
 
 function renderGallery() {
 
-    const gallery = document.getElementById("gallery");
-    if (!gallery) return;
-
-    gallery.innerHTML = "";
-    let mediaCount = 0;
-
-    memories.forEach(memory => {
-
-        const usableMedia = getMedia(memory).filter(
-            item => item.type === "image" || item.type === "video"
+    const gallery =
+        document.getElementById(
+            "gallery"
         );
 
-        if (usableMedia.length === 0) return;
 
-        // ==================================================
-        // MEMORY GROUP
-        // ==================================================
+    if (!gallery) {
 
-        const group = document.createElement("section");
-        group.className = "gallery-memory";
+        return;
 
-        const heading = document.createElement("div");
-        heading.className = "gallery-memory-heading";
+    }
 
-        // TITLE
-        const title = document.createElement("h2");
-        title.textContent = memory.title || "";
-        heading.appendChild(title);
 
-        // DATE + TIME
-        const dateTime = document.createElement("p");
-        dateTime.className = "gallery-date-time";
+    gallery.innerHTML =
+        "";
 
-        if (memory.date) {
-            const date = document.createElement("span");
-            date.className = "gallery-date";
-            date.textContent = memory.date;
-            dateTime.appendChild(date);
-        }
 
-        if (memory.time) {
-            const time = document.createElement("span");
-            time.className = "gallery-time";
-            time.textContent = memory.time;
-            dateTime.appendChild(time);
-        }
+    let mediaCount =
+        0;
 
-        if (dateTime.textContent.trim()) {
-            heading.appendChild(dateTime);
-        }
 
-        if (memory.location) {
-            const location = document.createElement("p");
-            location.className = "gallery-location";
-            location.textContent = memory.location;
-            heading.appendChild(location);
-        }
+    memories.forEach(
+        memory => {
 
-        group.appendChild(heading);
+            const usableMedia =
+                prioritizeVideos(
+                    getMedia(memory).filter(
+                        item =>
+                            item &&
+                            (
+                                item.type === "image" ||
+                                item.type === "video"
+                            )
+                    )
+                );
 
-        // ==================================================
-        // GRID
-        // ==================================================
 
-        const grid = document.createElement("div");
-        grid.className = "gallery-grid";
+            if (
+                usableMedia.length === 0
+            ) {
 
-        usableMedia.forEach((item, index) => {
+                return;
 
-            const figure = document.createElement("figure");
-            figure.className = "gallery-photo";
-
-            if (item.type === "video") {
-                figure.classList.add("is-video");
-
-                const video = document.createElement("video");
-                video.src = "./" + item.src;
-                video.preload = "metadata";
-                video.muted = true;
-                video.playsInline = true;
-                figure.appendChild(video);
-            } else {
-                const image = document.createElement("img");
-                image.src = "./" + item.src;
-                image.alt = item.caption || memory.title || "Memory photograph";
-                image.loading = "lazy";
-                figure.appendChild(image);
             }
 
-            figure.addEventListener("click", () => {
-                openMediaViewer(usableMedia, index, memory);
-            });
 
-            grid.appendChild(figure);
-            mediaCount++;
-        });
+            // ==================================================
+            // MEMORY GROUP
+            // ==================================================
 
-        group.appendChild(grid);
-        gallery.appendChild(group);
-    });
+            const group =
+                document.createElement(
+                    "section"
+                );
 
-    if (mediaCount === 0) {
+
+            group.className =
+                "gallery-memory";
+
+
+            // ==================================================
+            // HEADING
+            // ==================================================
+
+            const heading =
+                document.createElement(
+                    "div"
+                );
+
+
+            heading.className =
+                "gallery-memory-heading";
+
+
+            // TITLE
+
+            const title =
+                document.createElement(
+                    "h2"
+                );
+
+
+            title.textContent =
+                memory.title || "";
+
+
+            heading.appendChild(
+                title
+            );
+
+
+            // DATE + TIME
+
+            const dateTime =
+                document.createElement(
+                    "p"
+                );
+
+
+            dateTime.className =
+                "gallery-date-time";
+
+
+            if (memory.date) {
+
+                const date =
+                    document.createElement(
+                        "span"
+                    );
+
+
+                date.className =
+                    "gallery-date";
+
+
+                date.textContent =
+                    memory.date;
+
+
+                dateTime.appendChild(
+                    date
+                );
+
+            }
+
+
+            if (memory.time) {
+
+                const time =
+                    document.createElement(
+                        "span"
+                    );
+
+
+                time.className =
+                    "gallery-time";
+
+
+                time.textContent =
+                    memory.time;
+
+
+                dateTime.appendChild(
+                    time
+                );
+
+            }
+
+
+            if (
+                dateTime.textContent.trim()
+            ) {
+
+                heading.appendChild(
+                    dateTime
+                );
+
+            }
+
+
+            // LOCATION
+
+            if (memory.location) {
+
+                const location =
+                    document.createElement(
+                        "p"
+                    );
+
+
+                location.className =
+                    "gallery-location";
+
+
+                location.textContent =
+                    memory.location;
+
+
+                heading.appendChild(
+                    location
+                );
+
+            }
+
+
+            group.appendChild(
+                heading
+            );
+
+
+            // ==================================================
+            // GRID
+            // ==================================================
+
+            const grid =
+                document.createElement(
+                    "div"
+                );
+
+
+            grid.className =
+                "gallery-grid";
+
+
+            usableMedia.forEach(
+                (item, index) => {
+
+                    const figure =
+                        document.createElement(
+                            "figure"
+                        );
+
+
+                    figure.className =
+                        "gallery-photo";
+
+
+                    // VIDEO
+
+                    if (
+                        item.type === "video"
+                    ) {
+
+                        figure.classList.add(
+                            "is-video"
+                        );
+
+
+                        const video =
+                            document.createElement(
+                                "video"
+                            );
+
+
+                        video.src =
+                            "./" + item.src;
+
+
+                        video.preload =
+                            "metadata";
+
+
+                        video.muted =
+                            true;
+
+
+                        video.playsInline =
+                            true;
+
+
+                        figure.appendChild(
+                            video
+                        );
+
+                    }
+
+
+                    // IMAGE
+
+                    else {
+
+                        const image =
+                            document.createElement(
+                                "img"
+                            );
+
+
+                        image.src =
+                            "./" + item.src;
+
+
+                        image.alt =
+                            item.caption ||
+                            memory.title ||
+                            "Memory photograph";
+
+
+                        image.loading =
+                            "lazy";
+
+
+                        figure.appendChild(
+                            image
+                        );
+
+                    }
+
+
+                    // OPEN FULL VIEWER
+
+                    figure.addEventListener(
+                        "click",
+                        function () {
+
+                            openMediaViewer(
+                                usableMedia,
+                                index,
+                                memory
+                            );
+
+                        }
+                    );
+
+
+                    grid.appendChild(
+                        figure
+                    );
+
+
+                    mediaCount++;
+
+                }
+            );
+
+
+            group.appendChild(
+                grid
+            );
+
+
+            gallery.appendChild(
+                group
+            );
+
+        }
+    );
+
+
+    // EMPTY GALLERY
+
+    if (
+        mediaCount === 0
+    ) {
+
         gallery.innerHTML = `
             <div class="gallery-empty">
                 <span>—</span>
-                <p>The photographs are still waiting to be added.</p>
+                <p>
+                    The photographs are still waiting
+                    to be added.
+                </p>
             </div>
         `;
+
     }
+
 }
 
-let lightboxMemory = null;
 
-function openMediaViewer(items, index, memory) {
-    lightboxItems = items || [];
-    lightboxIndex = Math.max(0, Math.min(index, lightboxItems.length - 1));
-    lightboxMemory = memory || null;
+// ======================================================
+// OPEN MEDIA VIEWER
+// ======================================================
+
+function openMediaViewer(
+    items,
+    index,
+    memory
+) {
+
+    lightboxItems =
+        Array.isArray(items)
+            ? items
+            : [];
+
+
+    if (
+        !lightboxItems.length
+    ) {
+
+        return;
+
+    }
+
+
+    lightboxIndex =
+        Math.max(
+            0,
+            Math.min(
+                Number(index) || 0,
+                lightboxItems.length - 1
+            )
+        );
+
+
+    lightboxMemory =
+        memory || null;
+
+
     renderLightboxItem();
+
 }
+
+
+// ======================================================
+// RENDER LIGHTBOX ITEM
+// ======================================================
 
 function renderLightboxItem() {
-    if (!lightboxItems.length) return;
 
-    const item = lightboxItems[lightboxIndex];
-    const lightbox = document.getElementById("lightbox");
-    const image = document.getElementById("lightboxImage");
-    const captionElement = document.getElementById("lightboxCaption");
-    const content = lightbox && lightbox.querySelector(".lightbox-content");
+    if (
+        !lightboxItems.length
+    ) {
 
-    if (!lightbox || !content) return;
+        return;
 
-    const existingVideo = content.querySelector(".lightbox-video");
-    if (existingVideo) {
-        existingVideo.pause();
-        existingVideo.remove();
     }
 
-    if (item.type === "video") {
-        if (image) {
-            image.src = "";
-            image.style.display = "none";
-        }
 
-        const video = document.createElement("video");
-        video.className = "lightbox-video lightbox-media";
-        video.src = "./" + item.src;
-        video.controls = true;
-        video.playsInline = true;
-        video.preload = "metadata";
-        content.insertBefore(video, captionElement || null);
-    } else if (image) {
-        image.style.display = "block";
-        image.src = "./" + item.src;
-        image.alt = item.caption || lightboxMemory?.title || "Memory photograph";
+    const item =
+        lightboxItems[
+            lightboxIndex
+        ];
+
+
+    if (!item) {
+
+        return;
+
     }
 
-    if (captionElement) {
-        const parts = [];
-        if (item.caption) parts.push(item.caption);
-        if (lightboxMemory?.title) parts.push(lightboxMemory.title);
-        parts.push(`${lightboxIndex + 1} / ${lightboxItems.length}`);
-        captionElement.textContent = parts.join(" · ");
-    }
-
-    const prev = document.getElementById("lightboxPrev");
-    const next = document.getElementById("lightboxNext");
-    if (prev) prev.disabled = lightboxIndex <= 0;
-    if (next) next.disabled = lightboxIndex >= lightboxItems.length - 1;
-
-    lightbox.classList.add("open");
-    lightbox.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
-}
-
-function changeLightbox(direction) {
-    const nextIndex = lightboxIndex + direction;
-    if (nextIndex < 0 || nextIndex >= lightboxItems.length) return;
-    lightboxIndex = nextIndex;
-    renderLightboxItem();
-}
-
-// ======================================================
-// LIGHTBOX
-// Supports image + video.
-// ======================================================
-
-function openLightbox(src, caption, type) {
-    const item = { src, caption, type };
-    openMediaViewer([item], 0, null);
-}
-
-// ======================================================
-// CLOSE LIGHTBOX
-// ======================================================
-
-function closeLightbox() {
 
     const lightbox =
         document.getElementById(
             "lightbox"
         );
+
+
+    if (!lightbox) {
+
+        return;
+
+    }
 
 
     const image =
@@ -676,20 +950,316 @@ function closeLightbox() {
         );
 
 
-    if (!lightbox) {
+    const content =
+        lightbox.querySelector(
+            ".lightbox-content"
+        );
+
+
+    if (!content) {
+
         return;
+
+    }
+
+
+    // Remove previous video
+
+    const existingVideo =
+        content.querySelector(
+            ".lightbox-video"
+        );
+
+
+    if (existingVideo) {
+
+        existingVideo.pause();
+
+        existingVideo.remove();
+
     }
 
 
     // ==================================================
-    // STOP VIDEO
+    // VIDEO
     // ==================================================
+
+    if (
+        item.type === "video"
+    ) {
+
+        if (image) {
+
+            image.src =
+                "";
+
+            image.style.display =
+                "none";
+
+        }
+
+
+        const video =
+            document.createElement(
+                "video"
+            );
+
+
+        video.className =
+            "lightbox-video lightbox-media";
+
+
+        video.src =
+            "./" + item.src;
+
+
+        video.controls =
+            true;
+
+
+        video.playsInline =
+            true;
+
+
+        video.preload =
+            "metadata";
+
+
+        content.insertBefore(
+            video,
+            captionElement || null
+        );
+
+    }
+
+
+    // ==================================================
+    // IMAGE
+    // ==================================================
+
+    else if (image) {
+
+        image.style.display =
+            "block";
+
+
+        image.src =
+            "./" + item.src;
+
+
+        image.alt =
+            item.caption ||
+            (
+                lightboxMemory &&
+                lightboxMemory.title
+            ) ||
+            "Memory photograph";
+
+    }
+
+
+    // ==================================================
+    // CAPTION
+    // ==================================================
+
+    if (captionElement) {
+
+        const parts =
+            [];
+
+
+        if (item.caption) {
+
+            parts.push(
+                item.caption
+            );
+
+        }
+
+
+        if (
+            lightboxMemory &&
+            lightboxMemory.title
+        ) {
+
+            parts.push(
+                lightboxMemory.title
+            );
+
+        }
+
+
+        parts.push(
+            `${lightboxIndex + 1} / ${lightboxItems.length}`
+        );
+
+
+        captionElement.textContent =
+            parts.join(
+                " · "
+            );
+
+    }
+
+
+    // ==================================================
+    // PREVIOUS / NEXT
+    // ==================================================
+
+    const previous =
+        document.getElementById(
+            "lightboxPrev"
+        );
+
+
+    const next =
+        document.getElementById(
+            "lightboxNext"
+        );
+
+
+    if (previous) {
+
+        previous.disabled =
+            lightboxIndex <= 0;
+
+    }
+
+
+    if (next) {
+
+        next.disabled =
+            lightboxIndex >=
+            lightboxItems.length - 1;
+
+    }
+
+
+    // ==================================================
+    // OPEN
+    // ==================================================
+
+    lightbox.classList.add(
+        "open"
+    );
+
+
+    lightbox.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+
+    document.body.style.overflow =
+        "hidden";
+
+}
+
+
+// ======================================================
+// CHANGE LIGHTBOX
+// ======================================================
+
+function changeLightbox(
+    direction
+) {
+
+    if (
+        !lightboxItems.length
+    ) {
+
+        return;
+
+    }
+
+
+    const nextIndex =
+        lightboxIndex +
+        direction;
+
+
+    if (
+        nextIndex < 0 ||
+        nextIndex >= lightboxItems.length
+    ) {
+
+        return;
+
+    }
+
+
+    lightboxIndex =
+        nextIndex;
+
+
+    renderLightboxItem();
+
+}
+
+
+// ======================================================
+// SIMPLE LIGHTBOX OPENER
+// ======================================================
+
+function openLightbox(
+    src,
+    caption,
+    type
+) {
+
+    openMediaViewer(
+        [
+            {
+                src: src,
+                caption: caption,
+                type: type
+            }
+        ],
+        0,
+        null
+    );
+
+}
+
+
+// ======================================================
+// CLOSE LIGHTBOX
+// ======================================================
+
+function closeLightbox() {
+
+    const lightbox =
+        document.getElementById(
+            "lightbox"
+        );
+
+
+    if (!lightbox) {
+
+        return;
+
+    }
+
+
+    const image =
+        document.getElementById(
+            "lightboxImage"
+        );
+
+
+    const captionElement =
+        document.getElementById(
+            "lightboxCaption"
+        );
+
 
     const video =
         lightbox.querySelector(
             ".lightbox-video"
         );
 
+
+    // STOP VIDEO
 
     if (video) {
 
@@ -700,9 +1270,7 @@ function closeLightbox() {
     }
 
 
-    // ==================================================
     // CLOSE
-    // ==================================================
 
     lightbox.classList.remove(
         "open"
@@ -715,13 +1283,12 @@ function closeLightbox() {
     );
 
 
-    // ==================================================
     // RESET IMAGE
-    // ==================================================
 
     if (image) {
 
-        image.src = "";
+        image.src =
+            "";
 
         image.style.display =
             "block";
@@ -729,9 +1296,7 @@ function closeLightbox() {
     }
 
 
-    // ==================================================
     // RESET CAPTION
-    // ==================================================
 
     if (captionElement) {
 
@@ -741,14 +1306,22 @@ function closeLightbox() {
     }
 
 
-    // Restore scrolling
+    // RESTORE SCROLLING
 
     document.body.style.overflow =
         "";
 
-    lightboxItems = [];
-    lightboxIndex = 0;
-    lightboxMemory = null;
+
+    lightboxItems =
+        [];
+
+
+    lightboxIndex =
+        0;
+
+
+    lightboxMemory =
+        null;
 
 }
 
@@ -759,33 +1332,187 @@ function closeLightbox() {
 
 function setupLightbox() {
 
-    const lightbox = document.getElementById("lightbox");
-    const closeButton = document.getElementById("lightboxClose");
-    const prevButton = document.getElementById("lightboxPrev");
-    const nextButton = document.getElementById("lightboxNext");
+    const lightbox =
+        document.getElementById(
+            "lightbox"
+        );
 
-    if (!lightbox) return;
 
-    if (closeButton) closeButton.addEventListener("click", closeLightbox);
-    if (prevButton) prevButton.addEventListener("click", () => changeLightbox(-1));
-    if (nextButton) nextButton.addEventListener("click", () => changeLightbox(1));
+    const closeButton =
+        document.getElementById(
+            "lightboxClose"
+        );
 
-    lightbox.addEventListener("click", event => {
-        if (event.target === lightbox) closeLightbox();
-    });
 
-    let touchStartX = 0;
-    lightbox.addEventListener("touchstart", event => {
-        touchStartX = event.changedTouches[0].screenX;
-    }, { passive: true });
+    const previousButton =
+        document.getElementById(
+            "lightboxPrev"
+        );
 
-    lightbox.addEventListener("touchend", event => {
-        const delta = event.changedTouches[0].screenX - touchStartX;
-        if (Math.abs(delta) < 50) return;
-        if (delta < 0) changeLightbox(1);
-        else changeLightbox(-1);
-    }, { passive: true });
+
+    const nextButton =
+        document.getElementById(
+            "lightboxNext"
+        );
+
+
+    if (!lightbox) {
+
+        return;
+
+    }
+
+
+    // CLOSE BUTTON
+
+    if (closeButton) {
+
+        closeButton.addEventListener(
+            "click",
+            closeLightbox
+        );
+
+    }
+
+
+    // PREVIOUS
+
+    if (previousButton) {
+
+        previousButton.addEventListener(
+            "click",
+            function () {
+
+                changeLightbox(
+                    -1
+                );
+
+            }
+        );
+
+    }
+
+
+    // NEXT
+
+    if (nextButton) {
+
+        nextButton.addEventListener(
+            "click",
+            function () {
+
+                changeLightbox(
+                    1
+                );
+
+            }
+        );
+
+    }
+
+
+    // BACKGROUND CLICK
+
+    lightbox.addEventListener(
+        "click",
+        function (event) {
+
+            if (
+                event.target ===
+                lightbox
+            ) {
+
+                closeLightbox();
+
+            }
+
+        }
+    );
+
+
+    // ==================================================
+    // SWIPE
+    // ==================================================
+
+    let touchStartX =
+        0;
+
+
+    lightbox.addEventListener(
+        "touchstart",
+        function (event) {
+
+            if (
+                event.changedTouches &&
+                event.changedTouches[0]
+            ) {
+
+                touchStartX =
+                    event.changedTouches[0]
+                        .screenX;
+
+            }
+
+        },
+        {
+            passive: true
+        }
+    );
+
+
+    lightbox.addEventListener(
+        "touchend",
+        function (event) {
+
+            if (
+                !event.changedTouches ||
+                !event.changedTouches[0]
+            ) {
+
+                return;
+
+            }
+
+
+            const delta =
+                event.changedTouches[0]
+                    .screenX -
+                touchStartX;
+
+
+            if (
+                Math.abs(delta) < 50
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                delta < 0
+            ) {
+
+                changeLightbox(
+                    1
+                );
+
+            } else {
+
+                changeLightbox(
+                    -1
+                );
+
+            }
+
+        },
+        {
+            passive: true
+        }
+    );
+
 }
+
 
 // ======================================================
 // INDIVIDUAL MEMORY PAGE
@@ -800,13 +1527,11 @@ function renderMemoryPage() {
 
 
     if (!container) {
+
         return;
+
     }
 
-
-    // ==================================================
-    // GET ID FROM URL
-    // ==================================================
 
     const params =
         new URLSearchParams(
@@ -815,27 +1540,20 @@ function renderMemoryPage() {
 
 
     const id =
-        params.get("id");
+        params.get(
+            "id"
+        );
 
 
-    if (!id) {
+    if (id === null) {
 
-        container.innerHTML = `
-
-            <p class="loading">
-                Memory not selected.
-            </p>
-
-        `;
+        container.innerHTML =
+            '<p class="loading">Memory not selected.</p>';
 
         return;
 
     }
 
-
-    // ==================================================
-    // FIND MEMORY
-    // ==================================================
 
     const memory =
         memories.find(
@@ -847,29 +1565,32 @@ function renderMemoryPage() {
 
     if (!memory) {
 
-        container.innerHTML = `
-
-            <p class="loading">
-                Memory not found.
-            </p>
-
-        `;
+        container.innerHTML =
+            '<p class="loading">Memory not found.</p>';
 
         return;
 
     }
 
 
-    // ==================================================
-    // MEDIA
-    // ==================================================
+    // IMPORTANT:
+    // Individual memory pages preserve
+    // exact JSON media order.
 
-    const mediaItems = getMedia(memory);
+    const mediaItems =
+        getMedia(memory);
 
 
-    // ==================================================
-    // BUILD PAGE MEDIA
-    // ==================================================
+    const usableMedia =
+        mediaItems.filter(
+            media =>
+                media &&
+                (
+                    media.type === "image" ||
+                    media.type === "video"
+                )
+        );
+
 
     const mediaContainer =
         document.createElement(
@@ -881,16 +1602,8 @@ function renderMemoryPage() {
         "memory-media";
 
 
-    mediaItems.forEach(
+    usableMedia.forEach(
         (item, index) => {
-
-            if (
-                item.type !== "image" &&
-                item.type !== "video"
-            ) {
-                return;
-            }
-
 
             const figure =
                 document.createElement(
@@ -903,12 +1616,14 @@ function renderMemoryPage() {
 
 
             figure.classList.add(
-                "media-" + item.type
+                "media-" +
+                item.type
             );
 
 
             figure.classList.add(
-                "media-" + (index + 1)
+                "media-" +
+                (index + 1)
             );
 
 
@@ -951,9 +1666,7 @@ function renderMemoryPage() {
             // VIDEO
             // ==================================================
 
-            else if (
-                item.type === "video"
-            ) {
+            else {
 
                 figure.classList.add(
                     "is-video"
@@ -973,14 +1686,28 @@ function renderMemoryPage() {
                 video.muted =
                     true;
 
-                video.controls = true;
 
-                video.addEventListener("click", function (event) {
-                    event.stopPropagation();
-                });
+                video.controls =
+                    true;
+
 
                 video.playsInline =
                     true;
+
+
+                /*
+                 * Clicking the actual video controls
+                 * should keep the video usable.
+                 */
+
+                video.addEventListener(
+                    "click",
+                    function (event) {
+
+                        event.stopPropagation();
+
+                    }
+                );
 
 
                 const source =
@@ -1036,13 +1763,9 @@ function renderMemoryPage() {
                 "click",
                 function () {
 
-                    const usableMedia = mediaItems.filter(
-                        media => media.type === "image" || media.type === "video"
-                    );
-
                     openMediaViewer(
                         usableMedia,
-                        usableMedia.indexOf(item),
+                        index,
                         memory
                     );
 
@@ -1071,13 +1794,10 @@ function renderMemoryPage() {
 
                         event.preventDefault();
 
-                        const usableMedia = mediaItems.filter(
-                            media => media.type === "image" || media.type === "video"
-                        );
 
                         openMediaViewer(
                             usableMedia,
-                            usableMedia.indexOf(item),
+                            index,
                             memory
                         );
 
@@ -1099,7 +1819,8 @@ function renderMemoryPage() {
     // CLEAR OLD CONTENT
     // ==================================================
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "";
 
 
     // ==================================================
@@ -1203,7 +1924,7 @@ function renderMemoryPage() {
     // ==================================================
 
     if (
-        mediaContainer.children.length > 0
+        mediaContainer.children.length
     ) {
 
         container.appendChild(
@@ -1267,8 +1988,13 @@ function setupMemoryNavigation(
         );
 
 
-    if (!previous || !next) {
+    if (
+        !previous ||
+        !next
+    ) {
+
         return;
+
     }
 
 
@@ -1292,7 +2018,9 @@ function setupMemoryNavigation(
     // PREVIOUS
     // ==================================================
 
-    if (index > 0) {
+    if (
+        index > 0
+    ) {
 
         previous.href =
             "memory.html?id=" +
@@ -1318,7 +2046,8 @@ function setupMemoryNavigation(
 
     if (
         index >= 0 &&
-        index < sorted.length - 1
+        index <
+            sorted.length - 1
     ) {
 
         next.href =
@@ -1359,19 +2088,31 @@ function setupMobileMenu() {
         );
 
 
-    if (!button || !sidebar) {
+    if (
+        !button ||
+        !sidebar
+    ) {
+
         return;
+
     }
 
 
-    button.setAttribute("aria-expanded", "false");
+    button.setAttribute(
+        "aria-expanded",
+        "false"
+    );
+
 
     button.addEventListener(
         "click",
         function () {
 
             const isOpen =
-                sidebar.classList.toggle("mobile-open");
+                sidebar.classList.toggle(
+                    "mobile-open"
+                );
+
 
             button.setAttribute(
                 "aria-expanded",
@@ -1381,21 +2122,33 @@ function setupMobileMenu() {
         }
     );
 
-    sidebar.querySelectorAll(".nav-link").forEach(
-        function (link) {
 
-            link.addEventListener(
-                "click",
-                function () {
+    sidebar
+        .querySelectorAll(
+            ".nav-link"
+        )
+        .forEach(
+            function (link) {
 
-                    sidebar.classList.remove("mobile-open");
-                    button.setAttribute("aria-expanded", "false");
+                link.addEventListener(
+                    "click",
+                    function () {
 
-                }
-            );
+                        sidebar.classList.remove(
+                            "mobile-open"
+                        );
 
-        }
-    );
+
+                        button.setAttribute(
+                            "aria-expanded",
+                            "false"
+                        );
+
+                    }
+                );
+
+            }
+        );
 
 }
 
@@ -1410,12 +2163,53 @@ function setupKeyboard() {
         "keydown",
         function (event) {
 
-            if (event.key === "Escape") {
-                closeLightbox();
-            } else if (event.key === "ArrowLeft") {
-                changeLightbox(-1);
-            } else if (event.key === "ArrowRight") {
-                changeLightbox(1);
+            const lightbox =
+                document.getElementById(
+                    "lightbox"
+                );
+
+
+            const isOpen =
+                lightbox &&
+                lightbox.classList.contains(
+                    "open"
+                );
+
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                if (isOpen) {
+
+                    closeLightbox();
+
+                }
+
+            }
+
+
+            else if (
+                isOpen &&
+                event.key === "ArrowLeft"
+            ) {
+
+                changeLightbox(
+                    -1
+                );
+
+            }
+
+
+            else if (
+                isOpen &&
+                event.key === "ArrowRight"
+            ) {
+
+                changeLightbox(
+                    1
+                );
+
             }
 
         }
@@ -1430,155 +2224,248 @@ function setupKeyboard() {
 
 async function loadThings() {
 
-    const container = document.getElementById("thingsList");
-
-    if (!container) {
-        return;
-    }
-
-    try {
-
-        const response = await fetch("./data/things.json?v=1", { cache: "no-store" });
-
-        if (!response.ok) {
-            throw new Error("Could not load things.json");
-        }
-
-        const things = await response.json();
-
-        if (!Array.isArray(things)) {
-            throw new Error("things.json does not contain an array");
-        }
-
-        renderThings(things);
-
-    } catch (error) {
-
-        console.error("THINGS ERROR:", error);
-        container.innerHTML = '<p class="loading">Unable to load this page.</p>';
-
-    }
-}
-
-
-function renderThings(things) {
-
-    const container = document.getElementById("thingsList");
-
-    if (!container) {
-        return;
-    }
-
-    if (!things.length) {
-        container.innerHTML = `
-            <div class="things-empty">
-                <p class="handwritten">Nothing written here yet.</p>
-                <p>This page is waiting for the things that only belong here.</p>
-            </div>
-        `;
-        return;
-    }
-
-    container.innerHTML = things.map((thing, index) => {
-
-        const number = String(index + 1).padStart(2, "0");
-        const title = thing.title || "Untitled";
-        const text = thing.text || thing.description || "";
-        const date = thing.date ? `<span class="thing-date">${thing.date}</span>` : "";
-
-        return `
-            <article class="thing-entry">
-                <div class="thing-number">${number}</div>
-                <div class="thing-body">
-                    <div class="thing-meta">${date}</div>
-                    <h2>${title}</h2>
-                    <p>${text}</p>
-                </div>
-            </article>
-        `;
-
-    }).join("");
-}
-
-
-// ======================================================
-// INITIALIZE
-// ======================================================
-
-async function init() {
-
-    setupMobileMenu();
-
-    setupLightbox();
-
-    setupKeyboard();
-
-    await loadMemories();
-
-    await loadThings();
-
-    setupRandomMemory();
-
-}
-
-
-// ======================================================
-// WAIT FOR DOM
-// ======================================================
-
-if (
-    document.readyState === "loading"
-) {
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        init
-    );
-
-} else {
-
-    init();
-
-            }
-/* ======================================================
-   PLACES WE'VE BEEN
-   ====================================================== */
-
-async function loadPlaces() {
-
     const container =
-        document.getElementById("placesList");
+        document.getElementById(
+            "thingsList"
+        );
+
 
     if (!container) {
+
         return;
+
     }
+
 
     try {
 
         const response =
             await fetch(
-                "./data/places.json?v=1",
+                "./data/things.json?v=2",
                 {
                     cache: "no-store"
                 }
             );
 
+
         if (!response.ok) {
+
+            throw new Error(
+                "Could not load things.json"
+            );
+
+        }
+
+
+        const things =
+            await response.json();
+
+
+        if (
+            !Array.isArray(things)
+        ) {
+
+            throw new Error(
+                "things.json does not contain an array"
+            );
+
+        }
+
+
+        renderThings(
+            things
+        );
+
+    } catch (error) {
+
+        console.error(
+            "THINGS ERROR:",
+            error
+        );
+
+
+        container.innerHTML =
+            '<p class="loading">Unable to load this page.</p>';
+
+    }
+
+}
+
+
+// ======================================================
+// RENDER THINGS
+// ======================================================
+
+function renderThings(
+    things
+) {
+
+    const container =
+        document.getElementById(
+            "thingsList"
+        );
+
+
+    if (!container) {
+
+        return;
+
+    }
+
+
+    if (
+        !things.length
+    ) {
+
+        container.innerHTML = `
+            <div class="things-empty">
+                <p class="handwritten">
+                    Nothing written here yet.
+                </p>
+
+                <p>
+                    This page is waiting for
+                    the things that only belong here.
+                </p>
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        things
+            .map(
+                (thing, index) => {
+
+                    const number =
+                        String(
+                            index + 1
+                        ).padStart(
+                            2,
+                            "0"
+                        );
+
+
+                    const title =
+                        escapeHTML(
+                            thing.title ||
+                            "Untitled"
+                        );
+
+
+                    const text =
+                        escapeHTML(
+                            thing.text ||
+                            thing.description ||
+                            ""
+                        );
+
+
+                    const date =
+                        thing.date
+                            ? `
+                                <span class="thing-date">
+                                    ${escapeHTML(
+                                        thing.date
+                                    )}
+                                </span>
+                              `
+                            : "";
+
+
+                    return `
+                        <article class="thing-entry">
+
+                            <div class="thing-number">
+                                ${number}
+                            </div>
+
+                            <div class="thing-body">
+
+                                <div class="thing-meta">
+                                    ${date}
+                                </div>
+
+                                <h2>
+                                    ${title}
+                                </h2>
+
+                                <p>
+                                    ${text}
+                                </p>
+
+                            </div>
+
+                        </article>
+                    `;
+
+                }
+            )
+            .join("");
+
+}
+
+
+// ======================================================
+// PLACES WE'VE BEEN
+// ======================================================
+
+async function loadPlaces() {
+
+    const container =
+        document.getElementById(
+            "placesList"
+        );
+
+
+    if (!container) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "./data/places.json?v=2",
+                {
+                    cache: "no-store"
+                }
+            );
+
+
+        if (!response.ok) {
+
             throw new Error(
                 "Could not load places.json"
             );
+
         }
+
 
         const places =
             await response.json();
 
-        if (!Array.isArray(places)) {
+
+        if (
+            !Array.isArray(places)
+        ) {
+
             throw new Error(
                 "places.json does not contain an array"
             );
+
         }
 
-        renderPlaces(places);
+
+        renderPlaces(
+            places
+        );
 
     } catch (error) {
 
@@ -1587,42 +2474,58 @@ async function loadPlaces() {
             error
         );
 
+
         container.innerHTML =
             '<p class="loading">Unable to load this page.</p>';
+
     }
 
 }
 
 
-/* ======================================================
-   RENDER PLACES
-   ====================================================== */
+// ======================================================
+// RENDER PLACES
+// ======================================================
 
-function renderPlaces(places) {
+function renderPlaces(
+    places
+) {
 
     const container =
-        document.getElementById("placesList");
+        document.getElementById(
+            "placesList"
+        );
+
 
     if (!container) {
+
         return;
+
     }
 
-    if (!places.length) {
+
+    if (
+        !places.length
+    ) {
 
         container.innerHTML = `
             <div class="places-empty">
+
                 <p class="handwritten">
                     No places written here yet.
                 </p>
 
                 <p>
-                    This page is waiting for the places
-                    that became part of our story.
+                    This page is waiting for
+                    the places that became part
+                    of our story.
                 </p>
+
             </div>
         `;
 
         return;
+
     }
 
 
@@ -1632,77 +2535,113 @@ function renderPlaces(places) {
                 (place, index) => {
 
                     const number =
-                        String(index + 1)
-                            .padStart(2, "0");
+                        String(
+                            index + 1
+                        ).padStart(
+                            2,
+                            "0"
+                        );
+
 
                     const name =
-                        place.name ||
-                        "Untitled place";
+                        escapeHTML(
+                            place.name ||
+                            "Untitled place"
+                        );
+
 
                     const date =
-                        place.date || "";
+                        place.date ||
+                        "";
+
 
                     const location =
-                        place.location || "";
+                        place.location ||
+                        "";
+
 
                     const description =
                         place.description ||
                         place.text ||
                         "";
 
+
                     const image =
                         place.image ||
                         "";
 
 
-                    const metaParts = [];
+                    const metaParts =
+                        [];
 
+
+                    // DATE
 
                     if (date) {
 
-                        metaParts.push(`
-                            <span class="place-date">
-                                ${escapeHTML(date)}
-                            </span>
-                        `);
+                        metaParts.push(
+                            `
+                                <span class="place-date">
+                                    ${escapeHTML(
+                                        date
+                                    )}
+                                </span>
+                            `
+                        );
 
                     }
 
+
+                    // SEPARATOR
 
                     if (
                         date &&
                         location
                     ) {
 
-                        metaParts.push(`
-                            <span class="place-separator">
-                                ·
-                            </span>
-                        `);
+                        metaParts.push(
+                            `
+                                <span class="place-separator">
+                                    ·
+                                </span>
+                            `
+                        );
 
                     }
 
+
+                    // LOCATION
 
                     if (location) {
 
-                        metaParts.push(`
-                            <span class="place-location">
-                                ${escapeHTML(location)}
-                            </span>
-                        `);
+                        metaParts.push(
+                            `
+                                <span class="place-location">
+                                    ${escapeHTML(
+                                        location
+                                    )}
+                                </span>
+                            `
+                        );
 
                     }
 
+
+                    // IMAGE
 
                     const imageHTML =
                         image
                             ? `
                                 <div class="place-image">
+
                                     <img
-                                        src="./${escapeHTML(image)}"
-                                        alt="${escapeHTML(name)}"
+                                        src="./${escapeHTML(
+                                            image
+                                        )}"
+                                        alt="${name}"
                                         loading="lazy"
                                     >
+
                                 </div>
                               `
                             : "";
@@ -1722,14 +2661,16 @@ function renderPlaces(places) {
                                 </div>
 
                                 <h2>
-                                    ${escapeHTML(name)}
+                                    ${name}
                                 </h2>
 
                                 ${
                                     description
                                         ? `
                                             <p>
-                                                ${escapeHTML(description)}
+                                                ${escapeHTML(
+                                                    description
+                                                )}
                                             </p>
                                           `
                                         : ""
@@ -1749,32 +2690,16 @@ function renderPlaces(places) {
 }
 
 
-/* ======================================================
-   SAFE TEXT HELPER
-   ====================================================== */
-
-function escapeHTML(value) {
-
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-}
-
-
-/* ======================================================
-   NAVIGATION ROUTING
-   Makes the new sections work even on older
-   HTML pages whose links still contain "#".
-   ====================================================== */
+// ======================================================
+// NAVIGATION ROUTING
+// ======================================================
 
 function setupArchiveNavigation() {
 
     document
-        .querySelectorAll(".nav-link")
+        .querySelectorAll(
+            ".nav-link"
+        )
         .forEach(
             link => {
 
@@ -1782,6 +2707,7 @@ function setupArchiveNavigation() {
                     link.textContent
                         .trim()
                         .toLowerCase();
+
 
                 if (
                     label ===
@@ -1793,6 +2719,7 @@ function setupArchiveNavigation() {
 
                 }
 
+
                 if (
                     label ===
                     "things i love about you"
@@ -1802,6 +2729,7 @@ function setupArchiveNavigation() {
                         "things.html";
 
                 }
+
 
                 if (
                     label ===
@@ -1819,74 +2747,41 @@ function setupArchiveNavigation() {
 }
 
 
-/* ======================================================
-   INITIALIZE
-   ====================================================== */
-
-async function init() {
-
-    setupMobileMenu();
-
-    setupLightbox();
-
-    setupKeyboard();
-
-    setupArchiveNavigation();
-
-    await loadMemories();
-
-    await loadThings();
-
-    await loadPlaces();
-
-    setupRandomMemory();
-
-}
-
-
-/* ======================================================
-   WAIT FOR DOM
-   ====================================================== */
-
-if (
-    document.readyState === "loading"
-) {
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        init
-    );
-
-} else {
-
-    init();
-
-        }
-/* ======================================================
-   THE GROWING TREE
-   ====================================================== */
+// ======================================================
+// THE GROWING TREE
+// ======================================================
 
 async function loadTree() {
 
     const container =
-        document.getElementById("treeMilestones");
+        document.getElementById(
+            "treeMilestones"
+        );
+
 
     const leaves =
-        document.getElementById("treeLeaves");
+        document.getElementById(
+            "treeLeaves"
+        );
+
 
     if (!container) {
+
         return;
+
     }
+
 
     try {
 
         const response =
             await fetch(
-                "./data/tree.json?v=1",
+                "./data/tree.json?v=2",
                 {
                     cache: "no-store"
                 }
             );
+
 
         if (!response.ok) {
 
@@ -1896,10 +2791,16 @@ async function loadTree() {
 
         }
 
+
         const milestones =
             await response.json();
 
-        if (!Array.isArray(milestones)) {
+
+        if (
+            !Array.isArray(
+                milestones
+            )
+        ) {
 
             throw new Error(
                 "tree.json does not contain an array"
@@ -1907,7 +2808,10 @@ async function loadTree() {
 
         }
 
-        renderTree(milestones);
+
+        renderTree(
+            milestones
+        );
 
     } catch (error) {
 
@@ -1916,10 +2820,16 @@ async function loadTree() {
             error
         );
 
-        container.innerHTML = "";
+
+        container.innerHTML =
+            "";
+
 
         if (leaves) {
-            leaves.innerHTML = "";
+
+            leaves.innerHTML =
+                "";
+
         }
 
     }
@@ -1927,25 +2837,34 @@ async function loadTree() {
 }
 
 
-function renderTree(milestones) {
+// ======================================================
+// RENDER TREE
+// ======================================================
+
+function renderTree(
+    milestones
+) {
 
     const container =
-        document.getElementById("treeMilestones");
+        document.getElementById(
+            "treeMilestones"
+        );
+
 
     const leaves =
-        document.getElementById("treeLeaves");
+        document.getElementById(
+            "treeLeaves"
+        );
+
 
     if (!container) {
+
         return;
+
     }
 
 
-    /*
-       Vertical positions for milestones.
-
-       The tree becomes visually denser as
-       more moments are added.
-    */
+    // Vertical positions
 
     const positions = [
         79,
@@ -1965,29 +2884,41 @@ function renderTree(milestones) {
                 (milestone, index) => {
 
                     const position =
-                        milestone.position === "right"
+                        milestone.position ===
+                        "right"
                             ? "right"
                             : "left";
 
+
                     const top =
-                        positions[index] !== undefined
+                        positions[index] !==
+                        undefined
                             ? positions[index]
                             : Math.max(
                                 4,
-                                79 - (index * 8)
+                                79 -
+                                (
+                                    index *
+                                    8
+                                )
                             );
 
+
                     const date =
-                        milestone.date || "";
+                        milestone.date ||
+                        "";
+
 
                     const title =
                         milestone.title ||
                         "Untitled moment";
 
+
                     const text =
                         milestone.text ||
                         milestone.description ||
                         "";
+
 
                     return `
                         <article
@@ -1999,21 +2930,27 @@ function renderTree(milestones) {
                                 date
                                     ? `
                                         <div class="tree-milestone-date">
-                                            ${escapeHTML(date)}
+                                            ${escapeHTML(
+                                                date
+                                            )}
                                         </div>
                                       `
                                     : ""
                             }
 
                             <h3>
-                                ${escapeHTML(title)}
+                                ${escapeHTML(
+                                    title
+                                )}
                             </h3>
 
                             ${
                                 text
                                     ? `
                                         <p>
-                                            ${escapeHTML(text)}
+                                            ${escapeHTML(
+                                                text
+                                            )}
                                         </p>
                                       `
                                     : ""
@@ -2027,17 +2964,16 @@ function renderTree(milestones) {
             .join("");
 
 
-    /*
-       Add leaves around the upper
-       portion of the tree.
-
-       Their positions are intentionally
-       organic rather than perfectly symmetrical.
-    */
+    // ==================================================
+    // TREE LEAVES
+    // ==================================================
 
     if (!leaves) {
+
         return;
+
     }
+
 
     const leafPositions = [
 
@@ -2072,39 +3008,45 @@ function renderTree(milestones) {
 
     leaves.innerHTML =
         leafPositions
-            .slice(0, leafCount)
+            .slice(
+                0,
+                leafCount
+            )
             .map(
                 (position, index) => {
-
-                    const left =
-                        position[0];
-
-                    const top =
-                        position[1];
 
                     let size =
                         "small";
 
+
                     if (
-                        index % 5 === 0
+                        index % 5 ===
+                        0
                     ) {
 
-                        size = "large";
-
-                    } else if (
-                        index % 3 === 0
-                    ) {
-
-                        size = "medium";
+                        size =
+                            "large";
 
                     }
+
+
+                    else if (
+                        index % 3 ===
+                        0
+                    ) {
+
+                        size =
+                            "medium";
+
+                    }
+
 
                     return `
                         <span
                             class="tree-leaf ${size}"
                             style="
-                                left: ${left}%;
-                                top: ${top}%;
+                                left: ${position[0]}%;
+                                top: ${position[1]}%;
                                 animation-delay: ${index * 90}ms;
                             "
                         ></span>
@@ -2117,22 +3059,97 @@ function renderTree(milestones) {
 }
 
 
-/* ======================================================
-   TREE INITIALIZATION
-   ====================================================== */
+// ======================================================
+// SAFE TEXT HELPER
+// ======================================================
 
-const originalInit =
-    window.init;
+function escapeHTML(
+    value
+) {
 
-window.init =
-    async function () {
+    return String(
+        value
+    )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
-        if (typeof originalInit === "function") {
+}
 
-            await originalInit();
 
+// ======================================================
+// INITIALIZE
+// IMPORTANT:
+// THERE IS ONLY ONE INIT FUNCTION.
+// ======================================================
+
+async function init() {
+
+    setupMobileMenu();
+
+    setupLightbox();
+
+    setupKeyboard();
+
+    setupArchiveNavigation();
+
+
+    // Load all page data.
+
+    await loadMemories();
+
+    await loadThings();
+
+    await loadPlaces();
+
+    await loadTree();
+
+
+    // Random memory button.
+
+    setupRandomMemory();
+
+}
+
+
+// ======================================================
+// WAIT FOR DOM
+// IMPORTANT:
+// THERE IS ONLY ONE DOMContentLoaded HANDLER.
+// ======================================================
+
+if (
+    document.readyState ===
+    "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        init,
+        {
+            once: true
         }
+    );
 
-        await loadTree();
+} else {
 
-    };
+    init();
+
+}
