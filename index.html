@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A quiet collection of moments, photographs, places, and little things worth keeping.">
+    <meta name="theme-color" content="#f5f1e8">
+    <title>The Archive — The Archive</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <aside class="sidebar" aria-label="Archive navigation">
+        <div>
+            <a href="index.html" class="brand" aria-label="The Archive home">
+                <span class="brand-title">THE ARCHIVE</span>
+                <span class="brand-subtitle">A collection of moments.</span>
+            </a>
+            <nav class="navigation">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="story.html" class="nav-link">Our Story</a>
+                <a href="gallery.html" class="nav-link">The Gallery</a>
+                <a href="places.html" class="nav-link">Places We've Been</a>
+                <a href="things.html" class="nav-link">Things I Love About You</a>
+                <a href="tree.html" class="nav-link">The Growing Tree</a>
+            </nav>
+        </div>
+        <div class="sidebar-bottom">
+            <button id="randomMemory" class="random-button" type="button">
+                <span aria-hidden="true">↻</span> Random Memory
+            </button>
+            <div class="memory-counter" aria-live="polite">
+                <span id="memoryCount">0</span>
+                <span>memories preserved</span>
+            </div>
+        </div>
+    </aside>
+
+    <header class="mobile-header">
+        <a href="index.html" class="mobile-brand">THE ARCHIVE</a>
+        <button id="menuButton" class="menu-button" type="button" aria-label="Open navigation" aria-expanded="false">
+            <span></span><span></span>
+        </button>
+    </header>
+
+    <div class="mobile-nav" id="mobileNav" aria-hidden="true">
+        <nav aria-label="Mobile navigation">
+                <a href="index.html" class="active">Home</a>
+                <a href="story.html">Our Story</a>
+                <a href="gallery.html">The Gallery</a>
+                <a href="places.html">Places We've Been</a>
+                <a href="things.html">Things I Love About You</a>
+                <a href="tree.html">The Growing Tree</a>
+        </nav>
+        <div class="mobile-nav-footer">
+            <button id="mobileRandomMemory" class="random-button" type="button">↻ Random Memory</button>
+            <span><strong id="mobileMemoryCount">0</strong> memories preserved</span>
+        </div>
+    </div>
+
+    <main class="main-content home-page">
+        <section class="hero home-hero">
+            <p class="handwritten">A place to remember.</p>
+            <h1>Some things<br>are worth keeping.</h1>
+            <p class="hero-description">
+                A quiet collection of moments, photographs, places,
+                and little things that became important.
+            </p>
+            <a class="hero-link" href="story.html">Enter the archive <span>→</span></a>
+        </section>
+
+        <section class="home-latest" aria-labelledby="latestHeading">
+            <div class="section-heading" id="latestHeading">
+                <span class="line"></span>
+                <span>LATEST MEMORY</span>
+            </div>
+            <div id="latestMemory" class="latest-memory">
+                <p class="loading">Opening the latest memory...</p>
+            </div>
+        </section>
+
+        <section class="archive-introduction">
+            <p class="handwritten">Keep looking.</p>
+            <h2>There is more here.</h2>
+            <p>
+                A place for the moments we do not want to let disappear —
+                and for the ones we have not lived yet.
+            </p>
+            <a href="gallery.html" class="text-link">Browse the photographs <span>→</span></a>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <span>THE ARCHIVE</span>
+        <span>kept for us</span>
+    </footer>
+    <script src="script.js?v=20"></script>
+</body>
+</html>
