@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Places We've Been — The Archive</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500&family=Caveat:wght@400;500&display=swap"
+        rel="stylesheet"
+    >
+</head>
+
+<body>
+
+    <!-- =========================
+         SIDEBAR
+         ========================= -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <span class="brand-title">
+                THE ARCHIVE
+            </span>
+
+            <span class="brand-subtitle">
+                A collection of moments.
+            </span>
+        </div>
+
+        <nav class="navigation">
+
+            <a
+                href="index.html"
+                class="nav-link"
+            >
+                Home
+            </a>
+
+            <a
+                href="story.html"
+                class="nav-link"
+            >
+                Our Story
+            </a>
+
+            <a
+                href="gallery.html"
+                class="nav-link"
+            >
+                The Gallery
+            </a>
+
+            <a
+                href="places.html"
+                class="nav-link active"
+            >
+                Places We've Been
+            </a>
+
+            <a
+                href="things.html"
+                class="nav-link"
+            >
+                Things I Love About You
+            </a>
+
+            <a
+                href="tree.html"
+                class="nav-link"
+            >
+                The Growing Tree
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <button
+                id="randomMemory"
+                class="random-button"
+                type="button"
+            >
+                ↻ Random Memory
+            </button>
+
+            <div class="memory-counter">
+
+                <span id="memoryCount">
+                    0
+                </span>
+
+                <span>
+                    memories preserved
+                </span>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================
+         MOBILE HEADER
+         ========================= -->
+
+    <header class="mobile-header">
+
+        <span>
+            THE ARCHIVE
+        </span>
+
+        <button
+            id="menuButton"
+            type="button"
+            aria-label="Open navigation"
+        >
+            ☰
+        </button>
+
+    </header>
+
+
+    <!-- =========================
+         PLACES
+         ========================= -->
+
+    <main class="main-content places-page">
+
+        <section class="places-header">
+
+            <p class="handwritten">
+                Places that became ours.
+            </p>
+
+            <h1>
+                Places We've<br>
+                Been
+            </h1>
+
+            <p class="hero-description">
+                Some places are just places.
+                Some become part of the story.
+            </p>
+
+        </section>
+
+
+        <section
+            id="placesList"
+            class="places-list"
+        >
+
+            <p class="loading">
+                Remembering places...
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         JAVASCRIPT
+         ========================= -->
+
+    <script src="./script.js?v=12"></script>
+
+</body>
+
+</html>
