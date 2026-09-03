@@ -1,0 +1,2586 @@
+/* =========================================================
+   THE ARCHIVE — GLOBAL STYLES
+   Minimal / warm / nostalgic / responsive
+   ========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --background: #f5f1e8;
+    --surface: #eee8dc;
+    --text: #292622;
+    --muted: #777067;
+    --border: #d8d0c3;
+    --accent: #687568;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
+    background: var(--background);
+    color: var(--text);
+    font-family: "Inter", sans-serif;
+}
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 250px;
+    height: 100vh;
+
+    padding: 45px 30px;
+
+    display: flex;
+    flex-direction: column;
+
+    background: var(--background);
+    border-right: 1px solid var(--border);
+
+    z-index: 100;
+}
+
+/* BRAND */
+
+.brand {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    margin-bottom: 70px;
+}
+
+.brand-title {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+}
+
+.brand-subtitle {
+    color: var(--muted);
+    font-family: "Caveat", cursive;
+    font-size: 17px;
+}
+
+/* NAVIGATION */
+
+.navigation {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.nav-link {
+    color: var(--muted);
+    text-decoration: none;
+
+    font-size: 12px;
+    letter-spacing: 0.8px;
+
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--text);
+    transform: translateX(4px);
+}
+
+.nav-link.active {
+    color: var(--text);
+}
+
+.nav-link.active::before {
+    content: "—";
+    margin-right: 8px;
+    color: var(--accent);
+}
+
+/* SIDEBAR BOTTOM */
+
+.sidebar-bottom {
+    margin-top: auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.random-button {
+    border: none;
+    background: transparent;
+
+    color: var(--text);
+    text-align: left;
+
+    font-family: "Caveat", cursive;
+    font-size: 18px;
+
+    cursor: pointer;
+
+    transition: opacity 0.3s ease;
+}
+
+.random-button:hover {
+    opacity: 0.6;
+}
+
+.memory-counter {
+    display: flex;
+    flex-direction: column;
+
+    color: var(--muted);
+
+    font-size: 10px;
+    letter-spacing: 1px;
+}
+
+.memory-counter span:first-child {
+    color: var(--text);
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: 26px;
+
+    letter-spacing: 0;
+}
+
+/* =========================================================
+   MOBILE HEADER
+   ========================================================= */
+
+.mobile-header {
+    display: none;
+}
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+.main-content {
+    width: calc(100% - 250px);
+    max-width: 1200px;
+
+    margin-left: 250px;
+
+    padding: 100px 70px 120px;
+}
+
+/* =========================================================
+   TYPOGRAPHY
+   ========================================================= */
+
+.handwritten {
+    margin-bottom: 15px;
+
+    color: var(--muted);
+
+    font-family: "Caveat", cursive;
+    font-size: 22px;
+}
+
+.hero-description {
+    max-width: 460px;
+
+    color: var(--muted);
+
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+/* =========================================================
+   HOME / HERO
+   ========================================================= */
+
+.hero {
+    max-width: 720px;
+    margin-bottom: 120px;
+}
+
+.hero h1 {
+    margin-bottom: 35px;
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(55px, 7vw, 95px);
+
+    font-weight: 400;
+    line-height: 0.95;
+
+    letter-spacing: -2px;
+}
+
+/* =========================================================
+   SECTION HEADING
+   ========================================================= */
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    margin-bottom: 40px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+.section-heading .line {
+    width: 70px;
+    height: 1px;
+
+    background: var(--border);
+}
+
+/* =========================================================
+   HOME — LATEST MEMORY
+   ========================================================= */
+
+.memory-preview {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.1fr)
+        minmax(260px, 0.9fr);
+
+    gap: 55px;
+
+    align-items: center;
+}
+
+.memory-image {
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+
+    overflow: hidden;
+}
+
+.memory-image img,
+.memory-image video,
+#latestMemoryImage {
+    display: block;
+
+    width: auto;
+    max-width: 100%;
+
+    height: auto;
+    max-height: 520px;
+
+    object-fit: contain;
+}
+
+.memory-information {
+    padding-right: 10px;
+}
+
+.memory-date {
+    margin-bottom: 15px;
+
+    color: var(--muted);
+
+    font-family: "Caveat", cursive;
+    font-size: 20px;
+}
+
+.memory-information h2 {
+    margin-bottom: 12px;
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(38px, 4vw, 58px);
+
+    font-weight: 400;
+    line-height: 1;
+}
+
+.memory-location {
+    margin-bottom: 25px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+    letter-spacing: 1.5px;
+
+    text-transform: uppercase;
+}
+
+.memory-excerpt {
+    margin-bottom: 25px;
+
+    color: var(--muted);
+
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.read-memory {
+    display: inline-block;
+
+    padding-bottom: 3px;
+
+    color: var(--text);
+
+    border-bottom: 1px solid var(--border);
+
+    text-decoration: none;
+
+    font-family: "Caveat", cursive;
+    font-size: 20px;
+
+    transition:
+        border-color 0.3s ease,
+        opacity 0.3s ease;
+}
+
+.read-memory:hover {
+    border-color: var(--text);
+}
+
+/* =========================================================
+   NO PHOTO
+   ========================================================= */
+
+.memory-no-photo {
+    width: 100%;
+    min-height: 280px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+
+    color: var(--muted);
+}
+
+.memory-no-photo-mark {
+    margin-bottom: 15px;
+
+    color: var(--accent);
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: 40px;
+}
+
+.memory-no-photo p {
+    color: var(--muted);
+
+    font-family: "Caveat", cursive;
+    font-size: 20px;
+}
+
+/* =========================================================
+   ARCHIVE INTRODUCTION
+   ========================================================= */
+
+.archive-introduction {
+    max-width: 500px;
+
+    margin: 150px auto 0;
+
+    text-align: center;
+}
+
+.archive-introduction h2 {
+    margin-bottom: 20px;
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: 48px;
+
+    font-weight: 400;
+}
+
+.archive-introduction p:last-child {
+    color: var(--muted);
+
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+/* =========================================================
+   STORY
+   ========================================================= */
+
+.story-header {
+    max-width: 700px;
+
+    margin-bottom: 100px;
+}
+
+.story-header h1 {
+    margin-bottom: 30px;
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(60px, 8vw, 100px);
+
+    font-weight: 400;
+    line-height: 0.9;
+
+    letter-spacing: -2px;
+}
+
+/* =========================================================
+   TIMELINE
+   ========================================================= */
+
+.timeline {
+    position: relative;
+
+    max-width: 850px;
+
+    padding-left: 40px;
+}
+
+.timeline::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+    left: 7px;
+
+    width: 1px;
+
+    background: var(--border);
+}
+
+.timeline-memory {
+    position: relative;
+
+    margin-bottom: 75px;
+
+    cursor: pointer;
+}
+
+.timeline-memory::before {
+    content: "";
+
+    position: absolute;
+
+    top: 7px;
+    left: -37px;
+
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: var(--accent);
+}
+
+.timeline-date {
+    display: inline-block;
+
+    margin-bottom: 5px;
+
+    color: var(--muted);
+
+    font-family: "Caveat", cursive;
+    font-size: 21px;
+}
+
+.timeline-time {
+    display: inline-block;
+
+    margin-left: 10px;
+
+    color: var(--muted);
+
+    font-family: "Caveat", cursive;
+    font-size: 18px;
+}
+
+.timeline-memory h2 {
+    margin-bottom: 8px;
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: 42px;
+
+    font-weight: 400;
+    line-height: 1.05;
+
+    transition: opacity 0.3s ease;
+}
+
+.timeline-memory:hover h2 {
+    opacity: 0.55;
+}
+
+.timeline-location {
+    margin-bottom: 18px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+    letter-spacing: 1.5px;
+
+    text-transform: uppercase;
+}
+
+.timeline-description {
+    max-width: 520px;
+
+    color: var(--muted);
+
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.timeline-image,
+.timeline-video {
+    display: block;
+
+    width: auto;
+    max-width: min(100%, 520px);
+
+    height: auto;
+
+    margin-top: 20px;
+    margin-bottom: 25px;
+}
+
+/* =========================================================
+   INDIVIDUAL MEMORY PAGE
+   ========================================================= */
+
+.memory-page {
+    width: 100%;
+    max-width: 1100px;
+}
+
+.back-link {
+    display: inline-block;
+
+    margin-bottom: 75px;
+
+    color: var(--muted);
+
+    text-decoration: none;
+
+    font-family: "Caveat", cursive;
+    font-size: 20px;
+
+    transition: opacity 0.3s ease;
+}
+
+.back-link:hover {
+    opacity: 0.5;
+}
+
+.memory-page article {
+    width: 100%;
+    max-width: 1000px;
+}
+
+/* =========================================================
+   MEMORY HEADER
+   ========================================================= */
+
+.memory-page .memory-date {
+    margin-bottom: 10px;
+
+    color: var(--muted);
+
+    font-family: "Caveat", cursive;
+    font-size: 24px;
+}
+
+.memory-page .memory-time {
+    margin-bottom: 15px;
+
+    color: var(--accent);
+
+    font-family: "Caveat", cursive;
+    font-size: 19px;
+}
+
+.memory-page h1 {
+    max-width: 850px;
+
+    margin-bottom: 18px;
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(58px, 8vw, 105px);
+
+    font-weight: 400;
+    line-height: 0.9;
+
+    letter-spacing: -2.5px;
+}
+
+.memory-page .memory-location {
+    margin-bottom: 40px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+}
+
+/* =========================================================
+   INDIVIDUAL MEMORY MEDIA
+   3:4 ARCHIVE GRID
+   ========================================================= */
+
+.memory-media {
+    width: 100%;
+    max-width: 760px;
+
+    margin: 0 auto 55px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 14px;
+
+    align-items: start;
+}
+
+/*
+   Every memory item keeps a 3:4 frame.
+   Images/videos are cropped inside the frame.
+*/
+
+.memory-media-item {
+    position: relative;
+
+    width: 100%;
+    min-width: 0;
+
+    margin: 0;
+    padding: 0;
+
+    aspect-ratio: 3 / 4;
+
+    overflow: hidden;
+
+    cursor: pointer;
+}
+
+/* MEDIA */
+
+.memory-media-item img,
+.memory-media-item video {
+    position: absolute;
+
+    inset: 0;
+
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    background: var(--surface);
+
+    border: none;
+
+    transition: opacity 0.3s ease;
+}
+
+/*
+   Videos stay visually simple.
+   The actual controls appear in the full-screen viewer.
+*/
+
+.memory-media-item video {
+    background: var(--surface);
+}
+
+/* Very subtle interaction */
+
+.memory-media-item:hover img,
+.memory-media-item:hover video {
+    opacity: 0.88;
+}
+
+/* Tiny video indicator */
+
+.memory-media-item.is-video::after {
+    content: "▶";
+
+    position: absolute;
+
+    left: 10px;
+    bottom: 10px;
+
+    width: 25px;
+    height: 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(41, 38, 34, 0.58);
+
+    color: #f5f1e8;
+
+    font-size: 9px;
+
+    pointer-events: none;
+}
+
+/*
+   Captions stay subtle and don't change the grid height.
+*/
+
+.memory-media-item figcaption {
+    position: absolute;
+
+    left: 9px;
+    right: 9px;
+    bottom: 8px;
+
+    margin: 0;
+
+    color: #f5f1e8;
+
+    font-family: "Caveat", cursive;
+    font-size: 14px;
+
+    line-height: 1.25;
+
+    text-shadow:
+        0 1px 4px rgba(0, 0, 0, 0.7);
+
+    pointer-events: none;
+}
+
+/* =========================================================
+   MEMORY STORY
+   ========================================================= */
+
+.memory-story {
+    width: 100%;
+    max-width: 620px;
+
+    margin: 20px auto 90px;
+
+    color: var(--muted);
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: 25px;
+
+    line-height: 1.65;
+}
+
+/* =========================================================
+   MEMORY NAVIGATION
+   ========================================================= */
+
+.memory-navigation {
+    display: flex;
+    justify-content: space-between;
+
+    gap: 30px;
+
+    width: 100%;
+    max-width: 760px;
+
+    margin: 90px auto 0;
+
+    padding-top: 25px;
+
+    border-top: 1px solid var(--border);
+}
+
+.memory-navigation a {
+    color: var(--text);
+
+    text-decoration: none;
+
+    font-family: "Caveat", cursive;
+    font-size: 21px;
+
+    transition: opacity 0.3s ease;
+}
+
+.memory-navigation a:hover {
+    opacity: 0.5;
+}
+
+/* =========================================================
+   GALLERY
+   ========================================================= */
+
+.gallery-page {
+    width: 100%;
+    max-width: 1100px;
+}
+
+.gallery-header {
+    max-width: 700px;
+
+    margin-bottom: 80px;
+}
+
+.gallery-header h1 {
+    margin-bottom: 30px;
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(60px, 8vw, 100px);
+
+    font-weight: 400;
+    line-height: 0.9;
+
+    letter-spacing: -2px;
+}
+
+/* =========================================================
+   GALLERY MEMORY
+   ========================================================= */
+
+.gallery-memory {
+    margin-bottom: 100px;
+}
+
+.gallery-memory-heading {
+    margin-bottom: 30px;
+}
+
+.gallery-date {
+    margin-bottom: 7px;
+
+    color: var(--muted);
+
+    font-family: "Caveat", cursive;
+    font-size: 20px;
+}
+
+.gallery-time {
+    display: inline-block;
+
+    margin-left: 10px;
+
+    color: var(--muted);
+
+    font-family: "Caveat", cursive;
+    font-size: 18px;
+}
+
+.gallery-memory h2 {
+    margin-bottom: 7px;
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: 44px;
+
+    font-weight: 400;
+    line-height: 1;
+}
+
+.gallery-location {
+    color: var(--muted);
+
+    font-size: 10px;
+    letter-spacing: 1.5px;
+
+    text-transform: uppercase;
+}
+
+/* =========================================================
+   GALLERY GRID
+   ========================================================= */
+
+.gallery-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 25px;
+
+    align-items: start;
+}
+
+.gallery-photo {
+    position: relative;
+
+    width: 100%;
+
+    margin: 0;
+
+    cursor: pointer;
+}
+
+.gallery-photo img,
+.gallery-photo video {
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    max-height: 420px;
+
+    object-fit: contain;
+
+    border-radius: 2px;
+
+    transition:
+        transform 0.3s ease,
+        opacity 0.3s ease;
+}
+
+.gallery-photo video {
+    background: var(--surface);
+}
+
+.gallery-photo:hover img,
+.gallery-photo:hover video {
+    opacity: 0.92;
+}
+
+.gallery-photo figcaption {
+    margin-top: 9px;
+
+    color: var(--muted);
+
+    font-family: "Caveat", cursive;
+    font-size: 16px;
+}
+
+/* Video indicator in gallery */
+
+.gallery-photo.is-video::before {
+    content: "▶";
+
+    position: absolute;
+
+    left: 10px;
+    top: 10px;
+
+    width: 28px;
+    height: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(41, 38, 34, 0.58);
+
+    color: #f5f1e8;
+
+    font-size: 10px;
+
+    z-index: 2;
+
+    pointer-events: none;
+}
+
+/* =========================================================
+   EMPTY GALLERY
+   ========================================================= */
+
+.gallery-empty {
+    min-height: 280px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+
+    color: var(--muted);
+}
+
+.gallery-empty span {
+    margin-bottom: 15px;
+
+    color: var(--accent);
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: 42px;
+}
+
+.gallery-empty p {
+    font-family: "Caveat", cursive;
+    font-size: 20px;
+}
+
+/* =========================================================
+   LIGHTBOX
+   ========================================================= */
+
+.lightbox {
+    position: fixed;
+
+    inset: 0;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(20, 18, 15, 0.92);
+
+    z-index: 1000;
+}
+
+.lightbox.open {
+    display: flex;
+}
+
+.lightbox-content {
+    position: relative;
+
+    width: 100%;
+    max-width: 900px;
+
+    text-align: center;
+}
+
+/*
+   Full original image/video.
+   No forced aspect ratio here.
+*/
+
+.lightbox-content img,
+.lightbox-content video,
+.lightbox-media {
+    display: block;
+
+    width: auto;
+
+    max-width: 100%;
+    max-height: 82vh;
+
+    height: auto;
+
+    margin: 0 auto;
+
+    border-radius: 3px;
+
+    object-fit: contain;
+}
+
+.lightbox-content video {
+    background: #292622;
+}
+
+/* CAPTION */
+
+.lightbox-caption {
+    margin-top: 12px;
+
+    color: #eee8dc;
+
+    font-family: "Caveat", cursive;
+    font-size: 18px;
+}
+
+/* CLOSE */
+
+.lightbox-close {
+    position: absolute;
+
+    top: 18px;
+    right: 22px;
+
+    border: none;
+    background: transparent;
+
+    color: white;
+
+    font-size: 36px;
+
+    cursor: pointer;
+
+    z-index: 5;
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    .main-content {
+        width: calc(100% - 250px);
+
+        padding-left: 45px;
+        padding-right: 45px;
+    }
+
+    .memory-media {
+        max-width: 650px;
+
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
+        gap: 12px;
+    }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+
+        overflow-x: hidden;
+    }
+
+    /* SIDEBAR */
+
+    .sidebar {
+        display: none;
+    }
+
+    .sidebar.mobile-open {
+        display: flex;
+
+        position: fixed;
+
+        top: 60px;
+        left: 0;
+
+        width: 100%;
+        height: calc(100dvh - 60px);
+
+        padding: 30px 22px;
+
+        border-right: none;
+
+        overflow-y: auto;
+
+        z-index: 99;
+    }
+
+    .sidebar.mobile-open .brand {
+        margin-bottom: 40px;
+    }
+
+    /* MOBILE HEADER */
+
+    .mobile-header {
+        position: fixed;
+
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        height: 60px;
+
+        padding: 0 20px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: space-between;
+
+        background: rgba(245, 241, 232, 0.95);
+
+        backdrop-filter: blur(10px);
+
+        border-bottom: 1px solid var(--border);
+
+        z-index: 100;
+    }
+
+    .mobile-header span {
+        font-family: "Cormorant Garamond", serif;
+
+        font-size: 17px;
+
+        letter-spacing: 1.5px;
+    }
+
+    .mobile-header button {
+        border: none;
+        background: transparent;
+
+        color: var(--text);
+
+        font-size: 22px;
+
+        cursor: pointer;
+
+        padding: 5px;
+    }
+
+    /* MAIN */
+
+    .main-content {
+        width: 100%;
+        max-width: 100%;
+
+        margin-left: 0;
+
+        padding: 90px 20px 70px;
+    }
+
+    /* HERO */
+
+    .hero {
+        max-width: 100%;
+
+        margin-bottom: 80px;
+    }
+
+    .hero h1 {
+        margin-bottom: 25px;
+
+        font-size: clamp(48px, 15vw, 68px);
+
+        line-height: 0.92;
+
+        letter-spacing: -1px;
+    }
+
+    .hero-description {
+        max-width: 100%;
+
+        font-size: 13px;
+
+        line-height: 1.75;
+    }
+
+    .section-heading {
+        gap: 12px;
+
+        margin-bottom: 28px;
+
+        font-size: 9px;
+
+        letter-spacing: 1.5px;
+    }
+
+    .section-heading .line {
+        width: 45px;
+    }
+
+    /* LATEST MEMORY */
+
+    .memory-preview {
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 25px;
+    }
+
+    .memory-image {
+        width: 100%;
+
+        justify-content: center;
+    }
+
+    .memory-image img,
+    .memory-image video,
+    #latestMemoryImage {
+        width: auto;
+
+        max-width: 100%;
+        max-height: 340px;
+
+        height: auto;
+
+        margin: 0 auto;
+
+        object-fit: contain;
+    }
+
+    .memory-information {
+        width: 100%;
+
+        padding: 0;
+    }
+
+    .memory-date {
+        margin-bottom: 10px;
+
+        font-size: 19px;
+    }
+
+    .memory-information h2 {
+        margin-bottom: 10px;
+
+        font-size: 42px;
+
+        line-height: 0.98;
+    }
+
+    .memory-location {
+        margin-bottom: 20px;
+
+        font-size: 9px;
+    }
+
+    .memory-excerpt {
+        margin-bottom: 20px;
+
+        font-size: 13px;
+
+        line-height: 1.75;
+    }
+
+    .read-memory {
+        font-size: 19px;
+    }
+
+    /* ARCHIVE INTRO */
+
+    .archive-introduction {
+        width: 100%;
+
+        margin-top: 100px;
+    }
+
+    .archive-introduction h2 {
+        font-size: 38px;
+    }
+
+    .archive-introduction p:last-child {
+        font-size: 13px;
+    }
+
+    /* STORY */
+
+    .story-header {
+        margin-bottom: 65px;
+    }
+
+    .story-header h1 {
+        font-size: 62px;
+
+        letter-spacing: -1px;
+    }
+
+    /* TIMELINE */
+
+    .timeline {
+        width: 100%;
+
+        padding-left: 27px;
+    }
+
+    .timeline::before {
+        left: 4px;
+    }
+
+    .timeline-memory::before {
+        left: -27px;
+
+        width: 7px;
+        height: 7px;
+    }
+
+    .timeline-memory {
+        margin-bottom: 60px;
+    }
+
+    .timeline-date {
+        font-size: 19px;
+    }
+
+    .timeline-memory h2 {
+        font-size: 34px;
+
+        line-height: 1;
+    }
+
+    .timeline-location {
+        font-size: 9px;
+
+        margin-bottom: 14px;
+    }
+
+    .timeline-description {
+        font-size: 13px;
+
+        line-height: 1.75;
+    }
+
+    .timeline-image,
+    .timeline-video {
+        width: auto;
+
+        max-width: 100%;
+        max-height: 280px;
+
+        height: auto;
+
+        margin-top: 18px;
+
+        object-fit: contain;
+    }
+
+    /* INDIVIDUAL MEMORY */
+
+    .memory-page {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .back-link {
+        margin-bottom: 55px;
+
+        font-size: 19px;
+    }
+
+    .memory-page article {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .memory-page .memory-date {
+        margin-bottom: 7px;
+
+        font-size: 21px;
+    }
+
+    .memory-page .memory-time {
+        margin-bottom: 12px;
+
+        font-size: 18px;
+    }
+
+    .memory-page h1 {
+        width: 100%;
+        max-width: 100%;
+
+        margin-bottom: 15px;
+
+        font-size: clamp(48px, 14vw, 64px);
+
+        line-height: 0.92;
+
+        letter-spacing: -1px;
+
+        overflow-wrap: break-word;
+    }
+
+    .memory-page .memory-location {
+        width: 100%;
+
+        margin-bottom: 30px;
+
+        font-size: 9px;
+
+        letter-spacing: 1.5px;
+
+        line-height: 1.5;
+    }
+
+    /*
+       Two-column 3:4 memory grid on mobile.
+    */
+
+    .memory-media {
+        width: 100%;
+        max-width: 100%;
+
+        margin: 0 auto 45px;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 10px;
+    }
+
+    .memory-media-item figcaption {
+        left: 7px;
+        right: 7px;
+        bottom: 6px;
+
+        font-size: 12px;
+
+        line-height: 1.25;
+    }
+
+    .memory-media-item.is-video::after {
+        left: 7px;
+        bottom: 7px;
+
+        width: 22px;
+        height: 22px;
+
+        font-size: 8px;
+    }
+
+    /* MEMORY STORY */
+
+    .memory-story {
+        width: 100%;
+
+        margin: 10px auto 65px;
+
+        font-size: 21px;
+
+        line-height: 1.6;
+    }
+
+    /* MEMORY NAVIGATION */
+
+    .memory-navigation {
+        width: 100%;
+
+        margin-top: 65px;
+
+        padding-top: 20px;
+
+        gap: 15px;
+    }
+
+    .memory-navigation a {
+        font-size: 19px;
+    }
+
+    /* GALLERY */
+
+    .gallery-page {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .gallery-header {
+        margin-bottom: 60px;
+    }
+
+    .gallery-header h1 {
+        font-size: 62px;
+
+        letter-spacing: -1px;
+    }
+
+    .gallery-memory {
+        margin-bottom: 75px;
+    }
+
+    .gallery-memory-heading {
+        margin-bottom: 22px;
+    }
+
+    .gallery-date {
+        font-size: 19px;
+    }
+
+    .gallery-time {
+        font-size: 17px;
+    }
+
+    .gallery-memory h2 {
+        font-size: 36px;
+    }
+
+    .gallery-location {
+        font-size: 9px;
+    }
+
+    .gallery-grid {
+        grid-template-columns: 1fr;
+
+        gap: 28px;
+    }
+
+    .gallery-photo {
+        width: 100%;
+
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: center;
+    }
+
+    .gallery-photo img,
+    .gallery-photo video {
+        width: auto;
+
+        max-width: 100%;
+        max-height: 280px;
+
+        height: auto;
+
+        object-fit: contain;
+
+        border-radius: 2px;
+    }
+
+    .gallery-photo figcaption {
+        width: 100%;
+
+        margin-top: 8px;
+
+        font-size: 15px;
+    }
+
+    .gallery-photo.is-video::before {
+        left: 10px;
+        top: 10px;
+    }
+
+    /* EMPTY GALLERY */
+
+    .gallery-empty {
+        min-height: 230px;
+    }
+
+    .gallery-empty span {
+        font-size: 38px;
+    }
+
+    .gallery-empty p {
+        font-size: 19px;
+    }
+
+    /* LIGHTBOX */
+
+    .lightbox {
+        padding: 15px;
+    }
+
+    .lightbox-content {
+        width: 100%;
+    }
+
+    .lightbox-content img,
+    .lightbox-content video,
+    .lightbox-media {
+        max-width: 100%;
+        max-height: 78vh;
+    }
+
+    .lightbox-caption {
+        font-size: 17px;
+    }
+
+    .lightbox-close {
+        top: 10px;
+        right: 15px;
+
+        font-size: 32px;
+    }
+}
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .main-content {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .hero h1 {
+        font-size: 48px;
+    }
+
+    .memory-page h1 {
+        font-size: 46px;
+    }
+
+    .memory-image img,
+    .memory-image video,
+    #latestMemoryImage {
+        max-width: 100%;
+        max-height: 280px;
+    }
+
+    .memory-media {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 8px;
+    }
+
+    .memory-media-item figcaption {
+        font-size: 11px;
+    }
+
+    .gallery-photo img,
+    .gallery-photo video {
+        max-width: 100%;
+        max-height: 250px;
+    }
+
+    .timeline-image,
+    .timeline-video {
+        max-width: 100%;
+        max-height: 240px;
+    }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* =========================================================
+   GALLERY — GROUPED PHONE PHOTO APP GRID
+   ========================================================= */
+.gallery-page .gallery {
+    width: 100%;
+}
+
+.gallery-page .gallery-memory {
+    display: block;
+    margin: 0 0 64px;
+}
+
+.gallery-page .gallery-memory-heading {
+    display: block;
+    margin: 0 0 16px;
+}
+
+.gallery-page .gallery-memory-heading h2 {
+    margin: 0 0 4px;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 1.05;
+}
+
+.gallery-page .gallery-date-time {
+    margin: 0 0 5px;
+    color: var(--muted);
+    font-family: "Caveat", cursive;
+    font-size: 18px;
+}
+
+.gallery-page .gallery-date {
+    margin: 0;
+}
+
+.gallery-page .gallery-time {
+    margin-left: 9px;
+}
+
+.gallery-page .gallery-location {
+    margin: 0;
+}
+
+.gallery-page .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4px;
+    width: 100%;
+}
+
+.gallery-page .gallery-photo {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    margin: 0;
+    cursor: pointer;
+    background: var(--surface);
+}
+
+.gallery-page .gallery-photo img,
+.gallery-page .gallery-photo video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    object-fit: cover;
+    border-radius: 0;
+}
+
+.gallery-page .gallery-photo figcaption {
+    display: none;
+}
+
+.gallery-page .gallery-photo.is-video::before {
+    content: "▶";
+    position: absolute;
+    left: 8px;
+    bottom: 8px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(41, 38, 34, 0.58);
+    color: #f5f1e8;
+    font-size: 9px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Viewer navigation */
+.lightbox-nav {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1002;
+    width: 48px;
+    height: 64px;
+    border: 0;
+    background: rgba(41, 38, 34, 0.45);
+    color: white;
+    font-size: 42px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.lightbox-prev { left: 18px; }
+.lightbox-next { right: 18px; }
+.lightbox-nav:disabled {
+    opacity: 0.25;
+    cursor: default;
+}
+
+@media (max-width: 800px) {
+    .gallery-page .gallery-memory {
+        margin-bottom: 48px;
+    }
+
+    .gallery-page .gallery-grid {
+        gap: 2px;
+    }
+
+    .gallery-page .gallery-memory-heading h2 {
+        font-size: 26px;
+    }
+
+    .lightbox-nav {
+        width: 38px;
+        height: 52px;
+        font-size: 34px;
+    }
+
+    .lightbox-prev { left: 6px; }
+    .lightbox-next { right: 6px; }
+}
+
+
+/* =========================================================
+   THINGS I LOVE ABOUT YOU
+   ========================================================= */
+.things-page {
+    max-width: 980px;
+}
+
+.things-header {
+    max-width: 720px;
+    margin-bottom: 76px;
+}
+
+.things-header h1 {
+    margin: 0 0 22px;
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(48px, 7vw, 78px);
+    font-weight: 400;
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+}
+
+.things-list {
+    max-width: 860px;
+    border-top: 1px solid var(--border);
+}
+
+.thing-entry {
+    display: grid;
+    grid-template-columns: 76px minmax(0, 1fr);
+    gap: 28px;
+    padding: 38px 0 42px;
+    border-bottom: 1px solid var(--border);
+}
+
+.thing-number {
+    padding-top: 5px;
+    color: var(--muted);
+    font-family: "Caveat", cursive;
+    font-size: 22px;
+}
+
+.thing-body {
+    max-width: 680px;
+}
+
+.thing-meta {
+    min-height: 22px;
+    margin-bottom: 5px;
+}
+
+.thing-date {
+    color: var(--muted);
+    font-family: "Caveat", cursive;
+    font-size: 18px;
+}
+
+.thing-body h2 {
+    margin: 0 0 10px;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 36px;
+    font-weight: 400;
+    line-height: 1.05;
+}
+
+.thing-body p {
+    margin: 0;
+    max-width: 620px;
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.8;
+}
+
+.things-empty {
+    padding: 68px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.things-empty .handwritten {
+    margin-bottom: 8px;
+    font-size: 25px;
+}
+
+.things-empty p:last-child {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+@media (max-width: 800px) {
+    .things-header {
+        margin-bottom: 52px;
+    }
+
+    .things-header h1 {
+        font-size: 52px;
+    }
+
+    .thing-entry {
+        grid-template-columns: 42px minmax(0, 1fr);
+        gap: 14px;
+        padding: 30px 0 34px;
+    }
+
+    .thing-number {
+        font-size: 19px;
+    }
+
+    .thing-body h2 {
+        font-size: 30px;
+    }
+
+    .thing-body p {
+        font-size: 15px;
+    }
+}
+/* =========================================================
+   PLACES WE'VE BEEN
+   ========================================================= */
+
+.places-page {
+    max-width: 1000px;
+}
+
+.places-header {
+    max-width: 720px;
+    margin-bottom: 76px;
+}
+
+.places-header h1 {
+    margin: 0 0 22px;
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(48px, 7vw, 78px);
+    font-weight: 400;
+
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+}
+
+.places-list {
+    max-width: 900px;
+
+    border-top: 1px solid var(--border);
+}
+
+.place-entry {
+    display: grid;
+
+    grid-template-columns: 76px minmax(0, 1fr);
+
+    gap: 28px;
+
+    padding: 46px 0 52px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.place-number {
+    padding-top: 5px;
+
+    color: var(--muted);
+
+    font-family: "Caveat", cursive;
+    font-size: 22px;
+}
+
+.place-body {
+    min-width: 0;
+    max-width: 760px;
+}
+
+.place-meta {
+    display: flex;
+    flex-wrap: wrap;
+
+    align-items: center;
+
+    gap: 8px;
+
+    min-height: 24px;
+
+    margin-bottom: 8px;
+}
+
+.place-date {
+    color: var(--muted);
+
+    font-family: "Caveat", cursive;
+    font-size: 18px;
+}
+
+.place-separator {
+    color: var(--border);
+}
+
+.place-location {
+    color: var(--muted);
+
+    font-size: 11px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+}
+
+.place-body h2 {
+    margin: 0 0 12px;
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: 42px;
+    font-weight: 400;
+
+    line-height: 1;
+}
+
+.place-body p {
+    max-width: 650px;
+
+    margin: 0;
+
+    color: var(--muted);
+
+    font-size: 16px;
+    line-height: 1.8;
+}
+
+.place-image {
+    margin-top: 30px;
+
+    width: 100%;
+    max-width: 620px;
+
+    aspect-ratio: 4 / 3;
+
+    overflow: hidden;
+
+    background: var(--surface);
+}
+
+.place-image img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    transition:
+        transform 0.5s ease,
+        opacity 0.5s ease;
+}
+
+.place-image:hover img {
+    transform: scale(1.02);
+}
+
+.place-image.empty {
+    display: none;
+}
+
+.places-empty {
+    padding: 68px 0;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.places-empty .handwritten {
+    margin-bottom: 8px;
+
+    font-size: 25px;
+}
+
+.places-empty p:last-child {
+    margin: 0;
+
+    color: var(--muted);
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    .places-header {
+        margin-bottom: 52px;
+    }
+
+    .places-header h1 {
+        font-size: 52px;
+    }
+
+    .place-entry {
+        grid-template-columns: 42px minmax(0, 1fr);
+
+        gap: 14px;
+
+        padding: 32px 0 38px;
+    }
+
+    .place-number {
+        font-size: 19px;
+    }
+
+    .place-body h2 {
+        font-size: 34px;
+    }
+
+    .place-body p {
+        font-size: 15px;
+        line-height: 1.75;
+    }
+
+    .place-image {
+        margin-top: 24px;
+    }
+
+}
+/* =========================================================
+   THE GROWING TREE
+   ========================================================= */
+
+.tree-page {
+    max-width: 1100px;
+}
+
+.tree-header {
+    max-width: 720px;
+    margin-bottom: 40px;
+}
+
+.tree-header h1 {
+    margin: 0 0 24px;
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(52px, 8vw, 86px);
+    font-weight: 400;
+
+    line-height: 0.9;
+    letter-spacing: -0.025em;
+}
+
+.tree-intro {
+    max-width: 570px;
+
+    margin: 0;
+
+    color: var(--muted);
+
+    font-size: 16px;
+    line-height: 1.85;
+}
+
+
+/* TREE STAGE */
+
+.growing-tree {
+    width: 100%;
+
+    margin-top: 20px;
+}
+
+.tree-stage {
+    position: relative;
+
+    width: 100%;
+    max-width: 900px;
+
+    height: 900px;
+
+    margin: 0 auto;
+}
+
+
+/* SVG */
+
+.tree-svg {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    overflow: visible;
+}
+
+
+/* TRUNK */
+
+.tree-trunk path,
+.tree-branches path,
+.tree-roots path {
+
+    fill: none;
+
+    stroke: var(--text);
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
+
+}
+
+.tree-trunk path {
+    stroke-width: 13;
+
+    opacity: 0.82;
+}
+
+.tree-branches path {
+    stroke-width: 8;
+
+    opacity: 0.7;
+}
+
+.tree-roots path {
+    stroke-width: 5;
+
+    opacity: 0.35;
+}
+
+
+/* MILESTONES */
+
+.tree-milestones {
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+}
+
+.tree-milestone {
+    position: absolute;
+
+    width: 250px;
+
+    transform: translateY(-50%);
+
+    pointer-events: auto;
+}
+
+.tree-milestone.left {
+    left: 2%;
+    text-align: right;
+}
+
+.tree-milestone.right {
+    right: 2%;
+    text-align: left;
+}
+
+.tree-milestone-date {
+    margin-bottom: 4px;
+
+    color: var(--muted);
+
+    font-family: "Caveat", cursive;
+    font-size: 18px;
+}
+
+.tree-milestone h3 {
+    margin: 0 0 6px;
+
+    font-family: "Cormorant Garamond", serif;
+    font-size: 29px;
+    font-weight: 400;
+
+    line-height: 1.05;
+}
+
+.tree-milestone p {
+    margin: 0;
+
+    color: var(--muted);
+
+    font-size: 13px;
+    line-height: 1.65;
+}
+
+
+/* CONNECTING DOT */
+
+.tree-milestone::after {
+    content: "";
+
+    position: absolute;
+
+    top: 50%;
+
+    width: 9px;
+    height: 9px;
+
+    margin-top: -4px;
+
+    border-radius: 50%;
+
+    background: var(--accent);
+}
+
+.tree-milestone.left::after {
+    right: -55px;
+}
+
+.tree-milestone.right::after {
+    left: -55px;
+}
+
+
+/* LEAVES */
+
+.tree-leaves {
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+}
+
+.tree-leaf {
+    position: absolute;
+
+    width: 14px;
+    height: 22px;
+
+    border: 1px solid var(--accent);
+
+    border-radius: 100% 0 100% 0;
+
+    opacity: 0;
+
+    transform:
+        rotate(35deg)
+        scale(0.4);
+
+    animation:
+        leafAppear 0.7s ease forwards;
+}
+
+.tree-leaf.large {
+    width: 20px;
+    height: 30px;
+}
+
+.tree-leaf.medium {
+    width: 16px;
+    height: 24px;
+}
+
+.tree-leaf.small {
+    width: 12px;
+    height: 18px;
+}
+
+@keyframes leafAppear {
+
+    to {
+        opacity: 0.72;
+
+        transform:
+            rotate(35deg)
+            scale(1);
+    }
+
+}
+
+
+/* FOOTER */
+
+.tree-footer {
+    max-width: 700px;
+
+    margin: 20px auto 0;
+
+    padding: 50px 0 20px;
+
+    text-align: center;
+
+    border-top: 1px solid var(--border);
+}
+
+.tree-footer .handwritten {
+    margin-bottom: 8px;
+
+    font-size: 27px;
+}
+
+.tree-footer p:last-child {
+    margin: 0;
+
+    color: var(--muted);
+
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   TREE — MOBILE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    .tree-header {
+        margin-bottom: 20px;
+    }
+
+    .tree-header h1 {
+        font-size: 54px;
+    }
+
+    .tree-intro {
+        font-size: 15px;
+    }
+
+    .growing-tree {
+        margin-top: 0;
+    }
+
+    .tree-stage {
+
+        height: 920px;
+
+        max-width: 520px;
+
+    }
+
+
+    /*
+       On mobile the tree becomes more vertical,
+       with milestones beside it.
+    */
+
+    .tree-svg {
+        width: 145%;
+
+        left: -22.5%;
+    }
+
+
+    .tree-milestone {
+        width: 155px;
+    }
+
+    .tree-milestone.left {
+        left: 0;
+        text-align: right;
+    }
+
+    .tree-milestone.right {
+        right: 0;
+        text-align: left;
+    }
+
+    .tree-milestone h3 {
+        font-size: 24px;
+    }
+
+    .tree-milestone-date {
+        font-size: 16px;
+    }
+
+    .tree-milestone p {
+        font-size: 12px;
+        line-height: 1.55;
+    }
+
+    .tree-milestone.left::after {
+        right: -25px;
+    }
+
+    .tree-milestone.right::after {
+        left: -25px;
+    }
+
+    .tree-footer {
+        margin-top: 0;
+        padding-top: 40px;
+    }
+
+}
