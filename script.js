@@ -1862,3 +1862,277 @@ if (
     init();
 
         }
+/* ======================================================
+   THE GROWING TREE
+   ====================================================== */
+
+async function loadTree() {
+
+    const container =
+        document.getElementById("treeMilestones");
+
+    const leaves =
+        document.getElementById("treeLeaves");
+
+    if (!container) {
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                "./data/tree.json?v=1",
+                {
+                    cache: "no-store"
+                }
+            );
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Could not load tree.json"
+            );
+
+        }
+
+        const milestones =
+            await response.json();
+
+        if (!Array.isArray(milestones)) {
+
+            throw new Error(
+                "tree.json does not contain an array"
+            );
+
+        }
+
+        renderTree(milestones);
+
+    } catch (error) {
+
+        console.error(
+            "TREE ERROR:",
+            error
+        );
+
+        container.innerHTML = "";
+
+        if (leaves) {
+            leaves.innerHTML = "";
+        }
+
+    }
+
+}
+
+
+function renderTree(milestones) {
+
+    const container =
+        document.getElementById("treeMilestones");
+
+    const leaves =
+        document.getElementById("treeLeaves");
+
+    if (!container) {
+        return;
+    }
+
+
+    /*
+       Vertical positions for milestones.
+
+       The tree becomes visually denser as
+       more moments are added.
+    */
+
+    const positions = [
+        79,
+        63,
+        49,
+        36,
+        25,
+        16,
+        9,
+        3
+    ];
+
+
+    container.innerHTML =
+        milestones
+            .map(
+                (milestone, index) => {
+
+                    const position =
+                        milestone.position === "right"
+                            ? "right"
+                            : "left";
+
+                    const top =
+                        positions[index] !== undefined
+                            ? positions[index]
+                            : Math.max(
+                                4,
+                                79 - (index * 8)
+                            );
+
+                    const date =
+                        milestone.date || "";
+
+                    const title =
+                        milestone.title ||
+                        "Untitled moment";
+
+                    const text =
+                        milestone.text ||
+                        milestone.description ||
+                        "";
+
+                    return `
+                        <article
+                            class="tree-milestone ${position}"
+                            style="top: ${top}%"
+                        >
+
+                            ${
+                                date
+                                    ? `
+                                        <div class="tree-milestone-date">
+                                            ${escapeHTML(date)}
+                                        </div>
+                                      `
+                                    : ""
+                            }
+
+                            <h3>
+                                ${escapeHTML(title)}
+                            </h3>
+
+                            ${
+                                text
+                                    ? `
+                                        <p>
+                                            ${escapeHTML(text)}
+                                        </p>
+                                      `
+                                    : ""
+                            }
+
+                        </article>
+                    `;
+
+                }
+            )
+            .join("");
+
+
+    /*
+       Add leaves around the upper
+       portion of the tree.
+
+       Their positions are intentionally
+       organic rather than perfectly symmetrical.
+    */
+
+    if (!leaves) {
+        return;
+    }
+
+    const leafPositions = [
+
+        [37, 20],
+        [44, 15],
+        [51, 19],
+        [32, 27],
+        [57, 29],
+        [39, 34],
+        [48, 31],
+        [29, 22],
+        [62, 24],
+        [54, 12],
+        [35, 14],
+        [59, 18],
+        [45, 25],
+        [52, 36],
+        [31, 31]
+
+    ];
+
+
+    const leafCount =
+        Math.min(
+            leafPositions.length,
+            Math.max(
+                4,
+                milestones.length * 4
+            )
+        );
+
+
+    leaves.innerHTML =
+        leafPositions
+            .slice(0, leafCount)
+            .map(
+                (position, index) => {
+
+                    const left =
+                        position[0];
+
+                    const top =
+                        position[1];
+
+                    let size =
+                        "small";
+
+                    if (
+                        index % 5 === 0
+                    ) {
+
+                        size = "large";
+
+                    } else if (
+                        index % 3 === 0
+                    ) {
+
+                        size = "medium";
+
+                    }
+
+                    return `
+                        <span
+                            class="tree-leaf ${size}"
+                            style="
+                                left: ${left}%;
+                                top: ${top}%;
+                                animation-delay: ${index * 90}ms;
+                            "
+                        ></span>
+                    `;
+
+                }
+            )
+            .join("");
+
+}
+
+
+/* ======================================================
+   TREE INITIALIZATION
+   ====================================================== */
+
+const originalInit =
+    window.init;
+
+window.init =
+    async function () {
+
+        if (typeof originalInit === "function") {
+
+            await originalInit();
+
+        }
+
+        await loadTree();
+
+    };
