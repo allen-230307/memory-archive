@@ -1,0 +1,23 @@
+[
+    {
+        "date": "1 August 2026",
+        "title": "The beginning",
+        "text": "The day that became the first page of something we would keep growing.",
+        "position": "left",
+        "leaf": "large"
+    },
+    {
+        "date": "",
+        "title": "A moment worth keeping",
+        "text": "Replace this with another moment that became part of our story.",
+        "position": "right",
+        "leaf": "medium"
+    },
+    {
+        "date": "",
+        "title": "Another little branch",
+        "text": "Replace this with another memory, milestone or moment.",
+        "position": "left",
+        "leaf": "small"
+    }
+]
