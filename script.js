@@ -1540,3 +1540,325 @@ if (
     init();
 
             }
+/* ======================================================
+   PLACES WE'VE BEEN
+   ====================================================== */
+
+async function loadPlaces() {
+
+    const container =
+        document.getElementById("placesList");
+
+    if (!container) {
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                "./data/places.json?v=1",
+                {
+                    cache: "no-store"
+                }
+            );
+
+        if (!response.ok) {
+            throw new Error(
+                "Could not load places.json"
+            );
+        }
+
+        const places =
+            await response.json();
+
+        if (!Array.isArray(places)) {
+            throw new Error(
+                "places.json does not contain an array"
+            );
+        }
+
+        renderPlaces(places);
+
+    } catch (error) {
+
+        console.error(
+            "PLACES ERROR:",
+            error
+        );
+
+        container.innerHTML =
+            '<p class="loading">Unable to load this page.</p>';
+    }
+
+}
+
+
+/* ======================================================
+   RENDER PLACES
+   ====================================================== */
+
+function renderPlaces(places) {
+
+    const container =
+        document.getElementById("placesList");
+
+    if (!container) {
+        return;
+    }
+
+    if (!places.length) {
+
+        container.innerHTML = `
+            <div class="places-empty">
+                <p class="handwritten">
+                    No places written here yet.
+                </p>
+
+                <p>
+                    This page is waiting for the places
+                    that became part of our story.
+                </p>
+            </div>
+        `;
+
+        return;
+    }
+
+
+    container.innerHTML =
+        places
+            .map(
+                (place, index) => {
+
+                    const number =
+                        String(index + 1)
+                            .padStart(2, "0");
+
+                    const name =
+                        place.name ||
+                        "Untitled place";
+
+                    const date =
+                        place.date || "";
+
+                    const location =
+                        place.location || "";
+
+                    const description =
+                        place.description ||
+                        place.text ||
+                        "";
+
+                    const image =
+                        place.image ||
+                        "";
+
+
+                    const metaParts = [];
+
+
+                    if (date) {
+
+                        metaParts.push(`
+                            <span class="place-date">
+                                ${escapeHTML(date)}
+                            </span>
+                        `);
+
+                    }
+
+
+                    if (
+                        date &&
+                        location
+                    ) {
+
+                        metaParts.push(`
+                            <span class="place-separator">
+                                ·
+                            </span>
+                        `);
+
+                    }
+
+
+                    if (location) {
+
+                        metaParts.push(`
+                            <span class="place-location">
+                                ${escapeHTML(location)}
+                            </span>
+                        `);
+
+                    }
+
+
+                    const imageHTML =
+                        image
+                            ? `
+                                <div class="place-image">
+                                    <img
+                                        src="./${escapeHTML(image)}"
+                                        alt="${escapeHTML(name)}"
+                                        loading="lazy"
+                                    >
+                                </div>
+                              `
+                            : "";
+
+
+                    return `
+                        <article class="place-entry">
+
+                            <div class="place-number">
+                                ${number}
+                            </div>
+
+                            <div class="place-body">
+
+                                <div class="place-meta">
+                                    ${metaParts.join("")}
+                                </div>
+
+                                <h2>
+                                    ${escapeHTML(name)}
+                                </h2>
+
+                                ${
+                                    description
+                                        ? `
+                                            <p>
+                                                ${escapeHTML(description)}
+                                            </p>
+                                          `
+                                        : ""
+                                }
+
+                                ${imageHTML}
+
+                            </div>
+
+                        </article>
+                    `;
+
+                }
+            )
+            .join("");
+
+}
+
+
+/* ======================================================
+   SAFE TEXT HELPER
+   ====================================================== */
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* ======================================================
+   NAVIGATION ROUTING
+   Makes the new sections work even on older
+   HTML pages whose links still contain "#".
+   ====================================================== */
+
+function setupArchiveNavigation() {
+
+    document
+        .querySelectorAll(".nav-link")
+        .forEach(
+            link => {
+
+                const label =
+                    link.textContent
+                        .trim()
+                        .toLowerCase();
+
+                if (
+                    label ===
+                    "places we've been"
+                ) {
+
+                    link.href =
+                        "places.html";
+
+                }
+
+                if (
+                    label ===
+                    "things i love about you"
+                ) {
+
+                    link.href =
+                        "things.html";
+
+                }
+
+                if (
+                    label ===
+                    "the growing tree"
+                ) {
+
+                    link.href =
+                        "tree.html";
+
+                }
+
+            }
+        );
+
+}
+
+
+/* ======================================================
+   INITIALIZE
+   ====================================================== */
+
+async function init() {
+
+    setupMobileMenu();
+
+    setupLightbox();
+
+    setupKeyboard();
+
+    setupArchiveNavigation();
+
+    await loadMemories();
+
+    await loadThings();
+
+    await loadPlaces();
+
+    setupRandomMemory();
+
+}
+
+
+/* ======================================================
+   WAIT FOR DOM
+   ====================================================== */
+
+if (
+    document.readyState === "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        init
+    );
+
+} else {
+
+    init();
+
+        }
