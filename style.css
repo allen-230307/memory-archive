@@ -2226,12 +2226,18 @@ body {
    ========================================================= */
 
 .tree-page {
+    width: 100%;
     max-width: 1100px;
 }
 
+
+/* =========================================================
+   TREE HEADER
+   ========================================================= */
+
 .tree-header {
     max-width: 720px;
-    margin-bottom: 40px;
+    margin-bottom: 45px;
 }
 
 .tree-header h1 {
@@ -2252,17 +2258,18 @@ body {
 
     color: var(--muted);
 
-    font-size: 16px;
-    line-height: 1.85;
+    font-size: 15px;
+    line-height: 1.8;
 }
 
 
-/* TREE STAGE */
+/* =========================================================
+   TREE STAGE
+   ========================================================= */
 
 .growing-tree {
     width: 100%;
-
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .tree-stage {
@@ -2271,13 +2278,21 @@ body {
     width: 100%;
     max-width: 900px;
 
-    height: 900px;
+    /*
+       Enough vertical room for the trunk,
+       roots, branches and milestones.
+    */
+    height: 820px;
 
     margin: 0 auto;
+
+    overflow: visible;
 }
 
 
-/* SVG */
+/* =========================================================
+   TREE SVG
+   ========================================================= */
 
 .tree-svg {
     position: absolute;
@@ -2288,49 +2303,67 @@ body {
     height: 100%;
 
     overflow: visible;
+
+    /*
+       Keeps the SVG visually behind
+       the milestone information.
+    */
+    z-index: 1;
+
+    pointer-events: none;
 }
 
 
-/* TRUNK */
+/* =========================================================
+   TRUNK / BRANCHES / ROOTS
+   ========================================================= */
 
 .tree-trunk path,
 .tree-branches path,
 .tree-roots path {
-
     fill: none;
 
     stroke: var(--text);
 
     stroke-linecap: round;
     stroke-linejoin: round;
-
 }
 
-.tree-trunk path {
-    stroke-width: 13;
 
+/* Main trunk */
+
+.tree-trunk path {
+    stroke-width: 15;
     opacity: 0.82;
 }
 
+
+/* Branches */
+
 .tree-branches path {
     stroke-width: 8;
-
-    opacity: 0.7;
+    opacity: 0.68;
 }
+
+
+/* Roots */
 
 .tree-roots path {
     stroke-width: 5;
-
-    opacity: 0.35;
+    opacity: 0.32;
 }
 
 
-/* MILESTONES */
+/* =========================================================
+   MILESTONES
+   ========================================================= */
 
 .tree-milestones {
     position: absolute;
 
     inset: 0;
+
+    z-index: 3;
 
     pointer-events: none;
 }
@@ -2343,17 +2376,34 @@ body {
     transform: translateY(-50%);
 
     pointer-events: auto;
+
+    transition:
+        transform 0.3s ease,
+        opacity 0.3s ease;
 }
 
+
+/* LEFT */
+
 .tree-milestone.left {
-    left: 2%;
+    left: 1%;
+
     text-align: right;
 }
 
+
+/* RIGHT */
+
 .tree-milestone.right {
-    right: 2%;
+    right: 1%;
+
     text-align: left;
 }
+
+
+/* =========================================================
+   MILESTONE DATE
+   ========================================================= */
 
 .tree-milestone-date {
     margin-bottom: 4px;
@@ -2361,30 +2411,65 @@ body {
     color: var(--muted);
 
     font-family: "Caveat", cursive;
-    font-size: 18px;
+    font-size: 17px;
+
+    line-height: 1.2;
 }
+
+
+/* =========================================================
+   MILESTONE TITLE
+   ========================================================= */
 
 .tree-milestone h3 {
     margin: 0 0 6px;
 
     font-family: "Cormorant Garamond", serif;
-    font-size: 29px;
+
+    font-size: 27px;
     font-weight: 400;
 
     line-height: 1.05;
+
+    transition:
+        opacity 0.3s ease;
 }
 
+
+/* =========================================================
+   MILESTONE TEXT
+   ========================================================= */
+
 .tree-milestone p {
+    max-width: 250px;
+
     margin: 0;
 
     color: var(--muted);
 
     font-size: 13px;
-    line-height: 1.65;
+    line-height: 1.6;
 }
 
 
-/* CONNECTING DOT */
+/* =========================================================
+   MILESTONE HOVER
+   ========================================================= */
+
+.tree-milestone:hover {
+    transform:
+        translateY(-50%)
+        translateY(-2px);
+}
+
+.tree-milestone:hover h3 {
+    opacity: 0.58;
+}
+
+
+/* =========================================================
+   CONNECTING DOT
+   ========================================================= */
 
 .tree-milestone::after {
     content: "";
@@ -2393,31 +2478,55 @@ body {
 
     top: 50%;
 
-    width: 9px;
-    height: 9px;
+    width: 8px;
+    height: 8px;
 
     margin-top: -4px;
 
     border-radius: 50%;
 
     background: var(--accent);
+
+    box-shadow:
+        0 0 0 4px var(--background);
+
+    transition:
+        transform 0.3s ease,
+        opacity 0.3s ease;
 }
+
+
+/* LEFT DOT */
 
 .tree-milestone.left::after {
-    right: -55px;
+    right: -48px;
 }
+
+
+/* RIGHT DOT */
 
 .tree-milestone.right::after {
-    left: -55px;
+    left: -48px;
 }
 
 
-/* LEAVES */
+/* Dot interaction */
+
+.tree-milestone:hover::after {
+    transform: scale(1.35);
+}
+
+
+/* =========================================================
+   LEAVES
+   ========================================================= */
 
 .tree-leaves {
     position: absolute;
 
     inset: 0;
+
+    z-index: 2;
 
     pointer-events: none;
 }
@@ -2430,7 +2539,8 @@ body {
 
     border: 1px solid var(--accent);
 
-    border-radius: 100% 0 100% 0;
+    border-radius:
+        100% 0 100% 0;
 
     opacity: 0;
 
@@ -2442,145 +2552,33 @@ body {
         leafAppear 0.7s ease forwards;
 }
 
+
+/* Large */
+
 .tree-leaf.large {
     width: 20px;
     height: 30px;
 }
+
+
+/* Medium */
 
 .tree-leaf.medium {
     width: 16px;
     height: 24px;
 }
 
+
+/* Small */
+
 .tree-leaf.small {
     width: 12px;
     height: 18px;
 }
 
-@keyframes leafAppear {
-
-    to {
-        opacity: 0.72;
-
-        transform:
-            rotate(35deg)
-            scale(1);
-    }
-
-}
-
-
-/* FOOTER */
-
-.tree-footer {
-    max-width: 700px;
-
-    margin: 20px auto 0;
-
-    padding: 50px 0 20px;
-
-    text-align: center;
-
-    border-top: 1px solid var(--border);
-}
-
-.tree-footer .handwritten {
-    margin-bottom: 8px;
-
-    font-size: 27px;
-}
-
-.tree-footer p:last-child {
-    margin: 0;
-
-    color: var(--muted);
-
-    font-size: 14px;
-    line-height: 1.7;
-}
-
 
 /* =========================================================
-   TREE — MOBILE
+   LEAF ANIMATION
    ========================================================= */
 
-@media (max-width: 800px) {
-
-    .tree-header {
-        margin-bottom: 20px;
-    }
-
-    .tree-header h1 {
-        font-size: 54px;
-    }
-
-    .tree-intro {
-        font-size: 15px;
-    }
-
-    .growing-tree {
-        margin-top: 0;
-    }
-
-    .tree-stage {
-
-        height: 920px;
-
-        max-width: 520px;
-
-    }
-
-
-    /*
-       On mobile the tree becomes more vertical,
-       with milestones beside it.
-    */
-
-    .tree-svg {
-        width: 145%;
-
-        left: -22.5%;
-    }
-
-
-    .tree-milestone {
-        width: 155px;
-    }
-
-    .tree-milestone.left {
-        left: 0;
-        text-align: right;
-    }
-
-    .tree-milestone.right {
-        right: 0;
-        text-align: left;
-    }
-
-    .tree-milestone h3 {
-        font-size: 24px;
-    }
-
-    .tree-milestone-date {
-        font-size: 16px;
-    }
-
-    .tree-milestone p {
-        font-size: 12px;
-        line-height: 1.55;
-    }
-
-    .tree-milestone.left::after {
-        right: -25px;
-    }
-
-    .tree-milestone.right::after {
-        left: -25px;
-    }
-
-    .tree-footer {
-        margin-top: 0;
-        padding-top: 40px;
-    }
-
-}
+@key
