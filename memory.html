@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Memory — The Archive</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500&family=Caveat:wght@400;500&display=swap"
+        rel="stylesheet"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         NAVIGATION
+         ========================= -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <span class="brand-title">
+                THE ARCHIVE
+            </span>
+
+            <span class="brand-subtitle">
+                A collection of moments.
+            </span>
+
+        </div>
+
+
+        <nav class="navigation">
+
+            <a
+                href="index.html"
+                class="nav-link"
+            >
+                Home
+            </a>
+
+            <a
+                href="story.html"
+                class="nav-link"
+            >
+                Our Story
+            </a>
+
+            <a
+                href="gallery.html"
+                class="nav-link"
+            >
+                The Gallery
+            </a>
+
+            <a
+                href="#"
+                class="nav-link"
+            >
+                The Little Things
+            </a>
+
+            <a
+                href="#"
+                class="nav-link"
+            >
+                Places We've Been
+            </a>
+
+            <a
+                href="#"
+                class="nav-link"
+            >
+                Things I Love About You
+            </a>
+
+            <a
+                href="#"
+                class="nav-link"
+            >
+                The Growing Tree
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <button
+                id="randomMemory"
+                class="random-button"
+                type="button"
+            >
+                ↻ Random Memory
+            </button>
+
+
+            <div class="memory-counter">
+
+                <span id="memoryCount">
+                    0
+                </span>
+
+                <span>
+                    memories preserved
+                </span>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================
+         MOBILE HEADER
+         ========================= -->
+
+    <header class="mobile-header">
+
+        <span>
+            THE ARCHIVE
+        </span>
+
+        <button
+            id="menuButton"
+            type="button"
+            aria-label="Open navigation"
+        >
+            ☰
+        </button>
+
+    </header>
+
+
+    <!-- =========================
+         MEMORY CONTENT
+         ========================= -->
+
+    <main class="main-content memory-page">
+
+
+        <a
+            href="story.html"
+            class="back-link"
+        >
+            ← Our Story
+        </a>
+
+
+        <article id="memoryContent">
+
+            <p class="loading">
+                Opening memory...
+            </p>
+
+        </article>
+
+
+        <!-- =========================
+             PREVIOUS / NEXT
+             ========================= -->
+
+        <div class="memory-navigation">
+
+            <a
+                id="previousMemory"
+                href="#"
+            >
+                ← Previous
+            </a>
+
+            <a
+                id="nextMemory"
+                href="#"
+            >
+                Next →
+            </a>
+
+        </div>
+
+
+    </main>
+
+
+    <!-- =========================
+         LIGHTBOX
+         ========================= -->
+
+    <div
+        id="lightbox"
+        class="lightbox"
+        aria-hidden="true"
+    >
+
+        <button
+            id="lightboxPrev"
+            class="lightbox-nav lightbox-prev"
+            aria-label="Previous media"
+        >
+            ‹
+        </button>
+
+        <button
+            id="lightboxClose"
+            class="lightbox-close"
+            aria-label="Close media"
+        >
+            ×
+        </button>
+
+        <button
+            id="lightboxNext"
+            class="lightbox-nav lightbox-next"
+            aria-label="Next media"
+        >
+            ›
+        </button>
+
+        <div class="lightbox-content">
+
+            <img
+                id="lightboxImage"
+                src=""
+                alt=""
+            >
+
+            <div
+                id="lightboxCaption"
+                class="lightbox-caption"
+            ></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         JAVASCRIPT
+         ========================= -->
+
+    <script src="./script.js?v=4"></script>
+
+</body>
+
+</html>
