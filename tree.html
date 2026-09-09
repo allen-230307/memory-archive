@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f5f1e8">
+
+    <title>The Growing Tree — The Archive</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=Cormorant+Garamond:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=30">
+</head>
+
+<body class="tree-page">
+
+<header class="mobile-header">
+    <span>THE ARCHIVE</span>
+    <button id="menuButton" aria-label="Open menu" aria-expanded="false">☰</button>
+</header>
+
+<aside class="sidebar">
+    <div class="brand">
+        <div class="brand-title">THE ARCHIVE</div>
+        <div class="brand-subtitle">for us, and only us.</div>
+    </div>
+
+    <nav class="navigation" aria-label="Main navigation">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="story.html" class="nav-link">Our Story</a>
+        <a href="gallery.html" class="nav-link">The Gallery</a>
+        <a href="places.html" class="nav-link">Places We've Been</a>
+        <a href="things.html" class="nav-link">Things I Love About You</a>
+        <a href="tree.html" class="nav-link active" aria-current="page">The Growing Tree</a>
+    </nav>
+
+    <div class="sidebar-bottom">
+        <button id="randomMemory" class="random-button">show me a memory →</button>
+        <div class="memory-counter">
+            <span id="memoryCount">0</span>
+            <span>MEMORIES</span>
+        </div>
+    </div>
+</aside>
+
+<main class="main-content">
+
+    <header class="tree-header">
+        <p class="handwritten">Everything we have become.</p>
+        <h1>Our little universe.</h1>
+        <p class="tree-intro">
+            Some moments pass. Some stay with us. Here, the ones we kept are no longer pages —
+            they are points of light, connected by everything that happened between them.
+        </p>
+    </header>
+
+    <section class="growing-tree" aria-label="Our memory universe">
+        <div id="treeStage" class="tree-stage">
+
+            <div id="universeSpace" class="universe-space" aria-hidden="true"></div>
+
+            <svg id="universeConnections"
+                 class="universe-connections"
+                 viewBox="0 0 1000 700"
+                 preserveAspectRatio="none"
+                 aria-hidden="true"></svg>
+
+            <div id="universeCore" class="universe-core" aria-hidden="true">
+                <div class="universe-core-inner">
+                    <span class="universe-core-mark">✦</span>
+                    <span class="universe-core-label">THE ARCHIVE</span>
+                    <span class="universe-core-caption">still becoming</span>
+                </div>
+            </div>
+
+            <div id="treeMilestones" class="tree-milestones"></div>
+
+            <div class="universe-future" aria-hidden="true">
+                <span>and there is still more.</span>
+            </div>
+
+            <div id="universeDetail"
+                 class="universe-detail"
+                 aria-hidden="true"
+                 aria-live="polite">
+                <div id="universeDetailDate" class="universe-detail-date"></div>
+                <h2 id="universeDetailTitle"></h2>
+                <p id="universeDetailText"></p>
+                <div class="universe-detail-actions">
+                    <button id="universeOpenMemory" class="universe-open-memory">
+                        open this memory →
+                    </button>
+                    <button id="universeClose" class="universe-close">close</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="tree-footer">
+        <p class="handwritten">Not finished. Just growing.</p>
+        <p>
+            Every new memory becomes another point of light. The empty space is only waiting for what comes next.
+        </p>
+    </footer>
+
+</main>
+
+<script src="script.js?v=30"></script>
+</body>
+</html>
