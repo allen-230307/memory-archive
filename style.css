@@ -2222,115 +2222,285 @@ body {
 
 }
 /* =========================================================
-   THE GROWING TREE
+   MEMORY UNIVERSE — FINAL
+   THE EMOTIONAL CENTER OF THE ARCHIVE
    ========================================================= */
 
 .tree-page {
     max-width: 1100px;
 }
 
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
 .tree-header {
-    max-width: 720px;
-    margin-bottom: 40px;
+    max-width: 690px;
+    margin-bottom: 34px;
+}
+
+.tree-header .handwritten {
+    margin-bottom: 6px;
 }
 
 .tree-header h1 {
-    margin: 0 0 24px;
+    margin: 0 0 21px;
 
     font-family: "Cormorant Garamond", serif;
-    font-size: clamp(52px, 8vw, 86px);
+    font-size: clamp(58px, 7vw, 92px);
     font-weight: 400;
-
-    line-height: 0.9;
-    letter-spacing: -0.025em;
+    line-height: .86;
+    letter-spacing: -2.5px;
 }
 
 .tree-intro {
-    max-width: 570px;
+    max-width: 540px;
 
     margin: 0;
 
     color: var(--muted);
 
-    font-size: 16px;
+    font-size: 13px;
     line-height: 1.85;
 }
 
 
-/* TREE STAGE */
-
-.growing-tree {
-    width: 100%;
-
-    margin-top: 20px;
-}
+/* =========================================================
+   UNIVERSE STAGE
+   ========================================================= */
 
 .tree-stage {
     position: relative;
 
     width: 100%;
-    max-width: 900px;
-
-    height: 900px;
+    height: min(760px, 68vw);
+    min-height: 590px;
 
     margin: 0 auto;
+
+    overflow: hidden;
+
+    isolation: isolate;
+
+    background:
+        radial-gradient(
+            circle at 50% 50%,
+            rgba(181,154,98,.075),
+            transparent 23%
+        ),
+        radial-gradient(
+            circle at 19% 28%,
+            rgba(111,133,137,.045),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 82% 72%,
+            rgba(168,123,120,.035),
+            transparent 28%
+        );
+
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+
+    cursor: default;
 }
 
 
-/* SVG */
+/*
+   Very soft central atmosphere.
+*/
 
-.tree-svg {
+.tree-stage::before {
+    content: "";
+
+    position: absolute;
+    inset: 7%;
+
+    z-index: -2;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,255,255,.42),
+            transparent 66%
+        );
+
+    filter: blur(25px);
+
+    pointer-events: none;
+}
+
+
+/*
+   Very subtle outer vignette.
+*/
+
+.tree-stage::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    z-index: 6;
+
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            transparent 42%,
+            rgba(245,241,232,.20) 82%,
+            rgba(245,241,232,.55) 100%
+        );
+}
+
+
+/* =========================================================
+   STAR FIELD
+   ========================================================= */
+
+.universe-space {
+    position: absolute;
+    inset: 0;
+
+    overflow: hidden;
+
+    pointer-events: none;
+
+    z-index: 0;
+}
+
+.universe-star {
     position: absolute;
 
+    width: var(--star-size, 1.5px);
+    height: var(--star-size, 1.5px);
+
+    border-radius: 50%;
+
+    background: rgba(71,68,62,.42);
+
+    opacity: var(--star-opacity, .22);
+
+    transform: translate3d(
+        var(--star-x, 0px),
+        var(--star-y, 0px),
+        0
+    );
+
+    animation:
+        universeStarPulse
+        var(--star-duration, 5s)
+        ease-in-out
+        infinite;
+
+    animation-delay: var(--star-delay, 0s);
+}
+
+.universe-star:nth-child(7n) {
+    background: rgba(181,154,98,.60);
+}
+
+.universe-star:nth-child(11n) {
+    width: 2px;
+    height: 2px;
+}
+
+@keyframes universeStarPulse {
+
+    0%,
+    100% {
+        opacity: .08;
+        transform:
+            scale(.72)
+            translate3d(
+                var(--star-x, 0px),
+                var(--star-y, 0px),
+                0
+            );
+    }
+
+    50% {
+        opacity: .38;
+        transform:
+            scale(1.35)
+            translate3d(
+                var(--star-x, 0px),
+                var(--star-y, 0px),
+                0
+            );
+    }
+}
+
+
+/* =========================================================
+   MEMORY CONNECTIONS
+   ========================================================= */
+
+.universe-connections {
+    position: absolute;
     inset: 0;
 
     width: 100%;
     height: 100%;
 
     overflow: visible;
+
+    pointer-events: none;
+
+    z-index: 1;
 }
 
-
-/* TRUNK */
-
-.tree-trunk path,
-.tree-branches path,
-.tree-roots path {
-
+.universe-connections path {
     fill: none;
 
-    stroke: var(--text);
+    stroke: rgba(104,101,94,.15);
+
+    stroke-width: 1;
 
     stroke-linecap: round;
-    stroke-linejoin: round;
 
+    stroke-dasharray: 1 10;
+
+    opacity: .65;
+
+    transition:
+        stroke .55s ease,
+        opacity .55s ease,
+        stroke-width .55s ease;
 }
 
-.tree-trunk path {
-    stroke-width: 13;
+.universe-connections path.secondary {
+    stroke: rgba(181,154,98,.09);
 
-    opacity: 0.82;
+    stroke-dasharray: 1 13;
+
+    opacity: .38;
 }
 
-.tree-branches path {
-    stroke-width: 8;
+.universe-connections path.active {
+    stroke: rgba(181,154,98,.58);
 
-    opacity: 0.7;
+    stroke-width: 1.45;
+
+    stroke-dasharray: none;
+
+    opacity: 1;
 }
 
-.tree-roots path {
-    stroke-width: 5;
 
-    opacity: 0.35;
-}
-
-
-/* MILESTONES */
+/* =========================================================
+   MEMORY FIELD
+   ========================================================= */
 
 .tree-milestones {
     position: absolute;
-
     inset: 0;
+
+    z-index: 3;
 
     pointer-events: none;
 }
@@ -2338,150 +2508,759 @@ body {
 .tree-milestone {
     position: absolute;
 
-    width: 250px;
+    width: 46px;
+    height: 46px;
 
-    transform: translateY(-50%);
+    transform:
+        translate(-50%, -50%)
+        translate3d(
+            var(--node-x, 0px),
+            var(--node-y, 0px),
+            0
+        );
 
     pointer-events: auto;
-}
 
-.tree-milestone.left {
-    left: 2%;
-    text-align: right;
-}
+    cursor: pointer;
 
-.tree-milestone.right {
-    right: 2%;
-    text-align: left;
-}
+    border: 0;
 
-.tree-milestone-date {
-    margin-bottom: 4px;
+    background: transparent;
 
-    color: var(--muted);
+    padding: 0;
 
-    font-family: "Caveat", cursive;
-    font-size: 18px;
-}
+    outline: none;
 
-.tree-milestone h3 {
-    margin: 0 0 6px;
-
-    font-family: "Cormorant Garamond", serif;
-    font-size: 29px;
-    font-weight: 400;
-
-    line-height: 1.05;
-}
-
-.tree-milestone p {
-    margin: 0;
-
-    color: var(--muted);
-
-    font-size: 13px;
-    line-height: 1.65;
+    transition:
+        transform .8s cubic-bezier(.18,.78,.2,1),
+        opacity .45s ease;
 }
 
 
-/* CONNECTING DOT */
+/* =========================================================
+   THE MEMORY LIGHT
+   ========================================================= */
 
-.tree-milestone::after {
-    content: "";
-
-    position: absolute;
-
-    top: 50%;
-
-    width: 9px;
-    height: 9px;
-
-    margin-top: -4px;
-
-    border-radius: 50%;
-
-    background: var(--accent);
-}
-
-.tree-milestone.left::after {
-    right: -55px;
-}
-
-.tree-milestone.right::after {
-    left: -55px;
-}
-
-
-/* LEAVES */
-
-.tree-leaves {
+.universe-node {
     position: absolute;
 
     inset: 0;
 
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle at 36% 32%,
+            #fffdf7 0 7%,
+            rgba(255,250,236,.96) 12%,
+            var(--node-color, #aa9164) 39%,
+            rgba(104,86,60,.55) 64%,
+            transparent 73%
+        );
+
+    box-shadow:
+        0 0 0 1px rgba(255,255,255,.28),
+        0 0 12px var(--node-glow, rgba(181,154,98,.28)),
+        0 0 30px var(--node-glow, rgba(181,154,98,.12));
+
+    opacity: .93;
+
+    transition:
+        transform .65s cubic-bezier(.18,.8,.2,1),
+        box-shadow .65s ease,
+        opacity .45s ease;
+}
+
+
+/*
+   Inner point of light.
+*/
+
+.universe-node::before {
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    width: 23%;
+    height: 23%;
+
+    transform: translate(-50%, -50%);
+
+    border-radius: 50%;
+
+    background: #fffdf7;
+
+    box-shadow:
+        0 0 7px rgba(255,255,255,.9),
+        0 0 16px rgba(255,244,214,.75);
+}
+
+
+/*
+   Expanding halo.
+*/
+
+.universe-node::after {
+    content: "";
+
+    position: absolute;
+
+    inset: -55%;
+
+    border-radius: 50%;
+
+    border: 1px solid
+        var(--node-ring, rgba(181,154,98,.16));
+
+    opacity: .30;
+
+    transform: scale(.55);
+
+    transition:
+        transform .8s cubic-bezier(.18,.8,.2,1),
+        opacity .6s ease;
+}
+
+
+/* =========================================================
+   MEMORY LIGHT STATES
+   ========================================================= */
+
+.tree-milestone:hover {
+    transform:
+        translate(-50%, -50%)
+        translate3d(
+            var(--node-x, 0px),
+            var(--node-y, 0px),
+            0
+        )
+        scale(1.10);
+}
+
+.tree-milestone:hover .universe-node {
+    opacity: 1;
+
+    box-shadow:
+        0 0 0 1px rgba(255,255,255,.38),
+        0 0 17px var(--node-glow, rgba(181,154,98,.38)),
+        0 0 48px var(--node-glow, rgba(181,154,98,.18));
+}
+
+.tree-milestone:hover .universe-node::after,
+.tree-milestone.is-selected .universe-node::after {
+    opacity: .75;
+
+    transform: scale(1);
+}
+
+.tree-milestone.is-selected {
+    transform:
+        translate(-50%, -50%)
+        translate3d(
+            var(--node-x, 0px),
+            var(--node-y, 0px),
+            0
+        )
+        scale(1.20);
+
+    z-index: 8;
+}
+
+.tree-milestone.is-selected .universe-node {
+    opacity: 1;
+
+    box-shadow:
+        0 0 0 1px rgba(255,255,255,.48),
+        0 0 20px var(--node-glow, rgba(181,154,98,.45)),
+        0 0 62px var(--node-glow, rgba(181,154,98,.22));
+}
+
+
+/* =========================================================
+   MEMORY TONES
+   ========================================================= */
+
+.tree-milestone[data-tone="warm"] {
+    --node-color: #8d795f;
+    --node-glow: rgba(141,121,95,.38);
+    --node-ring: rgba(141,121,95,.20);
+}
+
+.tree-milestone[data-tone="rose"] {
+    --node-color: #956f6e;
+    --node-glow: rgba(149,111,110,.34);
+    --node-ring: rgba(149,111,110,.18);
+}
+
+.tree-milestone[data-tone="sage"] {
+    --node-color: #6e7b6d;
+    --node-glow: rgba(110,123,109,.34);
+    --node-ring: rgba(110,123,109,.18);
+}
+
+.tree-milestone[data-tone="gold"] {
+    --node-color: #aa9164;
+    --node-glow: rgba(170,145,100,.42);
+    --node-ring: rgba(170,145,100,.22);
+}
+
+.tree-milestone[data-tone="blue"] {
+    --node-color: #70858a;
+    --node-glow: rgba(112,133,138,.34);
+    --node-ring: rgba(112,133,138,.18);
+}
+
+
+/* =========================================================
+   MEMORY SIZES
+   ========================================================= */
+
+.tree-milestone[data-size="large"] {
+    width: 58px;
+    height: 58px;
+}
+
+.tree-milestone[data-size="medium"] {
+    width: 43px;
+    height: 43px;
+}
+
+.tree-milestone[data-size="small"] {
+    width: 31px;
+    height: 31px;
+}
+
+
+/* =========================================================
+   CENTRAL HEART
+   ========================================================= */
+
+.universe-core {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    width: 142px;
+    height: 142px;
+
+    transform:
+        translate(-50%, -50%)
+        translate3d(
+            var(--core-x, 0px),
+            var(--core-y, 0px),
+            0
+        );
+
+    z-index: 4;
+
+    pointer-events: none;
+
+    transition:
+        transform 1s cubic-bezier(.18,.78,.2,1);
+}
+
+.universe-core-ring {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    border-radius: 50%;
+
+    transform: translate(-50%, -50%);
+
+    border: 1px solid rgba(181,154,98,.18);
+
+    animation:
+        universeCorePulse
+        6s
+        ease-in-out
+        infinite;
+}
+
+.ring-one {
+    width: 72px;
+    height: 72px;
+
+    border-color: rgba(181,154,98,.30);
+}
+
+.ring-two {
+    width: 116px;
+    height: 116px;
+
+    opacity: .46;
+
+    animation-delay: -2s;
+}
+
+.ring-three {
+    width: 166px;
+    height: 166px;
+
+    opacity: .20;
+
+    border-style: dashed;
+
+    animation-delay: -4s;
+}
+
+@keyframes universeCorePulse {
+
+    0%,
+    100% {
+        transform:
+            translate(-50%, -50%)
+            scale(.94);
+
+        opacity: .55;
+    }
+
+    50% {
+        transform:
+            translate(-50%, -50%)
+            scale(1.055);
+
+        opacity: .95;
+    }
+}
+
+.universe-core-light {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    width: 62px;
+    height: 62px;
+
+    transform: translate(-50%, -50%);
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,255,250,.98) 0 5%,
+            rgba(255,248,226,.85) 16%,
+            rgba(181,154,98,.52) 40%,
+            rgba(181,154,98,.12) 62%,
+            transparent 76%
+        );
+
+    filter: blur(.2px);
+
+    animation:
+        coreLightBreath
+        5s
+        ease-in-out
+        infinite;
+}
+
+@keyframes coreLightBreath {
+
+    0%,
+    100% {
+        transform:
+            translate(-50%, -50%)
+            scale(.92);
+    }
+
+    50% {
+        transform:
+            translate(-50%, -50%)
+            scale(1.08);
+    }
+}
+
+.universe-core-inner {
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    width: 100%;
+
+    transform: translate(-50%, -50%);
+
+    text-align: center;
+}
+
+.universe-core-mark {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: rgba(126,105,67,.78);
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size: 21px;
+
+    line-height: 1;
+}
+
+.universe-core-label {
+    display: block;
+
+    color: rgba(41,38,34,.76);
+
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size: 22px;
+
+    line-height: 1;
+}
+
+.universe-core-caption {
+    display: block;
+
+    margin-top: 6px;
+
+    color: rgba(119,112,103,.72);
+
+    font-family:
+        "Caveat",
+        cursive;
+
+    font-size: 12px;
+
+    line-height: 1.05;
+}
+
+
+/* =========================================================
+   FUTURE
+   ========================================================= */
+
+.universe-future {
+    position: absolute;
+
+    right: 5%;
+    bottom: 8%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    color: rgba(119,112,103,.62);
+
+    font-family:
+        "Caveat",
+        cursive;
+
+    font-size: 17px;
+
+    z-index: 3;
+
     pointer-events: none;
 }
 
-.tree-leaf {
+.universe-future span {
+    width: 34px;
+    height: 1px;
+
+    background:
+        linear-gradient(
+            to right,
+            transparent,
+            rgba(216,208,195,.75)
+        );
+}
+
+.universe-future em {
+    font-style: normal;
+}
+
+
+/* =========================================================
+   INTERACTION HINT
+   ========================================================= */
+
+.universe-interaction-hint {
     position: absolute;
 
-    width: 14px;
-    height: 22px;
+    left: 50%;
+    bottom: 20px;
 
-    border: 1px solid var(--accent);
+    display: flex;
+    align-items: center;
 
-    border-radius: 100% 0 100% 0;
+    gap: 9px;
+
+    transform: translateX(-50%);
+
+    color: rgba(119,112,103,.38);
+
+    font-family: Inter, sans-serif;
+
+    font-size: 7px;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+
+    white-space: nowrap;
+
+    z-index: 4;
+
+    pointer-events: none;
+
+    transition:
+        opacity .6s ease;
+}
+
+.hint-line {
+    width: 24px;
+    height: 1px;
+
+    background: rgba(216,208,195,.62);
+}
+
+
+/* =========================================================
+   MEMORY DETAIL
+   ========================================================= */
+
+.universe-detail {
+    position: absolute;
+
+    left: 50%;
+    bottom: 25px;
+
+    width: min(
+        540px,
+        calc(100% - 40px)
+    );
+
+    padding: 23px 26px 22px;
+
+    transform:
+        translate(-50%, 22px)
+        scale(.985);
 
     opacity: 0;
 
+    visibility: hidden;
+
+    z-index: 12;
+
+    background:
+        rgba(248,245,238,.95);
+
+    border:
+        1px solid rgba(216,208,195,.95);
+
+    box-shadow:
+        0 24px 70px rgba(41,38,34,.13);
+
+    backdrop-filter:
+        blur(18px);
+
+    -webkit-backdrop-filter:
+        blur(18px);
+
+    transition:
+        opacity .4s ease,
+        transform .5s cubic-bezier(.18,.78,.2,1),
+        visibility .4s ease;
+}
+
+.universe-detail.open {
+    opacity: 1;
+
+    visibility: visible;
+
     transform:
-        rotate(35deg)
-        scale(0.4);
-
-    animation:
-        leafAppear 0.7s ease forwards;
+        translate(-50%, 0)
+        scale(1);
 }
 
-.tree-leaf.large {
-    width: 20px;
+.universe-detail-inner {
+    position: relative;
+}
+
+.universe-close {
+    position: absolute;
+
+    top: -4px;
+    right: -5px;
+
+    width: 30px;
     height: 30px;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--muted);
+
+    font-size: 21px;
+
+    font-family: Inter, sans-serif;
+
+    font-weight: 300;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    opacity: .7;
+
+    transition:
+        opacity .2s ease,
+        transform .2s ease;
 }
 
-.tree-leaf.medium {
-    width: 16px;
-    height: 24px;
+.universe-close:hover {
+    opacity: 1;
+
+    transform: rotate(6deg);
 }
 
-.tree-leaf.small {
-    width: 12px;
-    height: 18px;
+.universe-detail-date {
+    margin: 0 0 5px;
+
+    color: var(--muted);
+
+    font-family:
+        "Caveat",
+        cursive;
+
+    font-size: 17px;
 }
 
-@keyframes leafAppear {
+.universe-detail h2 {
+    margin: 0 0 9px;
 
-    to {
-        opacity: 0.72;
+    padding-right: 25px;
 
-        transform:
-            rotate(35deg)
-            scale(1);
-    }
+    color: var(--text);
 
+    font-family:
+        "Cormorant Garamond",
+        serif;
+
+    font-size: 32px;
+
+    font-weight: 400;
+
+    line-height: 1;
+}
+
+.universe-detail p {
+    margin: 0 0 16px;
+
+    color: var(--muted);
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+.universe-detail-actions {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+}
+
+.universe-open-memory {
+    border: 0;
+
+    padding: 0;
+
+    background: transparent;
+
+    color: var(--text);
+
+    font-family:
+        "Caveat",
+        cursive;
+
+    font-size: 18px;
+
+    cursor: pointer;
+
+    transition:
+        opacity .2s ease;
+}
+
+.universe-open-memory:hover {
+    opacity: .55;
+}
+
+.universe-detail-mark {
+    color: rgba(181,154,98,.55);
+
+    font-size: 14px;
 }
 
 
-/* FOOTER */
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.universe-status {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    margin-top: 18px;
+
+    color: var(--muted);
+
+    font-size: 8px;
+
+    letter-spacing: 1.8px;
+
+    text-transform: uppercase;
+}
+
+.status-dot {
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: #b59a62;
+
+    box-shadow:
+        0 0 9px rgba(181,154,98,.48);
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
 
 .tree-footer {
-    max-width: 700px;
+    max-width: 650px;
 
-    margin: 20px auto 0;
+    margin: 55px auto 20px;
 
-    padding: 50px 0 20px;
+    padding-top: 42px;
 
     text-align: center;
 
-    border-top: 1px solid var(--border);
+    border-top:
+        1px solid var(--border);
 }
 
 .tree-footer .handwritten {
@@ -2495,92 +3274,174 @@ body {
 
     color: var(--muted);
 
-    font-size: 14px;
-    line-height: 1.7;
+    font-size: 11px;
+
+    line-height: 1.75;
 }
 
 
 /* =========================================================
-   TREE — MOBILE
+   MOBILE
    ========================================================= */
 
 @media (max-width: 800px) {
 
     .tree-header {
-        margin-bottom: 20px;
+        margin-bottom: 23px;
     }
 
     .tree-header h1 {
-        font-size: 54px;
+        font-size: 58px;
+
+        letter-spacing: -1.5px;
     }
 
     .tree-intro {
-        font-size: 15px;
-    }
+        max-width: 470px;
 
-    .growing-tree {
-        margin-top: 0;
+        font-size: 13px;
+
+        line-height: 1.75;
     }
 
     .tree-stage {
+        height: 650px;
 
-        height: 920px;
+        min-height: 650px;
 
-        max-width: 520px;
+        margin-left: -4px;
 
+        width: calc(100% + 8px);
     }
 
-
-    /*
-       On mobile the tree becomes more vertical,
-       with milestones beside it.
-    */
-
-    .tree-svg {
-        width: 145%;
-
-        left: -22.5%;
+    .universe-core {
+        width: 122px;
+        height: 122px;
     }
 
-
-    .tree-milestone {
-        width: 155px;
+    .universe-core-caption {
+        font-size: 11px;
     }
 
-    .tree-milestone.left {
-        left: 0;
-        text-align: right;
+    .tree-milestone[data-size="large"] {
+        width: 48px;
+        height: 48px;
     }
 
-    .tree-milestone.right {
-        right: 0;
-        text-align: left;
+    .tree-milestone[data-size="medium"] {
+        width: 37px;
+        height: 37px;
     }
 
-    .tree-milestone h3 {
-        font-size: 24px;
+    .tree-milestone[data-size="small"] {
+        width: 28px;
+        height: 28px;
     }
 
-    .tree-milestone-date {
-        font-size: 16px;
+    .universe-detail {
+        bottom: 12px;
+
+        width:
+            calc(100% - 28px);
+
+        padding:
+            19px 20px 19px;
     }
 
-    .tree-milestone p {
+    .universe-detail h2 {
+        font-size: 28px;
+    }
+
+    .universe-detail p {
         font-size: 12px;
-        line-height: 1.55;
+
+        line-height: 1.65;
     }
 
-    .tree-milestone.left::after {
-        right: -25px;
+    .universe-interaction-hint {
+        bottom: 19px;
+
+        font-size: 6.5px;
     }
 
-    .tree-milestone.right::after {
-        left: -25px;
+    .universe-future {
+        right: 4%;
+        bottom: 9%;
+
+        font-size: 15px;
     }
 
     .tree-footer {
-        margin-top: 0;
-        padding-top: 40px;
+        margin-top: 40px;
+
+        padding-top: 35px;
+    }
+}
+
+
+/* =========================================================
+   SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .tree-header h1 {
+        font-size: 55px;
     }
 
+    .tree-intro {
+        font-size: 12.5px;
+    }
+
+    .tree-stage {
+        height: 630px;
+
+        min-height: 630px;
+    }
+
+    .universe-core {
+        transform:
+            translate(-50%, -50%)
+            scale(.86);
+    }
+
+    .universe-future {
+        right: 3%;
+
+        font-size: 14px;
+    }
+
+    .universe-future span {
+        width: 22px;
+    }
+
+    .universe-interaction-hint {
+        gap: 6px;
+    }
+
+    .hint-line {
+        width: 17px;
+    }
 }
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .universe-star,
+    .universe-core-ring,
+    .universe-core-light {
+        animation: none !important;
+    }
+
+    .tree-milestone,
+    .universe-node,
+    .universe-detail,
+    .universe-core {
+        transition: none !important;
+    }
+
+       }
