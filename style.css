@@ -3444,4 +3444,203 @@ body {
         transition: none !important;
     }
 
+       }
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.tree-footer {
+    max-width: 650px;
+
+    margin: 55px auto 20px;
+
+    padding-top: 42px;
+
+    text-align: center;
+
+    border-top:
+        1px solid var(--border);
+}
+
+.tree-footer .handwritten {
+    margin-bottom: 8px;
+
+    font-size: 27px;
+}
+
+.tree-footer p:last-child {
+    margin: 0;
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+    line-height: 1.75;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    .tree-header {
+        margin-bottom: 23px;
+    }
+
+    .tree-header h1 {
+        font-size: 58px;
+
+        letter-spacing: -1.5px;
+    }
+
+    .tree-intro {
+        max-width: 470px;
+
+        font-size: 13px;
+
+        line-height: 1.75;
+    }
+
+    .tree-stage {
+        height: 650px;
+
+        min-height: 650px;
+
+        margin-left: -4px;
+
+        width: calc(100% + 8px);
+    }
+
+    .universe-core {
+        width: 122px;
+        height: 122px;
+    }
+
+    .universe-core-caption {
+        font-size: 11px;
+    }
+
+    .tree-milestone[data-size="large"] {
+        width: 48px;
+        height: 48px;
+    }
+
+    .tree-milestone[data-size="medium"] {
+        width: 37px;
+        height: 37px;
+    }
+
+    .tree-milestone[data-size="small"] {
+        width: 28px;
+        height: 28px;
+    }
+
+    .universe-detail {
+        bottom: 12px;
+
+        width:
+            calc(100% - 28px);
+
+        padding:
+            19px 20px 19px;
+    }
+
+    .universe-detail h2 {
+        font-size: 28px;
+    }
+
+    .universe-detail p {
+        font-size: 12px;
+
+        line-height: 1.65;
+    }
+
+    .universe-interaction-hint {
+        bottom: 19px;
+
+        font-size: 6.5px;
+    }
+
+    .universe-future {
+        right: 4%;
+        bottom: 9%;
+
+        font-size: 15px;
+    }
+
+    .tree-footer {
+        margin-top: 40px;
+
+        padding-top: 35px;
+    }
+}
+
+
+/* =========================================================
+   SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .tree-header h1 {
+        font-size: 55px;
+    }
+
+    .tree-intro {
+        font-size: 12.5px;
+    }
+
+    .tree-stage {
+        height: 630px;
+
+        min-height: 630px;
+    }
+
+    .universe-core {
+        transform:
+            translate(-50%, -50%)
+            scale(.86);
+    }
+
+    .universe-future {
+        right: 3%;
+
+        font-size: 14px;
+    }
+
+    .universe-future span {
+        width: 22px;
+    }
+
+    .universe-interaction-hint {
+        gap: 6px;
+    }
+
+    .hint-line {
+        width: 17px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .universe-star,
+    .universe-core-ring,
+    .universe-core-light {
+        animation: none !important;
+    }
+
+    .tree-milestone,
+    .universe-node,
+    .universe-detail,
+    .universe-core {
+        transition: none !important;
+    }
+
    }
