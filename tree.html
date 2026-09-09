@@ -3,110 +3,344 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#f5f1e8">
 
     <title>The Growing Tree — The Archive</title>
 
+    <link rel="stylesheet" href="style.css">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=Cormorant+Garamond:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=30">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500&display=swap"
+        rel="stylesheet"
+    >
 </head>
 
-<body class="tree-page">
+<body>
 
-<header class="mobile-header">
-    <span>THE ARCHIVE</span>
-    <button id="menuButton" aria-label="Open menu" aria-expanded="false">☰</button>
-</header>
+<!-- =========================================================
+     SIDEBAR
+     ========================================================= -->
 
 <aside class="sidebar">
-    <div class="brand">
-        <div class="brand-title">THE ARCHIVE</div>
-        <div class="brand-subtitle">for us, and only us.</div>
-    </div>
 
-    <nav class="navigation" aria-label="Main navigation">
-        <a href="index.html" class="nav-link">Home</a>
-        <a href="story.html" class="nav-link">Our Story</a>
-        <a href="gallery.html" class="nav-link">The Gallery</a>
-        <a href="places.html" class="nav-link">Places We've Been</a>
-        <a href="things.html" class="nav-link">Things I Love About You</a>
-        <a href="tree.html" class="nav-link active" aria-current="page">The Growing Tree</a>
-    </nav>
+    <div class="sidebar-top">
+
+        <a href="index.html" class="archive-mark">
+            THE ARCHIVE
+        </a>
+
+        <nav class="sidebar-nav">
+
+            <a href="index.html" class="nav-link">
+                Home
+            </a>
+
+            <a href="story.html" class="nav-link">
+                Our Story
+            </a>
+
+            <a href="gallery.html" class="nav-link">
+                The Gallery
+            </a>
+
+            <a href="places.html" class="nav-link">
+                Places We've Been
+            </a>
+
+            <a href="things.html" class="nav-link">
+                Things I Love About You
+            </a>
+
+            <a
+                href="tree.html"
+                class="nav-link active"
+                aria-current="page"
+            >
+                The Growing Tree
+            </a>
+
+        </nav>
+
+    </div>
 
     <div class="sidebar-bottom">
-        <button id="randomMemory" class="random-button">show me a memory →</button>
-        <div class="memory-counter">
-            <span id="memoryCount">0</span>
-            <span>MEMORIES</span>
-        </div>
+        <span>A collection of us</span>
     </div>
+
 </aside>
 
-<main class="main-content">
+
+<!-- =========================================================
+     MOBILE HEADER
+     ========================================================= -->
+
+<header class="mobile-header">
+
+    <a href="index.html" class="archive-mark">
+        THE ARCHIVE
+    </a>
+
+    <button
+        class="menu-toggle"
+        aria-label="Open menu"
+        type="button"
+    >
+        <span></span>
+        <span></span>
+    </button>
+
+</header>
+
+
+<!-- =========================================================
+     MOBILE MENU
+     ========================================================= -->
+
+<div class="mobile-menu">
+
+    <nav>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="story.html">
+            Our Story
+        </a>
+
+        <a href="gallery.html">
+            The Gallery
+        </a>
+
+        <a href="places.html">
+            Places We've Been
+        </a>
+
+        <a href="things.html">
+            Things I Love About You
+        </a>
+
+        <a
+            href="tree.html"
+            class="active"
+        >
+            The Growing Tree
+        </a>
+
+    </nav>
+
+</div>
+
+
+<!-- =========================================================
+     MEMORY UNIVERSE
+     ========================================================= -->
+
+<main class="main-content tree-page">
 
     <header class="tree-header">
-        <p class="handwritten">Everything we have become.</p>
-        <h1>Our little universe.</h1>
-        <p class="tree-intro">
-            Some moments pass. Some stay with us. Here, the ones we kept are no longer pages —
-            they are points of light, connected by everything that happened between them.
+
+        <p class="handwritten">
+            Still becoming.
         </p>
+
+        <h1>
+            Our little<br>
+            universe.
+        </h1>
+
+        <p class="tree-intro">
+            Some moments become memories.
+            Some memories become part of us.
+            This is the space between them —
+            still forming, still moving, still ours.
+        </p>
+
     </header>
 
-    <section class="growing-tree" aria-label="Our memory universe">
-        <div id="treeStage" class="tree-stage">
 
-            <div id="universeSpace" class="universe-space" aria-hidden="true"></div>
+    <!-- =====================================================
+         UNIVERSE
+         ===================================================== -->
 
-            <svg id="universeConnections"
-                 class="universe-connections"
-                 viewBox="0 0 1000 700"
-                 preserveAspectRatio="none"
-                 aria-hidden="true"></svg>
+    <section
+        class="tree-stage"
+        id="treeStage"
+        aria-label="Our memory universe"
+    >
 
-            <div id="universeCore" class="universe-core" aria-hidden="true">
-                <div class="universe-core-inner">
-                    <span class="universe-core-mark">✦</span>
-                    <span class="universe-core-label">THE ARCHIVE</span>
-                    <span class="universe-core-caption">still becoming</span>
-                </div>
-            </div>
+        <!-- atmospheric background -->
+        <div
+            class="universe-space"
+            id="universeSpace"
+            aria-hidden="true"
+        ></div>
 
-            <div id="treeMilestones" class="tree-milestones"></div>
 
-            <div class="universe-future" aria-hidden="true">
-                <span>and there is still more.</span>
-            </div>
+        <!-- connecting filaments -->
+        <svg
+            class="universe-connections"
+            id="universeConnections"
+            viewBox="0 0 1000 700"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+        ></svg>
 
-            <div id="universeDetail"
-                 class="universe-detail"
-                 aria-hidden="true"
-                 aria-live="polite">
-                <div id="universeDetailDate" class="universe-detail-date"></div>
-                <h2 id="universeDetailTitle"></h2>
-                <p id="universeDetailText"></p>
-                <div class="universe-detail-actions">
-                    <button id="universeOpenMemory" class="universe-open-memory">
-                        open this memory →
-                    </button>
-                    <button id="universeClose" class="universe-close">close</button>
-                </div>
+
+        <!-- central heart -->
+        <div
+            class="universe-core"
+            id="universeCore"
+            aria-hidden="true"
+        >
+
+            <span class="universe-core-ring ring-one"></span>
+            <span class="universe-core-ring ring-two"></span>
+            <span class="universe-core-ring ring-three"></span>
+
+            <span class="universe-core-light"></span>
+
+            <div class="universe-core-inner">
+
+                <span class="universe-core-mark">
+                    ✦
+                </span>
+
+                <span class="universe-core-label">
+                    us
+                </span>
+
+                <span class="universe-core-caption">
+                    everything between the moments
+                </span>
+
             </div>
 
         </div>
+
+
+        <!-- memory lights are generated here -->
+        <div
+            class="tree-milestones"
+            id="treeMilestones"
+        ></div>
+
+
+        <!-- future -->
+        <div
+            class="universe-future"
+            aria-hidden="true"
+        >
+            <span></span>
+            <em>there is still more</em>
+        </div>
+
+
+        <!-- subtle interaction hint -->
+        <div
+            class="universe-interaction-hint"
+            aria-hidden="true"
+        >
+            <span class="hint-line"></span>
+            <span>touch a light</span>
+            <span class="hint-line"></span>
+        </div>
+
+
+        <!-- =================================================
+             MEMORY DETAIL CARD
+             ================================================= -->
+
+        <aside
+            class="universe-detail"
+            id="universeDetail"
+            aria-hidden="true"
+            role="dialog"
+            aria-live="polite"
+            aria-label="Memory"
+        >
+
+            <button
+                class="universe-close"
+                id="universeClose"
+                type="button"
+                aria-label="Close memory"
+            >
+                ×
+            </button>
+
+            <div class="universe-detail-inner">
+
+                <p
+                    class="universe-detail-date"
+                    id="universeDetailDate"
+                ></p>
+
+                <h2 id="universeDetailTitle"></h2>
+
+                <p id="universeDetailText"></p>
+
+                <div class="universe-detail-actions">
+
+                    <button
+                        class="universe-open-memory"
+                        id="universeOpenMemory"
+                        type="button"
+                    >
+                        Open memory →
+                    </button>
+
+                    <span class="universe-detail-mark">
+                        ✦
+                    </span>
+
+                </div>
+
+            </div>
+
+        </aside>
+
     </section>
 
+
+    <!-- =====================================================
+         STATUS
+         ===================================================== -->
+
+    <div class="universe-status">
+
+        <span class="status-dot"></span>
+
+        <span id="universeStatus">
+            0 memories remembered
+        </span>
+
+    </div>
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
     <footer class="tree-footer">
-        <p class="handwritten">Not finished. Just growing.</p>
-        <p>
-            Every new memory becomes another point of light. The empty space is only waiting for what comes next.
+
+        <p class="handwritten">
+            And there is still more to discover.
         </p>
+
+        <p>
+            The empty space is intentional.
+            It belongs to everything we haven't lived yet.
+        </p>
+
     </footer>
 
 </main>
 
-<script src="script.js?v=30"></script>
+
+<script src="script.js?v=40"></script>
+
 </body>
 </html>
