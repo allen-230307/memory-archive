@@ -1863,5 +1863,1125 @@ if (
 
         }
 // ======================================================
-// MEMORY UNIVERSE — THE GROWING TREE PAGE
+// MEMORY UNIVERSE — FINAL
 // ======================================================
+
+let universeMilestones = [];
+let universeSelectedIndex = -1;
+let universePointer = {
+    x: 0,
+    y: 0,
+    targetX: 0,
+    targetY: 0
+};
+
+let universeAnimationFrame = null;
+let universeResizeTimer = null;
+
+
+// ======================================================
+// LOAD UNIVERSE DATA
+// ======================================================
+
+async function loadTree() {
+
+    const stage = document.getElementById("treeStage");
+    const container = document.getElementById("treeMilestones");
+
+    if (!stage || !container) return;
+
+    try {
+
+        const response = await fetch(
+            "./data/tree.json?v=40",
+            {
+                cache: "no-store"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Could not load tree.json");
+        }
+
+        const data = await response.json();
+
+        if (!Array.isArray(data)) {
+            throw new Error(
+                "tree.json does not contain an array"
+            );
+        }
+
+        universeMilestones = data;
+
+        renderTree(data);
+
+    } catch (error) {
+
+        console.error(
+            "MEMORY UNIVERSE ERROR:",
+            error
+        );
+
+        container.innerHTML = "";
+    }
+}
+
+
+// ======================================================
+// UNIVERSE POSITIONS
+// ======================================================
+
+function universePositions(count, mobile = false) {
+
+    const desktop = [
+
+        [19, 25],
+        [81, 25],
+
+        [14, 68],
+        [86, 68],
+
+        [50, 13],
+
+        [50, 88],
+
+        [30, 43],
+        [70, 43],
+
+        [30, 77],
+        [70, 77],
+
+        [40, 23],
+        [60, 23]
+
+    ];
+
+    const phone = [
+
+        [21, 23],
+        [79, 24],
+
+        [17, 67],
+        [83, 67],
+
+        [50, 11],
+
+        [50, 88],
+
+        [28, 43],
+        [72, 43],
+
+        [30, 78],
+        [70, 78]
+
+    ];
+
+    const positions = mobile
+        ? phone
+        : desktop;
+
+    return positions.slice(
+        0,
+        Math.min(count, positions.length)
+    );
+}
+
+
+// ======================================================
+// STAR FIELD
+// ======================================================
+
+function renderUniverseStars() {
+
+    const space =
+        document.getElementById(
+            "universeSpace"
+        );
+
+    if (!space) return;
+
+    space.innerHTML = "";
+
+    const mobile =
+        window.matchMedia(
+            "(max-width: 600px)"
+        ).matches;
+
+    const count = mobile ? 58 : 105;
+
+    for (let i = 0; i < count; i++) {
+
+        const star =
+            document.createElement("span");
+
+        star.className =
+            "universe-star";
+
+        const x =
+            3 + Math.random() * 94;
+
+        const y =
+            4 + Math.random() * 90;
+
+        const size =
+            Math.random() * 1.7 + .45;
+
+        const opacity =
+            Math.random() * .25 + .08;
+
+        const duration =
+            4 + Math.random() * 6;
+
+        const delay =
+            Math.random() * -7;
+
+        star.style.left =
+            `${x.toFixed(2)}%`;
+
+        star.style.top =
+            `${y.toFixed(2)}%`;
+
+        star.style.setProperty(
+            "--star-size",
+            `${size.toFixed(2)}px`
+        );
+
+        star.style.setProperty(
+            "--star-opacity",
+            opacity.toFixed(2)
+        );
+
+        star.style.setProperty(
+            "--star-duration",
+            `${duration.toFixed(2)}s`
+        );
+
+        star.style.setProperty(
+            "--star-delay",
+            `${delay.toFixed(2)}s`
+        );
+
+        space.appendChild(star);
+    }
+}
+
+
+// ======================================================
+// CONNECTIONS
+// ======================================================
+
+function renderUniverseConnections(
+    positions
+) {
+
+    const svg =
+        document.getElementById(
+            "universeConnections"
+        );
+
+    if (!svg) return;
+
+    svg.innerHTML = "";
+
+    const center = {
+        x: 500,
+        y: 350
+    };
+
+    const points =
+        positions.map(position => ({
+            x: position[0] * 10,
+            y: position[1] * 7
+        }));
+
+
+    /*
+       Main chronological filament.
+    */
+
+    for (
+        let i = 0;
+        i < points.length - 1;
+        i++
+    ) {
+
+        const a = points[i];
+        const b = points[i + 1];
+
+        const curve =
+            Math.max(
+                35,
+                Math.abs(b.x - a.x) * .34
+            );
+
+        const direction =
+            b.x >= a.x
+                ? 1
+                : -1;
+
+        const path =
+            document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "path"
+            );
+
+        path.classList.add(
+            "universe-line"
+        );
+
+        path.dataset.pair =
+            `${i}-${i + 1}`;
+
+        path.setAttribute(
+            "d",
+            `
+                M ${a.x} ${a.y}
+                C
+                ${a.x + curve * direction}
+                ${a.y},
+                ${b.x - curve * direction}
+                ${b.y},
+                ${b.x} ${b.y}
+            `
+        );
+
+        svg.appendChild(path);
+    }
+
+
+    /*
+       Individual memory → central heart.
+       These are deliberately extremely subtle.
+    */
+
+    points.forEach((point, index) => {
+
+        const bend =
+            (index % 2 === 0 ? 1 : -1) *
+            (35 + index * 4);
+
+        const path =
+            document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "path"
+            );
+
+        path.classList.add(
+            "universe-line",
+            "secondary"
+        );
+
+        path.dataset.index =
+            String(index);
+
+        path.setAttribute(
+            "d",
+            `
+                M ${center.x} ${center.y}
+                Q
+                ${(
+                    (center.x + point.x) / 2
+                    + bend
+                )}
+                ${(
+                    (center.y + point.y) / 2
+                    - bend * .35
+                )}
+                ${point.x} ${point.y}
+            `
+        );
+
+        svg.appendChild(path);
+    });
+}
+
+
+// ======================================================
+// RENDER MEMORY LIGHTS
+// ======================================================
+
+function renderTree(milestones) {
+
+    const container =
+        document.getElementById(
+            "treeMilestones"
+        );
+
+    const stage =
+        document.getElementById(
+            "treeStage"
+        );
+
+    if (!container || !stage) {
+        return;
+    }
+
+    const mobile =
+        window.matchMedia(
+            "(max-width: 800px)"
+        ).matches;
+
+    const positions =
+        universePositions(
+            milestones.length,
+            mobile
+        );
+
+    container.innerHTML = "";
+
+    renderUniverseStars();
+
+    renderUniverseConnections(
+        positions
+    );
+
+
+    milestones.forEach(
+        (milestone, index) => {
+
+            const position =
+                positions[index] || [
+                    15 + ((index * 31) % 70),
+                    18 + ((index * 47) % 65)
+                ];
+
+            const node =
+                document.createElement(
+                    "button"
+                );
+
+            node.type = "button";
+
+            node.className =
+                "tree-milestone";
+
+            node.dataset.tone =
+                milestone.tone || "sage";
+
+            node.dataset.size =
+                milestone.size || "medium";
+
+            node.style.left =
+                `${position[0]}%`;
+
+            node.style.top =
+                `${position[1]}%`;
+
+            node.setAttribute(
+                "aria-label",
+                milestone.title
+                    ? `Open memory: ${milestone.title}`
+                    : "Open memory"
+            );
+
+            /*
+               IMPORTANT:
+               No title.
+               No date.
+               No description.
+               The universe stays visually empty.
+            */
+
+            const light =
+                document.createElement(
+                    "span"
+                );
+
+            light.className =
+                "universe-node";
+
+            light.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+
+            node.appendChild(light);
+
+
+            node.addEventListener(
+                "click",
+                () => {
+                    openUniverseMemory(
+                        milestone,
+                        index,
+                        node
+                    );
+                }
+            );
+
+
+            node.addEventListener(
+                "keydown",
+                event => {
+
+                    if (
+                        event.key === "Enter" ||
+                        event.key === " "
+                    ) {
+
+                        event.preventDefault();
+
+                        openUniverseMemory(
+                            milestone,
+                            index,
+                            node
+                        );
+                    }
+
+                }
+            );
+
+
+            container.appendChild(node);
+        }
+    );
+
+
+    setupUniverseParallax();
+}
+
+
+// ======================================================
+// RESOLVE ACTUAL MEMORY
+// ======================================================
+
+function resolveUniverseMemory(
+    milestone
+) {
+
+    if (
+        milestone.memoryId !== undefined &&
+        milestone.memoryId !== null
+    ) {
+
+        const exact =
+            memories.find(
+                memory =>
+                    String(memory.id) ===
+                    String(milestone.memoryId)
+            );
+
+        if (exact) {
+            return exact;
+        }
+    }
+
+    return memories.find(
+        memory =>
+            String(memory.title || "")
+                .trim()
+                .toLowerCase() ===
+            String(milestone.title || "")
+                .trim()
+                .toLowerCase()
+    ) || null;
+}
+
+
+// ======================================================
+// OPEN MEMORY CARD
+// ======================================================
+
+function openUniverseMemory(
+    milestone,
+    index,
+    element
+) {
+
+    universeSelectedIndex =
+        index;
+
+
+    document
+        .querySelectorAll(
+            ".tree-milestone.is-selected"
+        )
+        .forEach(node => {
+            node.classList.remove(
+                "is-selected"
+            );
+        });
+
+
+    element.classList.add(
+        "is-selected"
+    );
+
+
+    document
+        .querySelectorAll(
+            ".universe-connections path"
+        )
+        .forEach(path => {
+            path.classList.remove(
+                "active"
+            );
+        });
+
+
+    const activePaths =
+        document.querySelectorAll(
+            `.universe-connections path[data-index="${index}"]`
+        );
+
+    activePaths.forEach(path => {
+        path.classList.add(
+            "active"
+        );
+    });
+
+
+    const detail =
+        document.getElementById(
+            "universeDetail"
+        );
+
+    const date =
+        document.getElementById(
+            "universeDetailDate"
+        );
+
+    const title =
+        document.getElementById(
+            "universeDetailTitle"
+        );
+
+    const text =
+        document.getElementById(
+            "universeDetailText"
+        );
+
+    const openButton =
+        document.getElementById(
+            "universeOpenMemory"
+        );
+
+
+    if (!detail) return;
+
+
+    const actual =
+        resolveUniverseMemory(
+            milestone
+        );
+
+
+    const actualDate =
+        actual?.date ||
+        milestone.date ||
+        "";
+
+    const actualTitle =
+        actual?.title ||
+        milestone.title ||
+        "A memory";
+
+    const actualText =
+        actual?.description ||
+        milestone.text ||
+        milestone.description ||
+        "";
+
+
+    if (date) {
+        date.textContent =
+            actualDate;
+    }
+
+    if (title) {
+        title.textContent =
+            actualTitle;
+    }
+
+    if (text) {
+        text.textContent =
+            actualText;
+    }
+
+
+    if (openButton) {
+
+        if (
+            actual &&
+            actual.id !== undefined &&
+            actual.id !== null
+        ) {
+
+            openButton.style.display =
+                "inline-block";
+
+            openButton.onclick =
+                () => {
+
+                    window.location.href =
+                        "memory.html?id=" +
+                        encodeURIComponent(
+                            actual.id
+                        );
+                };
+
+        } else {
+
+            openButton.style.display =
+                "none";
+        }
+    }
+
+
+    detail.classList.add(
+        "open"
+    );
+
+    detail.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+
+    const hint =
+        document.querySelector(
+            ".universe-interaction-hint"
+        );
+
+    if (hint) {
+        hint.style.opacity = "0";
+    }
+}
+
+
+// ======================================================
+// CLOSE MEMORY CARD
+// ======================================================
+
+function closeUniverseMemory() {
+
+    universeSelectedIndex = -1;
+
+
+    const detail =
+        document.getElementById(
+            "universeDetail"
+        );
+
+    if (detail) {
+
+        detail.classList.remove(
+            "open"
+        );
+
+        detail.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+    }
+
+
+    document
+        .querySelectorAll(
+            ".tree-milestone.is-selected"
+        )
+        .forEach(node => {
+
+            node.classList.remove(
+                "is-selected"
+            );
+        });
+
+
+    document
+        .querySelectorAll(
+            ".universe-connections path.active"
+        )
+        .forEach(path => {
+
+            path.classList.remove(
+                "active"
+            );
+        });
+
+
+    const hint =
+        document.querySelector(
+            ".universe-interaction-hint"
+        );
+
+    if (hint) {
+        hint.style.opacity = "";
+    }
+}
+
+
+// ======================================================
+// DETAIL CARD SETUP
+// ======================================================
+
+function setupUniverseDetail() {
+
+    const close =
+        document.getElementById(
+            "universeClose"
+        );
+
+    if (close) {
+
+        close.addEventListener(
+            "click",
+            closeUniverseMemory
+        );
+    }
+}
+
+
+// ======================================================
+// PARALLAX
+// ======================================================
+
+function setupUniverseParallax() {
+
+    const stage =
+        document.getElementById(
+            "treeStage"
+        );
+
+    const core =
+        document.getElementById(
+            "universeCore"
+        );
+
+    if (!stage || !core) {
+        return;
+    }
+
+
+    if (
+        window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches
+    ) {
+        return;
+    }
+
+
+    /*
+       Avoid installing duplicate listeners
+       if the universe is re-rendered.
+    */
+
+    if (
+        stage.dataset.parallaxReady === "true"
+    ) {
+        return;
+    }
+
+    stage.dataset.parallaxReady = "true";
+
+
+    const isTouch =
+        window.matchMedia(
+            "(hover: none)"
+        ).matches;
+
+
+    if (isTouch) {
+
+        let startX = 0;
+        let startY = 0;
+
+
+        stage.addEventListener(
+            "touchstart",
+            event => {
+
+                if (!event.touches[0]) {
+                    return;
+                }
+
+                startX =
+                    event.touches[0].clientX;
+
+                startY =
+                    event.touches[0].clientY;
+
+            },
+            {
+                passive: true
+            }
+        );
+
+
+        stage.addEventListener(
+            "touchmove",
+            event => {
+
+                if (!event.touches[0]) {
+                    return;
+                }
+
+                const rect =
+                    stage.getBoundingClientRect();
+
+                const dx =
+                    (
+                        event.touches[0].clientX -
+                        startX
+                    ) / rect.width;
+
+                const dy =
+                    (
+                        event.touches[0].clientY -
+                        startY
+                    ) / rect.height;
+
+
+                core.style.setProperty(
+                    "--core-x",
+                    `${dx * 8}px`
+                );
+
+                core.style.setProperty(
+                    "--core-y",
+                    `${dy * 8}px`
+                );
+
+            },
+            {
+                passive: true
+            }
+        );
+
+
+        stage.addEventListener(
+            "touchend",
+            () => {
+
+                core.style.setProperty(
+                    "--core-x",
+                    "0px"
+                );
+
+                core.style.setProperty(
+                    "--core-y",
+                    "0px"
+                );
+
+            },
+            {
+                passive: true
+            }
+        );
+
+        return;
+    }
+
+
+    stage.addEventListener(
+        "pointermove",
+        event => {
+
+            const rect =
+                stage.getBoundingClientRect();
+
+
+            universePointer.targetX =
+                (
+                    event.clientX -
+                    (
+                        rect.left +
+                        rect.width / 2
+                    )
+                ) /
+                rect.width *
+                28;
+
+
+            universePointer.targetY =
+                (
+                    event.clientY -
+                    (
+                        rect.top +
+                        rect.height / 2
+                    )
+                ) /
+                rect.height *
+                28;
+
+        }
+    );
+
+
+    stage.addEventListener(
+        "pointerleave",
+        () => {
+
+            universePointer.targetX = 0;
+            universePointer.targetY = 0;
+
+        }
+    );
+
+
+    function animateUniverse() {
+
+        universePointer.x +=
+            (
+                universePointer.targetX -
+                universePointer.x
+            ) * .045;
+
+
+        universePointer.y +=
+            (
+                universePointer.targetY -
+                universePointer.y
+            ) * .045;
+
+
+        core.style.setProperty(
+            "--core-x",
+            `${universePointer.x * .30}px`
+        );
+
+        core.style.setProperty(
+            "--core-y",
+            `${universePointer.y * .30}px`
+        );
+
+
+        const nodes =
+            document.querySelectorAll(
+                ".tree-milestone"
+            );
+
+
+        nodes.forEach(
+            (node, index) => {
+
+                const depth =
+                    .35 +
+                    (index % 5) * .11;
+
+
+                node.style.setProperty(
+                    "--node-x",
+                    `${(
+                        universePointer.x *
+                        depth
+                    ).toFixed(2)}px`
+                );
+
+
+                node.style.setProperty(
+                    "--node-y",
+                    `${(
+                        universePointer.y *
+                        depth
+                    ).toFixed(2)}px`
+                );
+
+            }
+        );
+
+
+        universeAnimationFrame =
+            requestAnimationFrame(
+                animateUniverse
+            );
+    }
+
+
+    animateUniverse();
+}
+
+
+// ======================================================
+// RESIZE
+// ======================================================
+
+function setupUniverseResize() {
+
+    if (
+        window.__memoryUniverseResizeReady
+    ) {
+        return;
+    }
+
+    window.__memoryUniverseResizeReady =
+        true;
+
+
+    window.addEventListener(
+        "resize",
+        () => {
+
+            clearTimeout(
+                universeResizeTimer
+            );
+
+            universeResizeTimer =
+                setTimeout(
+                    () => {
+
+                        if (
+                            universeMilestones.length
+                        ) {
+
+                            const stage =
+                                document.getElementById(
+                                    "treeStage"
+                                );
+
+                            if (stage) {
+                                stage.dataset.parallaxReady =
+                                    "false";
+                            }
+
+                            renderTree(
+                                universeMilestones
+                            );
+                        }
+
+                    },
+                    180
+                );
+        }
+    );
+}
+
+
+// ======================================================
+// ESCAPE KEY
+// ======================================================
+
+function setupUniverseKeyboard() {
+
+    if (
+        window.__memoryUniverseKeyboardReady
+    ) {
+        return;
+    }
+
+    window.__memoryUniverseKeyboardReady =
+        true;
+
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                closeUniverseMemory();
+            }
+        }
+    );
+}
+
+
+// ======================================================
+// INITIALIZE UNIVERSE
+// ======================================================
+
+setupUniverseResize();
+setupUniverseKeyboard();
