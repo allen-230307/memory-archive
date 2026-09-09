@@ -1,0 +1,47 @@
+[
+  {
+    "memoryId": 0,
+    "date": "1 August 2026",
+    "title": "The Journey That Started Something",
+    "text": "I travelled all the way from Kerala to Bangalore just to prove that I could. It wasn't meant to be about love, but somehow that little ego-driven journey became the moment that set everything else in motion.",
+    "size": "large",
+    "tone": "warm",
+    "orbit": 0
+  },
+  {
+    "memoryId": 1,
+    "date": "21 August 2026",
+    "title": "The Night I Told You",
+    "text": "The full-night bike ride, the warmth of the night, and the moment I finally confessed my love to you.",
+    "size": "medium",
+    "tone": "rose",
+    "orbit": 1
+  },
+  {
+    "memoryId": 2,
+    "date": "21 August 2026",
+    "title": "Thattekad — Mini Switzerland",
+    "text": "A cool morning at Thattekad. The atmosphere was calm, the grounds felt almost unreal, and we spent the morning being playful together.",
+    "size": "medium",
+    "tone": "sage",
+    "orbit": 1
+  },
+  {
+    "memoryId": 3,
+    "date": "28 August 2026",
+    "title": "Four Hours Close",
+    "text": "Our first time cuddling. We were together for about four hours. But what stayed with me wasn't simply the closeness. My love for you was sincere. It was about you, not just the moment.",
+    "size": "medium",
+    "tone": "rose",
+    "orbit": 2
+  },
+  {
+    "memoryId": 4,
+    "date": "30 August 2026",
+    "title": "The First Goodbye",
+    "text": "I followed your bus till Perumbavoor just to have another twenty minutes with you. When it was time for you to leave, I felt like I was breaking down from inside. But I stood there still, watching you for those last few minutes.",
+    "size": "large",
+    "tone": "gold",
+    "orbit": 2
+  }
+]
