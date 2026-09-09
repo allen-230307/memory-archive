@@ -1,0 +1,864 @@
+let memories = [];
+let lightboxItems = [];
+let lightboxIndex = 0;
+let lightboxMemory = null;
+
+// ======================================================
+// LOAD MEMORIES
+// ======================================================
+async function loadMemories() {
+    try {
+        const response = await fetch("./data/memories.json?v=10", { cache: "no-store" });
+        if (!response.ok) throw new Error("Could not load memories.json");
+
+        memories = await response.json();
+        if (!Array.isArray(memories)) throw new Error("memories.json does not contain an array");
+
+        updateMemoryCounter();
+        renderTimeline();
+        renderGallery();
+        renderMemoryPage();
+    } catch (error) {
+        console.error("MEMORY ERROR:", error);
+
+        const message = `<p class="loading">Unable to load memories.</p>`;
+        const timeline = document.getElementById("timeline");
+        const gallery = document.getElementById("gallery");
+        const memoryContent = document.getElementById("memoryContent");
+
+        if (timeline) timeline.innerHTML = message;
+        if (gallery) gallery.innerHTML = message;
+        if (memoryContent) memoryContent.innerHTML = message;
+    }
+}
+
+// ======================================================
+// MEMORY COUNTER
+// ======================================================
+function updateMemoryCounter() {
+    const counter = document.getElementById("memoryCount");
+    if (counter) counter.textContent = memories.length;
+}
+
+// ======================================================
+// MEDIA HELPER
+// ======================================================
+function getMedia(memory) {
+    if (Array.isArray(memory.media)) return memory.media;
+
+    if (Array.isArray(memory.images)) {
+        return memory.images.map(src => ({
+            type: "image",
+            src,
+            caption: ""
+        }));
+    }
+
+    return [];
+}
+
+// ======================================================
+// VIDEO PRIORITIZER
+// Used only by the Gallery.
+// Individual memory pages preserve JSON order.
+// ======================================================
+function prioritizeVideos(media) {
+    return [...media].sort((a, b) => {
+        if (a.type === "video" && b.type !== "video") return -1;
+        if (a.type !== "video" && b.type === "video") return 1;
+        return 0;
+    });
+}
+
+// ======================================================
+// DATE + TIME HELPER
+// ======================================================
+function memoryTime(memory) {
+    if (!memory.date) return 0;
+
+    const fullDateString = memory.time
+        ? `${memory.date} ${memory.time}`
+        : memory.date;
+
+    const parsedTime = Date.parse(fullDateString);
+    if (!isNaN(parsedTime)) return parsedTime;
+
+    const dateOnly = Date.parse(memory.date);
+    return isNaN(dateOnly) ? 0 : dateOnly;
+}
+
+// ======================================================
+// RANDOM MEMORY
+// ======================================================
+function setupRandomMemory() {
+    const button = document.getElementById("randomMemory");
+    if (!button) return;
+
+    button.onclick = function () {
+        if (!memories.length) return;
+
+        const index = Math.floor(Math.random() * memories.length);
+        const selected = memories[index];
+
+        if (!selected || selected.id === undefined || selected.id === null) return;
+
+        window.location.href =
+            "memory.html?id=" + encodeURIComponent(selected.id);
+    };
+}
+
+// ======================================================
+// OUR STORY — TEXT-ONLY TIMELINE
+// ======================================================
+function renderTimeline() {
+    const timeline = document.getElementById("timeline");
+    if (!timeline) return;
+
+    timeline.innerHTML = "";
+
+    const sorted = [...memories].sort(
+        (a, b) => memoryTime(b) - memoryTime(a)
+    );
+
+    sorted.forEach(memory => {
+        const article = document.createElement("article");
+        article.className = "timeline-memory";
+
+        const date = document.createElement("p");
+        date.className = "timeline-date";
+        date.textContent = memory.date || "";
+        article.appendChild(date);
+
+        if (memory.time) {
+            const time = document.createElement("span");
+            time.className = "timeline-time";
+            time.textContent = memory.time;
+            article.appendChild(time);
+        }
+
+        const title = document.createElement("h2");
+        title.textContent = memory.title || "";
+        article.appendChild(title);
+
+        if (memory.location) {
+            const location = document.createElement("p");
+            location.className = "timeline-location";
+            location.textContent = memory.location;
+            article.appendChild(location);
+        }
+
+        if (memory.description) {
+            const description = document.createElement("p");
+            description.className = "timeline-description";
+            description.textContent = memory.description;
+            article.appendChild(description);
+        }
+
+        article.addEventListener("click", () => {
+            window.location.href =
+                "memory.html?id=" + encodeURIComponent(memory.id);
+        });
+
+        timeline.appendChild(article);
+    });
+}
+
+// ======================================================
+// GALLERY
+// Videos appear first within each memory.
+// ======================================================
+function renderGallery() {
+    const gallery = document.getElementById("gallery");
+    if (!gallery) return;
+
+    gallery.innerHTML = "";
+    let mediaCount = 0;
+
+    memories.forEach(memory => {
+        const usableMedia = prioritizeVideos(
+            getMedia(memory).filter(
+                item => item && (item.type === "image" || item.type === "video")
+            )
+        );
+
+        if (!usableMedia.length) return;
+
+        const group = document.createElement("section");
+        group.className = "gallery-memory";
+
+        const heading = document.createElement("div");
+        heading.className = "gallery-memory-heading";
+
+        const title = document.createElement("h2");
+        title.textContent = memory.title || "";
+        heading.appendChild(title);
+
+        const dateTime = document.createElement("p");
+        dateTime.className = "gallery-date-time";
+
+        if (memory.date) {
+            const date = document.createElement("span");
+            date.className = "gallery-date";
+            date.textContent = memory.date;
+            dateTime.appendChild(date);
+        }
+
+        if (memory.time) {
+            const time = document.createElement("span");
+            time.className = "gallery-time";
+            time.textContent = memory.time;
+            dateTime.appendChild(time);
+        }
+
+        if (dateTime.textContent.trim()) heading.appendChild(dateTime);
+
+        if (memory.location) {
+            const location = document.createElement("p");
+            location.className = "gallery-location";
+            location.textContent = memory.location;
+            heading.appendChild(location);
+        }
+
+        group.appendChild(heading);
+
+        const grid = document.createElement("div");
+        grid.className = "gallery-grid";
+
+        usableMedia.forEach((item, index) => {
+            const figure = document.createElement("figure");
+            figure.className = "gallery-photo";
+
+            if (item.type === "video") {
+                figure.classList.add("is-video");
+
+                const video = document.createElement("video");
+                video.src = "./" + item.src;
+                video.preload = "metadata";
+                video.muted = true;
+                video.playsInline = true;
+                figure.appendChild(video);
+            } else {
+                const image = document.createElement("img");
+                image.src = "./" + item.src;
+                image.alt = item.caption || memory.title || "Memory photograph";
+                image.loading = "lazy";
+                figure.appendChild(image);
+            }
+
+            figure.addEventListener("click", () => {
+                openMediaViewer(usableMedia, index, memory);
+            });
+
+            grid.appendChild(figure);
+            mediaCount++;
+        });
+
+        group.appendChild(grid);
+        gallery.appendChild(group);
+    });
+
+    if (!mediaCount) {
+        gallery.innerHTML = `
+            <div class="gallery-empty">
+                <span>—</span>
+                <p>The photographs are still waiting to be added.</p>
+            </div>
+        `;
+    }
+}
+
+// ======================================================
+// MEDIA VIEWER
+// ======================================================
+function openMediaViewer(items, index, memory) {
+    lightboxItems = Array.isArray(items) ? items : [];
+    if (!lightboxItems.length) return;
+
+    lightboxIndex = Math.max(
+        0,
+        Math.min(Number(index) || 0, lightboxItems.length - 1)
+    );
+
+    lightboxMemory = memory || null;
+    renderLightboxItem();
+}
+
+function renderLightboxItem() {
+    if (!lightboxItems.length) return;
+
+    const item = lightboxItems[lightboxIndex];
+    if (!item) return;
+
+    const lightbox = document.getElementById("lightbox");
+    if (!lightbox) return;
+
+    const image = document.getElementById("lightboxImage");
+    const captionElement = document.getElementById("lightboxCaption");
+    const content = lightbox.querySelector(".lightbox-content");
+    if (!content) return;
+
+    const existingVideo = content.querySelector(".lightbox-video");
+    if (existingVideo) {
+        existingVideo.pause();
+        existingVideo.remove();
+    }
+
+    if (item.type === "video") {
+        if (image) {
+            image.src = "";
+            image.style.display = "none";
+        }
+
+        const video = document.createElement("video");
+        video.className = "lightbox-video lightbox-media";
+        video.src = "./" + item.src;
+        video.controls = true;
+        video.playsInline = true;
+        video.preload = "metadata";
+        content.insertBefore(video, captionElement || null);
+    } else if (image) {
+        image.style.display = "block";
+        image.src = "./" + item.src;
+        image.alt =
+            item.caption ||
+            (lightboxMemory && lightboxMemory.title) ||
+            "Memory photograph";
+    }
+
+    if (captionElement) {
+        const parts = [];
+        if (item.caption) parts.push(item.caption);
+        if (lightboxMemory && lightboxMemory.title) {
+            parts.push(lightboxMemory.title);
+        }
+        parts.push(`${lightboxIndex + 1} / ${lightboxItems.length}`);
+        captionElement.textContent = parts.join(" · ");
+    }
+
+    const prev = document.getElementById("lightboxPrev");
+    const next = document.getElementById("lightboxNext");
+
+    if (prev) prev.disabled = lightboxIndex <= 0;
+    if (next) next.disabled = lightboxIndex >= lightboxItems.length - 1;
+
+    lightbox.classList.add("open");
+    lightbox.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+}
+
+function changeLightbox(direction) {
+    if (!lightboxItems.length) return;
+
+    const nextIndex = lightboxIndex + direction;
+    if (nextIndex < 0 || nextIndex >= lightboxItems.length) return;
+
+    lightboxIndex = nextIndex;
+    renderLightboxItem();
+}
+
+function openLightbox(src, caption, type) {
+    openMediaViewer([{ src, caption, type }], 0, null);
+}
+
+// ======================================================
+// CLOSE LIGHTBOX
+// ======================================================
+function closeLightbox() {
+    const lightbox = document.getElementById("lightbox");
+    if (!lightbox) return;
+
+    const image = document.getElementById("lightboxImage");
+    const captionElement = document.getElementById("lightboxCaption");
+    const video = lightbox.querySelector(".lightbox-video");
+
+    if (video) {
+        video.pause();
+        video.remove();
+    }
+
+    lightbox.classList.remove("open");
+    lightbox.setAttribute("aria-hidden", "true");
+
+    if (image) {
+        image.src = "";
+        image.style.display = "block";
+    }
+
+    if (captionElement) captionElement.textContent = "";
+
+    document.body.style.overflow = "";
+
+    lightboxItems = [];
+    lightboxIndex = 0;
+    lightboxMemory = null;
+}
+
+// ======================================================
+// LIGHTBOX SETUP
+// ======================================================
+function setupLightbox() {
+    const lightbox = document.getElementById("lightbox");
+    const closeButton = document.getElementById("lightboxClose");
+    const prevButton = document.getElementById("lightboxPrev");
+    const nextButton = document.getElementById("lightboxNext");
+
+    if (!lightbox) return;
+
+    if (closeButton) closeButton.addEventListener("click", closeLightbox);
+    if (prevButton) {
+        prevButton.addEventListener("click", () => changeLightbox(-1));
+    }
+    if (nextButton) {
+        nextButton.addEventListener("click", () => changeLightbox(1));
+    }
+
+    lightbox.addEventListener("click", event => {
+        if (event.target === lightbox) closeLightbox();
+    });
+
+    let touchStartX = 0;
+
+    lightbox.addEventListener(
+        "touchstart",
+        event => {
+            if (event.changedTouches && event.changedTouches[0]) {
+                touchStartX = event.changedTouches[0].screenX;
+            }
+        },
+        { passive: true }
+    );
+
+    lightbox.addEventListener(
+        "touchend",
+        event => {
+            if (!event.changedTouches || !event.changedTouches[0]) return;
+
+            const delta =
+                event.changedTouches[0].screenX - touchStartX;
+
+            if (Math.abs(delta) < 50) return;
+
+            if (delta < 0) changeLightbox(1);
+            else changeLightbox(-1);
+        },
+        { passive: true }
+    );
+}
+
+// ======================================================
+// INDIVIDUAL MEMORY PAGE
+// ======================================================
+function renderMemoryPage() {
+    const container = document.getElementById("memoryContent");
+    if (!container) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    if (id === null) {
+        container.innerHTML = `<p class="loading">Memory not selected.</p>`;
+        return;
+    }
+
+    const memory = memories.find(
+        item => String(item.id) === String(id)
+    );
+
+    if (!memory) {
+        container.innerHTML = `<p class="loading">Memory not found.</p>`;
+        return;
+    }
+
+    // Preserve the exact order from memories.json.
+    const mediaItems = getMedia(memory);
+
+    const mediaContainer = document.createElement("div");
+    mediaContainer.className = "memory-media";
+
+    mediaItems.forEach((item, index) => {
+        if (
+            !item ||
+            (item.type !== "image" && item.type !== "video")
+        ) return;
+
+        const figure = document.createElement("figure");
+        figure.className = "memory-media-item";
+        figure.classList.add("media-" + item.type);
+        figure.classList.add("media-" + (index + 1));
+
+        if (item.type === "image") {
+            const image = document.createElement("img");
+            image.src = "./" + item.src;
+            image.alt =
+                item.caption ||
+                memory.title ||
+                "Memory photograph";
+            image.loading = "lazy";
+            figure.appendChild(image);
+        } else {
+            figure.classList.add("is-video");
+
+            const video = document.createElement("video");
+            video.preload = "metadata";
+            video.muted = true;
+            video.controls = true;
+            video.playsInline = true;
+
+            video.addEventListener("click", event => {
+                event.stopPropagation();
+            });
+
+            const source = document.createElement("source");
+            source.src = "./" + item.src;
+            video.appendChild(source);
+            figure.appendChild(video);
+        }
+
+        if (item.caption) {
+            const caption = document.createElement("figcaption");
+            caption.textContent = item.caption;
+            figure.appendChild(caption);
+        }
+
+        const usableMedia = mediaItems.filter(
+            media =>
+                media &&
+                (media.type === "image" || media.type === "video")
+        );
+
+        figure.addEventListener("click", () => {
+            openMediaViewer(
+                usableMedia,
+                usableMedia.indexOf(item),
+                memory
+            );
+        });
+
+        figure.setAttribute("tabindex", "0");
+
+        figure.addEventListener("keydown", event => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+
+                openMediaViewer(
+                    usableMedia,
+                    usableMedia.indexOf(item),
+                    memory
+                );
+            }
+        });
+
+        mediaContainer.appendChild(figure);
+    });
+
+    container.innerHTML = "";
+
+    const date = document.createElement("p");
+    date.className = "memory-date";
+    date.textContent = memory.date || "";
+    container.appendChild(date);
+
+    if (memory.time) {
+        const time = document.createElement("p");
+        time.className = "memory-time";
+        time.textContent = memory.time;
+        container.appendChild(time);
+    }
+
+    const title = document.createElement("h1");
+    title.textContent = memory.title || "";
+    container.appendChild(title);
+
+    if (memory.location) {
+        const location = document.createElement("p");
+        location.className = "memory-location";
+        location.textContent = memory.location;
+        container.appendChild(location);
+    }
+
+    if (mediaContainer.children.length) {
+        container.appendChild(mediaContainer);
+    }
+
+    const story = document.createElement("div");
+    story.className = "memory-story";
+    story.innerHTML = memory.description || "";
+    container.appendChild(story);
+
+    setupMemoryNavigation(memory);
+}
+
+// ======================================================
+// PREVIOUS / NEXT MEMORY
+// ======================================================
+function setupMemoryNavigation(currentMemory) {
+    const previous = document.getElementById("previousMemory");
+    const next = document.getElementById("nextMemory");
+
+    if (!previous || !next) return;
+
+    const sorted = [...memories].sort(
+        (a, b) => memoryTime(a) - memoryTime(b)
+    );
+
+    const index = sorted.findIndex(
+        memory => String(memory.id) === String(currentMemory.id)
+    );
+
+    if (index > 0) {
+        previous.href =
+            "memory.html?id=" +
+            encodeURIComponent(sorted[index - 1].id);
+        previous.style.visibility = "visible";
+    } else {
+        previous.style.visibility = "hidden";
+    }
+
+    if (index >= 0 && index < sorted.length - 1) {
+        next.href =
+            "memory.html?id=" +
+            encodeURIComponent(sorted[index + 1].id);
+        next.style.visibility = "visible";
+    } else {
+        next.style.visibility = "hidden";
+    }
+}
+
+// ======================================================
+// MOBILE MENU
+// ======================================================
+function setupMobileMenu() {
+    const button = document.getElementById("menuButton");
+    const sidebar = document.querySelector(".sidebar");
+
+    if (!button || !sidebar) return;
+
+    button.setAttribute("aria-expanded", "false");
+
+    button.addEventListener("click", () => {
+        const isOpen = sidebar.classList.toggle("mobile-open");
+        button.setAttribute("aria-expanded", String(isOpen));
+    });
+
+    sidebar.querySelectorAll(".nav-link").forEach(link => {
+        link.addEventListener("click", () => {
+            sidebar.classList.remove("mobile-open");
+            button.setAttribute("aria-expanded", "false");
+        });
+    });
+}
+
+// ======================================================
+// KEYBOARD LIGHTBOX
+// ======================================================
+function setupKeyboard() {
+    document.addEventListener("keydown", event => {
+        const lightbox = document.getElementById("lightbox");
+        const isOpen = lightbox && lightbox.classList.contains("open");
+
+        if (event.key === "Escape") {
+            closeLightbox();
+        } else if (isOpen && event.key === "ArrowLeft") {
+            changeLightbox(-1);
+        } else if (isOpen && event.key === "ArrowRight") {
+            changeLightbox(1);
+        }
+    });
+}
+
+// ======================================================
+// THINGS I LOVE ABOUT YOU
+// ======================================================
+async function loadThings() {
+    const container = document.getElementById("thingsList");
+    if (!container) return;
+
+    try {
+        const response = await fetch(
+            "./data/things.json?v=1",
+            { cache: "no-store" }
+        );
+
+        if (!response.ok) throw new Error("Could not load things.json");
+
+        const things = await response.json();
+        if (!Array.isArray(things)) {
+            throw new Error("things.json does not contain an array");
+        }
+
+        renderThings(things);
+    } catch (error) {
+        console.error("THINGS ERROR:", error);
+        container.innerHTML =
+            '<p class="loading">Unable to load this page.</p>';
+    }
+}
+
+function renderThings(things) {
+    const container = document.getElementById("thingsList");
+    if (!container) return;
+
+    if (!things.length) {
+        container.innerHTML = `
+            <div class="things-empty">
+                <p class="handwritten">Nothing written here yet.</p>
+                <p>This page is waiting for the things that only belong here.</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = things.map((thing, index) => {
+        const number = String(index + 1).padStart(2, "0");
+        const title = escapeHTML(thing.title || "Untitled");
+        const text = escapeHTML(thing.text || thing.description || "");
+        const date = thing.date
+            ? `<span class="thing-date">${escapeHTML(thing.date)}</span>`
+            : "";
+
+        return `
+            <article class="thing-entry">
+                <div class="thing-number">${number}</div>
+                <div class="thing-body">
+                    <div class="thing-meta">${date}</div>
+                    <h2>${title}</h2>
+                    <p>${text}</p>
+                </div>
+            </article>
+        `;
+    }).join("");
+}
+
+// ======================================================
+// PLACES WE'VE BEEN
+// ======================================================
+async function loadPlaces() {
+    const container = document.getElementById("placesList");
+    if (!container) return;
+
+    try {
+        const response = await fetch(
+            "./data/places.json?v=1",
+            { cache: "no-store" }
+        );
+
+        if (!response.ok) throw new Error("Could not load places.json");
+
+        const places = await response.json();
+        if (!Array.isArray(places)) {
+            throw new Error("places.json does not contain an array");
+        }
+
+        renderPlaces(places);
+    } catch (error) {
+        console.error("PLACES ERROR:", error);
+        container.innerHTML =
+            '<p class="loading">Unable to load this page.</p>';
+    }
+}
+
+function renderPlaces(places) {
+    const container = document.getElementById("placesList");
+    if (!container) return;
+
+    if (!places.length) {
+        container.innerHTML = `
+            <div class="places-empty">
+                <p class="handwritten">No places written here yet.</p>
+                <p>This page is waiting for the places that became part of our story.</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = places.map((place, index) => {
+        const number = String(index + 1).padStart(2, "0");
+        const name = escapeHTML(place.name || "Untitled place");
+        const date = place.date || "";
+        const location = place.location || "";
+        const description = place.description || place.text || "";
+        const image = place.image || "";
+
+        const metaParts = [];
+
+        if (date) {
+            metaParts.push(
+                `<span class="place-date">${escapeHTML(date)}</span>`
+            );
+        }
+
+        if (date && location) {
+            metaParts.push(`<span class="place-separator">·</span>`);
+        }
+
+        if (location) {
+            metaParts.push(
+                `<span class="place-location">${escapeHTML(location)}</span>`
+            );
+        }
+
+        const imageHTML = image
+            ? `
+                <div class="place-image">
+                    <img
+                        src="./${escapeHTML(image)}"
+                        alt="${name}"
+                        loading="lazy"
+                    >
+                </div>
+            `
+            : "";
+
+        return `
+            <article class="place-entry">
+                <div class="place-number">${number}</div>
+                <div class="place-body">
+                    <div class="place-meta">${metaParts.join("")}</div>
+                    <h2>${name}</h2>
+                    ${
+                        description
+                            ? `<p>${escapeHTML(description)}</p>`
+                            : ""
+                    }
+                    ${imageHTML}
+                </div>
+            </article>
+        `;
+    }).join("");
+}
+
+// ======================================================
+// NAVIGATION ROUTING
+// ======================================================
+function setupArchiveNavigation() {
+    document.querySelectorAll(".nav-link").forEach(link => {
+        const label = link.textContent.trim().toLowerCase();
+
+        if (label === "places we've been") link.href = "places.html";
+        if (label === "things i love about you") link.href = "things.html";
+        if (label === "the growing tree") link.href = "tree.html";
+    });
+}
+
+// ======================================================
+// MEMORY UNIVERSE — THE GROWING TREE PAGE
+// ======================================================
+async function loadTree(){
+ const container=document.getElementById("treeMilestones"),stage=document.getElementById("treeStage");
+ if(!container||!stage)return;
+ try{const response=await fetch("./data/tree.json?v=30",{cache:"no-store"});if(!response.ok)throw new Error("Could not load tree.json");const milestones=await response.json();if(!Array.isArray(milestones))throw new Error("tree.json does not contain an array");renderTree(milestones);}catch(error){console.error("MEMORY UNIVERSE ERROR:",error);container.innerHTML="";}
+}
+function universePositions(count,mobile){const d=[[18,25],[82,27],[18,70],[82,69],[50,10],[50,88],[31,38],[69,39],[30,72],[70,72],[42,20],[58,21]],m=[[22,26],[78,27],[18,67],[82,67],[50,14],[50,83],[30,47],[70,47]];return(mobile?m:d).slice(0,count)}
+function renderUniverseStars(){const space=document.getElementById("universeSpace");if(!space)return;space.innerHTML="";for(let i=0;i<70;i++){const star=document.createElement("span");star.className="universe-star";star.style.left=`${(i*47)%100}%`;star.style.top=`${(i*71+11)%100}%`;star.style.animationDelay=`${(i%13)*.31}s`;space.appendChild(star)}}
+function renderUniverseConnections(positions){const svg=document.getElementById("universeConnections");if(!svg)return;svg.innerHTML="";const links=[];for(let i=0;i<positions.length-1;i++)links.push([i,i+1,false]);if(positions.length>=4){links.push([0,2,true]);links.push([1,3,true])}links.forEach(([a,b,secondary])=>{const[x1,y1]=positions[a],[x2,y2]=positions[b],curve=Math.max(35,Math.abs(x2-x1)*.32),direction=x2>=x1?1:-1,path=document.createElementNS("http://www.w3.org/2000/svg","path");path.setAttribute("d",`M ${x1*10} ${y1*7} C ${x1*10+curve*direction} ${y1*7}, ${x2*10-curve*direction} ${y2*7}, ${x2*10} ${y2*7}`);if(secondary)path.classList.add("secondary");svg.appendChild(path)})}
+function renderTree(milestones){const container=document.getElementById("treeMilestones"),stage=document.getElementById("treeStage");if(!container||!stage)return;const mobile=window.matchMedia("(max-width:800px)").matches,positions=universePositions(milestones.length,mobile);container.innerHTML="";renderUniverseStars();const usable=[];milestones.forEach((milestone,index)=>{const pos=positions[index]||[12+(index*29)%76,12+(index*43)%76];usable.push(pos);const article=document.createElement("article");article.className="tree-milestone";article.dataset.tone=milestone.tone||"sage";article.dataset.size=milestone.size||"medium";article.style.left=`${pos[0]}%`;article.style.top=`${pos[1]}%`;article.tabIndex=0;article.setAttribute("role","button");article.setAttribute("aria-label",`${milestone.title||"Memory"}${milestone.date?`, ${milestone.date}`:""}`);const node=document.createElement("div");node.className="universe-node";node.setAttribute("aria-hidden","true");article.appendChild(node);if(milestone.date){const date=document.createElement("div");date.className="tree-milestone-date";date.textContent=milestone.date;article.appendChild(date)}const title=document.createElement("h3");title.textContent=milestone.title||"Untitled moment";article.appendChild(title);const text=milestone.text||milestone.description||"";if(text){const description=document.createElement("p");description.textContent=text;article.appendChild(description)}article.addEventListener("click",()=>openUniverseMemory(milestone,article));article.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();openUniverseMemory(milestone,article)}});container.appendChild(article)});renderUniverseConnections(usable);setupUniverseParallax()}
+function resolveTreeMemory(memory){if(memory.memoryId!==undefined&&memory.memoryId!==null){const exact=memories.find(item=>String(item.id)===String(memory.memoryId));if(exact)return exact}return memories.find(item=>String(item.title||"").trim().toLowerCase()===String(memory.title||"").trim().toLowerCase())||null}
+function openUniverseMemory(memory,element){document.querySelectorAll(".tree-milestone.is-selected").forEach(n=>n.classList.remove("is-selected"));element.classList.add("is-selected");const detail=document.getElementById("universeDetail"),date=document.getElementById("universeDetailDate"),title=document.getElementById("universeDetailTitle"),text=document.getElementById("universeDetailText"),open=document.getElementById("universeOpenMemory");if(!detail)return;const actual=resolveTreeMemory(memory);if(date)date.textContent=memory.date||actual?.date||"";if(title)title.textContent=memory.title||actual?.title||"Untitled moment";if(text)text.textContent=memory.text||memory.description||actual?.description||"";if(open){open.style.display=actual&&actual.id!==undefined?"inline-block":"none";open.onclick=()=>{if(actual&&actual.id!==undefined)window.location.href="memory.html?id="+encodeURIComponent(actual.id)}}detail.classList.add("open");detail.setAttribute("aria-hidden","false")}
+function closeUniverseMemory(){const detail=document.getElementById("universeDetail");if(detail){detail.classList.remove("open");detail.setAttribute("aria-hidden","true")}document.querySelectorAll(".tree-milestone.is-selected").forEach(n=>n.classList.remove("is-selected"))}
+function setupUniverseParallax(){const stage=document.getElementById("treeStage"),core=document.getElementById("universeCore");if(!stage||!core||window.matchMedia("(prefers-reduced-motion:reduce)").matches)return;const touch=window.matchMedia("(hover:none)").matches;if(touch){let sx=0,sy=0;stage.addEventListener("touchstart",e=>{const t=e.touches[0];sx=t.clientX;sy=t.clientY},{passive:true});stage.addEventListener("touchmove",e=>{const t=e.touches[0],dx=(t.clientX-sx)/stage.clientWidth,dy=(t.clientY-sy)/stage.clientHeight;core.style.transform=`translate(calc(-50% + ${dx*8}px),calc(-50% + ${dy*8}px))`},{passive:true});stage.addEventListener("touchend",()=>core.style.transform="translate(-50%,-50%)",{passive:true});return}let raf=null;stage.addEventListener("pointermove",e=>{const r=stage.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;if(raf)cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{core.style.transform=`translate(calc(-50% + ${x*12}px),calc(-50% + ${y*12}px))`;document.querySelectorAll(".tree-milestone").forEach((node,i)=>{const depth=2+i%4;node.style.marginLeft=`${x*depth}px`;node.style.marginTop=`${y*depth}px`})})});stage.addEventListener("pointerleave",()=>{core.style.transform="translate(-50%,-50%)";document.querySelectorAll(".tree-milestone").forEach(node=>{node.style.marginLeft="";node.style.marginTop=""})})}
+function setupUniverseDetail(){const close=document.getElementById("universeClose");if(close)close.addEventListener("click",closeUniverseMemory);document.addEventListener("keydown",e=>{if(e.key==="Escape")closeUniverseMemory()})}
+// ======================================================
+// FINAL INITIALIZATION
+// ======================================================
+async function init(){setupMobileMenu();setupLightbox();setupKeyboard();setupArchiveNavigation();await loadMemories();await loadThings();await loadPlaces();setupRandomMemory();if(document.getElementById("treeStage")){setupUniverseDetail();await loadTree()}}
+if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",init,{once:true})}else{init()}
