@@ -3073,3 +3073,334 @@ body.tree-page nav a[aria-current="page"] {
         transition: none !important;
     }
        }
+/* =========================================================
+   MEMORY UNIVERSE — DEDICATED NAVIGATION & PAGE SHELL
+   Add this entire section to the VERY BOTTOM of style.css.
+   It affects ONLY tree.html (.tree-page).
+   ========================================================= */
+
+.tree-page .universe-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    padding: 45px 30px;
+    display: flex;
+    flex-direction: column;
+
+    background: rgba(2, 2, 7, 0.78);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+
+    color: rgba(245, 242, 251, 0.72);
+    z-index: 100;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+.tree-page .universe-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 70px;
+}
+
+.tree-page .universe-brand-title {
+    color: #f5f2fb;
+    text-decoration: none;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    line-height: 1;
+    transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.tree-page .universe-brand-title:hover {
+    color: #ffffff;
+    opacity: 0.9;
+}
+
+.tree-page .universe-brand-subtitle {
+    color: rgba(239, 235, 247, 0.38);
+    font-family: "Caveat", cursive;
+    font-size: 17px;
+    line-height: 1.2;
+}
+
+.tree-page .universe-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.tree-page .universe-nav-link {
+    position: relative;
+    display: block;
+    color: rgba(239, 235, 247, 0.48);
+    text-decoration: none;
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.8px;
+    line-height: 1.35;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.tree-page .universe-nav-link:hover {
+    color: rgba(255, 255, 255, 0.9);
+    transform: translateX(4px);
+}
+
+.tree-page .universe-nav-link.active {
+    color: #ffffff;
+}
+
+.tree-page .universe-nav-link.active::before {
+    content: "—";
+    margin-right: 8px;
+    color: #a98cff;
+}
+
+.tree-page .universe-sidebar-bottom {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.tree-page .universe-random-button {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: rgba(245, 242, 251, 0.78);
+    text-align: left;
+    font-family: "Caveat", cursive;
+    font-size: 18px;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.tree-page .universe-random-button:hover {
+    color: #ffd37a;
+    opacity: 0.9;
+}
+
+.tree-page .universe-memory-counter {
+    display: flex;
+    flex-direction: column;
+    color: rgba(239, 235, 247, 0.34);
+    font-family: "Inter", sans-serif;
+    font-size: 10px;
+    letter-spacing: 1px;
+    line-height: 1.35;
+}
+
+.tree-page .universe-memory-counter span:first-child {
+    color: rgba(255, 255, 255, 0.82);
+    font-family: "Cormorant Garamond", serif;
+    font-size: 26px;
+    letter-spacing: 0;
+    line-height: 1;
+    margin-bottom: 3px;
+}
+
+/* Main area: deliberately independent of .main-content. */
+.tree-page .universe-main {
+    position: relative;
+    z-index: 1;
+    width: calc(100% - 250px);
+    min-height: 100vh;
+    margin-left: 250px;
+    padding: 0 70px 70px;
+}
+
+.tree-page .universe-page {
+    width: calc(100% - 250px);
+    max-width: none;
+    margin-left: 250px;
+    margin-right: 0;
+}
+
+/* Dedicated mobile header — never inherits the archive's white header. */
+.tree-page .universe-mobile-header {
+    display: none;
+}
+
+.tree-page .universe-menu-button {
+    width: 36px;
+    height: 36px;
+    padding: 8px 6px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+.tree-page .universe-menu-button span {
+    display: block;
+    width: 22px;
+    height: 1px;
+    margin: 6px auto;
+    background: rgba(255, 255, 255, 0.78);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.tree-page .universe-menu-button[aria-expanded="true"] span:first-child {
+    transform: translateY(3.5px) rotate(45deg);
+}
+
+.tree-page .universe-menu-button[aria-expanded="true"] span:last-child {
+    transform: translateY(-3.5px) rotate(-45deg);
+}
+
+.tree-page .universe-mobile-menu {
+    display: none;
+}
+
+/* Keep the existing Universe typography scale, but prevent global
+   archive heading rules from leaking into this page. */
+.tree-page .universe-header,
+.tree-page .universe-shell,
+.tree-page .universe-footer-note {
+    position: relative;
+    z-index: 1;
+}
+
+@media (max-width: 1050px) {
+    .tree-page .universe-sidebar {
+        width: 220px;
+        padding-left: 26px;
+        padding-right: 26px;
+    }
+
+    .tree-page .universe-main,
+    .tree-page .universe-page {
+        width: calc(100% - 220px);
+        margin-left: 220px;
+    }
+}
+
+@media (max-width: 800px) {
+    .tree-page .universe-sidebar {
+        display: none;
+    }
+
+    .tree-page .universe-mobile-header {
+        position: relative;
+        z-index: 120;
+        width: 100%;
+        min-height: 64px;
+        padding: 0 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        background: rgba(2, 2, 7, 0.86);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+    }
+
+    .tree-page .universe-mobile-header .universe-brand-title {
+        font-size: 20px;
+    }
+
+    .tree-page .universe-main,
+    .tree-page .universe-page {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .tree-page .universe-main {
+        padding-left: 12px;
+        padding-right: 12px;
+        padding-bottom: 50px;
+    }
+
+    .tree-page .universe-mobile-menu {
+        position: fixed;
+        inset: 64px 0 0;
+        z-index: 110;
+        display: block;
+
+        padding: 38px 28px;
+        background: rgba(2, 2, 7, 0.96);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translateY(-10px);
+        transition:
+            opacity 0.3s ease,
+            transform 0.35s ease,
+            visibility 0.3s ease;
+
+        backdrop-filter: blur(22px);
+        -webkit-backdrop-filter: blur(22px);
+    }
+
+    .tree-page .universe-mobile-menu.open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(0);
+    }
+
+    .tree-page .universe-mobile-menu nav {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+    }
+
+    .tree-page .universe-mobile-menu a {
+        color: rgba(239, 235, 247, 0.58);
+        text-decoration: none;
+        font-family: "Inter", sans-serif;
+        font-size: 12px;
+        letter-spacing: 0.8px;
+        line-height: 1.4;
+        transition: color 0.3s ease;
+    }
+
+    .tree-page .universe-mobile-menu a:hover,
+    .tree-page .universe-mobile-menu a[aria-current="page"] {
+        color: #ffffff;
+    }
+
+    .tree-page .universe-mobile-menu a[aria-current="page"]::before {
+        content: "—";
+        margin-right: 8px;
+        color: #a98cff;
+    }
+
+    .tree-page.universe-menu-open {
+        overflow: hidden;
+    }
+}
+
+@media (max-width: 700px) {
+    .tree-page .universe-mobile-header {
+        min-height: 60px;
+    }
+
+    .tree-page .universe-mobile-menu {
+        inset: 60px 0 0;
+    }
+
+    .tree-page .universe-main {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tree-page .universe-nav-link,
+    .tree-page .universe-brand-title,
+    .tree-page .universe-mobile-menu,
+    .tree-page .universe-menu-button span {
+        transition: none !important;
+    }
+}
