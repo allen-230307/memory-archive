@@ -841,24 +841,785 @@ function setupArchiveNavigation() {
 }
 
 // ======================================================
-// MEMORY UNIVERSE — THE GROWING TREE PAGE
+// MEMORY UNIVERSE — FINAL GALAXY
 // ======================================================
-async function loadTree(){
- const container=document.getElementById("treeMilestones"),stage=document.getElementById("treeStage");
- if(!container||!stage)return;
- try{const response=await fetch("./data/tree.json?v=30",{cache:"no-store"});if(!response.ok)throw new Error("Could not load tree.json");const milestones=await response.json();if(!Array.isArray(milestones))throw new Error("tree.json does not contain an array");renderTree(milestones);}catch(error){console.error("MEMORY UNIVERSE ERROR:",error);container.innerHTML="";}
-}
-function universePositions(count,mobile){const d=[[18,25],[82,27],[18,70],[82,69],[50,10],[50,88],[31,38],[69,39],[30,72],[70,72],[42,20],[58,21]],m=[[22,26],[78,27],[18,67],[82,67],[50,14],[50,83],[30,47],[70,47]];return(mobile?m:d).slice(0,count)}
-function renderUniverseStars(){const space=document.getElementById("universeSpace");if(!space)return;space.innerHTML="";for(let i=0;i<70;i++){const star=document.createElement("span");star.className="universe-star";star.style.left=`${(i*47)%100}%`;star.style.top=`${(i*71+11)%100}%`;star.style.animationDelay=`${(i%13)*.31}s`;space.appendChild(star)}}
-function renderUniverseConnections(positions){const svg=document.getElementById("universeConnections");if(!svg)return;svg.innerHTML="";const links=[];for(let i=0;i<positions.length-1;i++)links.push([i,i+1,false]);if(positions.length>=4){links.push([0,2,true]);links.push([1,3,true])}links.forEach(([a,b,secondary])=>{const[x1,y1]=positions[a],[x2,y2]=positions[b],curve=Math.max(35,Math.abs(x2-x1)*.32),direction=x2>=x1?1:-1,path=document.createElementNS("http://www.w3.org/2000/svg","path");path.setAttribute("d",`M ${x1*10} ${y1*7} C ${x1*10+curve*direction} ${y1*7}, ${x2*10-curve*direction} ${y2*7}, ${x2*10} ${y2*7}`);if(secondary)path.classList.add("secondary");svg.appendChild(path)})}
-function renderTree(milestones){const container=document.getElementById("treeMilestones"),stage=document.getElementById("treeStage");if(!container||!stage)return;const mobile=window.matchMedia("(max-width:800px)").matches,positions=universePositions(milestones.length,mobile);container.innerHTML="";renderUniverseStars();const usable=[];milestones.forEach((milestone,index)=>{const pos=positions[index]||[12+(index*29)%76,12+(index*43)%76];usable.push(pos);const article=document.createElement("article");article.className="tree-milestone";article.dataset.tone=milestone.tone||"sage";article.dataset.size=milestone.size||"medium";article.style.left=`${pos[0]}%`;article.style.top=`${pos[1]}%`;article.tabIndex=0;article.setAttribute("role","button");article.setAttribute("aria-label",`${milestone.title||"Memory"}${milestone.date?`, ${milestone.date}`:""}`);const node=document.createElement("div");node.className="universe-node";node.setAttribute("aria-hidden","true");article.appendChild(node);if(milestone.date){const date=document.createElement("div");date.className="tree-milestone-date";date.textContent=milestone.date;article.appendChild(date)}const title=document.createElement("h3");title.textContent=milestone.title||"Untitled moment";article.appendChild(title);const text=milestone.text||milestone.description||"";if(text){const description=document.createElement("p");description.textContent=text;article.appendChild(description)}article.addEventListener("click",()=>openUniverseMemory(milestone,article));article.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();openUniverseMemory(milestone,article)}});container.appendChild(article)});renderUniverseConnections(usable);setupUniverseParallax()}
-function resolveTreeMemory(memory){if(memory.memoryId!==undefined&&memory.memoryId!==null){const exact=memories.find(item=>String(item.id)===String(memory.memoryId));if(exact)return exact}return memories.find(item=>String(item.title||"").trim().toLowerCase()===String(memory.title||"").trim().toLowerCase())||null}
-function openUniverseMemory(memory,element){document.querySelectorAll(".tree-milestone.is-selected").forEach(n=>n.classList.remove("is-selected"));element.classList.add("is-selected");const detail=document.getElementById("universeDetail"),date=document.getElementById("universeDetailDate"),title=document.getElementById("universeDetailTitle"),text=document.getElementById("universeDetailText"),open=document.getElementById("universeOpenMemory");if(!detail)return;const actual=resolveTreeMemory(memory);if(date)date.textContent=memory.date||actual?.date||"";if(title)title.textContent=memory.title||actual?.title||"Untitled moment";if(text)text.textContent=memory.text||memory.description||actual?.description||"";if(open){open.style.display=actual&&actual.id!==undefined?"inline-block":"none";open.onclick=()=>{if(actual&&actual.id!==undefined)window.location.href="memory.html?id="+encodeURIComponent(actual.id)}}detail.classList.add("open");detail.setAttribute("aria-hidden","false")}
-function closeUniverseMemory(){const detail=document.getElementById("universeDetail");if(detail){detail.classList.remove("open");detail.setAttribute("aria-hidden","true")}document.querySelectorAll(".tree-milestone.is-selected").forEach(n=>n.classList.remove("is-selected"))}
-function setupUniverseParallax(){const stage=document.getElementById("treeStage"),core=document.getElementById("universeCore");if(!stage||!core||window.matchMedia("(prefers-reduced-motion:reduce)").matches)return;const touch=window.matchMedia("(hover:none)").matches;if(touch){let sx=0,sy=0;stage.addEventListener("touchstart",e=>{const t=e.touches[0];sx=t.clientX;sy=t.clientY},{passive:true});stage.addEventListener("touchmove",e=>{const t=e.touches[0],dx=(t.clientX-sx)/stage.clientWidth,dy=(t.clientY-sy)/stage.clientHeight;core.style.transform=`translate(calc(-50% + ${dx*8}px),calc(-50% + ${dy*8}px))`},{passive:true});stage.addEventListener("touchend",()=>core.style.transform="translate(-50%,-50%)",{passive:true});return}let raf=null;stage.addEventListener("pointermove",e=>{const r=stage.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;if(raf)cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{core.style.transform=`translate(calc(-50% + ${x*12}px),calc(-50% + ${y*12}px))`;document.querySelectorAll(".tree-milestone").forEach((node,i)=>{const depth=2+i%4;node.style.marginLeft=`${x*depth}px`;node.style.marginTop=`${y*depth}px`})})});stage.addEventListener("pointerleave",()=>{core.style.transform="translate(-50%,-50%)";document.querySelectorAll(".tree-milestone").forEach(node=>{node.style.marginLeft="";node.style.marginTop=""})})}
-function setupUniverseDetail(){const close=document.getElementById("universeClose");if(close)close.addEventListener("click",closeUniverseMemory);document.addEventListener("keydown",e=>{if(e.key==="Escape")closeUniverseMemory()})}
-// ======================================================
-// FINAL INITIALIZATION
-// ======================================================
-async function init(){setupMobileMenu();setupLightbox();setupKeyboard();setupArchiveNavigation();await loadMemories();await loadThings();await loadPlaces();setupRandomMemory();if(document.getElementById("treeStage")){setupUniverseDetail();await loadTree()}}
-if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",init,{once:true})}else{init()}
+
+async function loadTree() {
+
+    const stage = document.getElementById("treeStage");
+    const stars = document.getElementById("universeStars");
+    const lines = document.getElementById("universeConnections");
+    const nodes = document.getElementById("universeNodes");
+    const detail = document.getElementById("universeDetail");
+    const detailDate = document.getElementById("universeDetailDate");
+    const detailTitle = document.getElementById("universeDetailTitle");
+    const detailText = document.getElementById("universeDetailText");
+    const openMemory = document.getElementById("universeOpenMemory");
+    const closeMemory = document.getElementById("universeClose");
+
+    if (
+        !stage ||
+        !stars ||
+        !lines ||
+        !nodes ||
+        !detail
+    ) {
+        return;
+    }
+
+    const reduceMotion =
+        window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches;
+
+    let universe = [];
+    let selected = null;
+
+    const tones = {
+        warm: "#ffd37a",
+        rose: "#ff8fc7",
+        sage: "#8fe3c1",
+        gold: "#ffd37a",
+        blue: "#67e8f9",
+        violet: "#a98cff"
+    };
+
+
+    // ==================================================
+    // LOAD UNIVERSE DATA
+    // ==================================================
+
+    try {
+
+        const response = await fetch(
+            "./data/tree.json?v=31",
+            {
+                cache: "no-store"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                "Could not load tree.json"
+            );
+        }
+
+        universe = await response.json();
+
+        if (!Array.isArray(universe)) {
+            throw new Error(
+                "tree.json does not contain an array"
+            );
+        }
+
+    } catch (error) {
+
+        console.error(
+            "MEMORY UNIVERSE ERROR:",
+            error
+        );
+
+        return;
+    }
+
+
+    // ==================================================
+    // MEMORY POSITIONS
+    // ==================================================
+
+    function nodePosition(item, index) {
+
+        const desktop = [
+            [19, 28],
+            [69, 23],
+            [79, 58],
+            [28, 70],
+            [53, 83]
+        ];
+
+        const mobile = [
+            [21, 25],
+            [77, 25],
+            [79, 58],
+            [22, 62],
+            [51, 82]
+        ];
+
+        const positions =
+            window.innerWidth <= 700
+                ? mobile
+                : desktop;
+
+        return positions[
+            index % positions.length
+        ];
+    }
+
+
+    // ==================================================
+    // STARS
+    // ==================================================
+
+    function makeStars() {
+
+        const count =
+            window.innerWidth <= 700
+                ? 105
+                : 190;
+
+        const fragment =
+            document.createDocumentFragment();
+
+        const colourClasses = [
+            "",
+            "",
+            "",
+            "colour-violet",
+            "colour-cyan",
+            "colour-rose"
+        ];
+
+        for (let i = 0; i < count; i++) {
+
+            const star =
+                document.createElement("span");
+
+            star.className =
+                "universe-star " +
+                colourClasses[
+                    Math.floor(
+                        Math.random() *
+                        colourClasses.length
+                    )
+                ];
+
+            star.style.setProperty(
+                "--x",
+                `${Math.random() * 100}%`
+            );
+
+            star.style.setProperty(
+                "--y",
+                `${Math.random() * 100}%`
+            );
+
+            star.style.setProperty(
+                "--s",
+                `${
+                    Math.random() < .9
+                        ? Math.random() * 1.4 + .45
+                        : Math.random() * 2 + 1.2
+                }px`
+            );
+
+            star.style.setProperty(
+                "--o",
+                `${Math.random() * .38 + .07}`
+            );
+
+            star.style.setProperty(
+                "--d",
+                `${Math.random() * 5 + 3}s`
+            );
+
+            if (
+                Math.random() > .45 &&
+                !reduceMotion
+            ) {
+                star.classList.add("twinkle");
+            }
+
+            fragment.appendChild(star);
+        }
+
+        stars.replaceChildren(fragment);
+    }
+
+
+    // ==================================================
+    // CONSTELLATION LINES
+    // ==================================================
+
+    function renderLines() {
+
+        const rect =
+            stage.getBoundingClientRect();
+
+        lines.setAttribute(
+            "viewBox",
+            `0 0 ${rect.width} ${rect.height}`
+        );
+
+        lines.innerHTML = "";
+
+        const points =
+            universe.map((item, index) => {
+
+                const [x, y] =
+                    nodePosition(
+                        item,
+                        index
+                    );
+
+                return {
+                    x: rect.width * x / 100,
+                    y: rect.height * y / 100
+                };
+            });
+
+        const cx =
+            rect.width / 2;
+
+        const cy =
+            rect.height / 2;
+
+
+        // Every memory quietly connects
+        // back toward the archive core.
+
+        points.forEach((point, index) => {
+
+            const path =
+                document.createElementNS(
+                    "http://www.w3.org/2000/svg",
+                    "path"
+                );
+
+            const bend =
+                (
+                    index % 2
+                        ? -1
+                        : 1
+                ) *
+                Math.min(
+                    90,
+                    rect.width * .07
+                );
+
+            path.setAttribute(
+                "d",
+                `
+                M ${point.x} ${point.y}
+                Q
+                ${(point.x + cx) / 2 + bend}
+                ${(point.y + cy) / 2 + bend}
+                ${cx}
+                ${cy}
+                `
+            );
+
+            path.dataset.index =
+                String(index);
+
+            path.classList.add(
+                "universe-line"
+            );
+
+            lines.appendChild(path);
+        });
+
+
+        // Secondary connections between
+        // neighbouring memories.
+
+        for (
+            let i = 0;
+            i < points.length - 1;
+            i++
+        ) {
+
+            const a = points[i];
+            const b = points[i + 1];
+
+            const path =
+                document.createElementNS(
+                    "http://www.w3.org/2000/svg",
+                    "path"
+                );
+
+            const mx =
+                (a.x + b.x) / 2;
+
+            const my =
+                (a.y + b.y) / 2 -
+                (i % 2 ? 35 : -28);
+
+            path.setAttribute(
+                "d",
+                `
+                M ${a.x} ${a.y}
+                Q ${mx} ${my}
+                ${b.x} ${b.y}
+                `
+            );
+
+            path.dataset.pair =
+                `${i}-${i + 1}`;
+
+            path.classList.add(
+                "universe-line"
+            );
+
+            path.style.opacity = ".48";
+
+            lines.appendChild(path);
+        }
+    }
+
+
+    // ==================================================
+    // MEMORY LIGHTS
+    // ==================================================
+
+    function renderNodes() {
+
+        nodes.replaceChildren();
+
+        const fragment =
+            document.createDocumentFragment();
+
+        universe.forEach(
+            (item, index) => {
+
+                const [x, y] =
+                    nodePosition(
+                        item,
+                        index
+                    );
+
+                const tone =
+                    tones[item.tone] ||
+                    tones.violet;
+
+                const size =
+                    item.size === "large"
+                        ? 34
+                        : item.size === "medium"
+                            ? 27
+                            : 22;
+
+
+                const button =
+                    document.createElement(
+                        "button"
+                    );
+
+                button.type = "button";
+
+                button.className =
+                    "universe-node";
+
+                button.dataset.index =
+                    String(index);
+
+                button.dataset.memoryId =
+                    String(item.memoryId);
+
+                button.setAttribute(
+                    "aria-label",
+                    "Open memory"
+                );
+
+                button.style.setProperty(
+                    "--x",
+                    `${x}%`
+                );
+
+                button.style.setProperty(
+                    "--y",
+                    `${y}%`
+                );
+
+                button.style.setProperty(
+                    "--size",
+                    `${size}px`
+                );
+
+                button.style.setProperty(
+                    "--tone",
+                    tone
+                );
+
+
+                /*
+                 * IMPORTANT:
+                 *
+                 * There is deliberately NO
+                 * title/date/description
+                 * rendered beside the light.
+                 *
+                 * The light itself is the
+                 * interface.
+                 */
+
+                button.innerHTML = `
+                    <span class="node-aura"></span>
+                    <span class="node-halo"></span>
+                    <span class="node-core"></span>
+                `;
+
+
+                button.addEventListener(
+                    "click",
+                    () => selectMemory(index)
+                );
+
+                fragment.appendChild(button);
+            }
+        );
+
+        nodes.appendChild(fragment);
+    }
+
+
+    // ==================================================
+    // SELECT MEMORY
+    // ==================================================
+
+    function selectMemory(index) {
+
+        const item =
+            universe[index];
+
+        if (!item) return;
+
+
+        const memory =
+            memories.find(
+                memory =>
+                    String(memory.id) ===
+                    String(item.memoryId)
+            );
+
+        if (!memory) return;
+
+
+        selected = {
+            item,
+            memory,
+            index
+        };
+
+
+        if (detailDate) {
+
+            detailDate.textContent =
+                `${memory.date || item.date || ""}` +
+                (
+                    memory.time
+                        ? ` · ${memory.time}`
+                        : ""
+                );
+        }
+
+
+        if (detailTitle) {
+
+            detailTitle.textContent =
+                memory.title ||
+                item.title ||
+                "";
+        }
+
+
+        if (detailText) {
+
+            detailText.textContent =
+                memory.description ||
+                item.text ||
+                "";
+        }
+
+
+        if (openMemory) {
+
+            openMemory.style.display =
+                "inline-block";
+
+            openMemory.dataset.memoryId =
+                String(memory.id);
+        }
+
+
+        document
+            .querySelectorAll(
+                ".universe-node"
+            )
+            .forEach(node => {
+
+                node.classList.toggle(
+                    "selected",
+                    Number(
+                        node.dataset.index
+                    ) === index
+                );
+            });
+
+
+        document
+            .querySelectorAll(
+                ".universe-line"
+            )
+            .forEach(line => {
+
+                line.classList.toggle(
+                    "active",
+                    line.dataset.index ===
+                    String(index)
+                );
+            });
+
+
+        detail.classList.add("open");
+
+        stage.classList.add(
+            "focus-mode"
+        );
+
+        detail.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+    }
+
+
+    // ==================================================
+    // CLOSE MEMORY
+    // ==================================================
+
+    function closeDetail() {
+
+        selected = null;
+
+        detail.classList.remove(
+            "open"
+        );
+
+        stage.classList.remove(
+            "focus-mode"
+        );
+
+        detail.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+
+        document
+            .querySelectorAll(
+                ".universe-node"
+            )
+            .forEach(node => {
+
+                node.classList.remove(
+                    "selected"
+                );
+            });
+
+
+        document
+            .querySelectorAll(
+                ".universe-line"
+            )
+            .forEach(line => {
+
+                line.classList.remove(
+                    "active"
+                );
+            });
+    }
+
+
+    // ==================================================
+    // OPEN ACTUAL MEMORY
+    // ==================================================
+
+    function openSelectedMemory() {
+
+        if (!selected) return;
+
+        window.location.href =
+            "memory.html?id=" +
+            encodeURIComponent(
+                selected.memory.id
+            );
+    }
+
+
+    // ==================================================
+    // PARALLAX
+    // ==================================================
+
+    let raf = null;
+
+    function parallax(x, y) {
+
+        if (reduceMotion) return;
+
+        if (raf) {
+            cancelAnimationFrame(raf);
+        }
+
+        raf =
+            requestAnimationFrame(
+                () => {
+
+                    raf = null;
+
+                    const starsList =
+                        stars.children;
+
+                    for (
+                        let i = 0;
+                        i < starsList.length;
+                        i++
+                    ) {
+
+                        const depth =
+                            (i % 7 + 1) / 7;
+
+                        starsList[i]
+                            .style
+                            .setProperty(
+                                "--px",
+                                `${x * depth * 5}px`
+                            );
+
+                        starsList[i]
+                            .style
+                            .setProperty(
+                                "--py",
+                                `${y * depth * 5}px`
+                            );
+                    }
+
+
+                    document
+                        .querySelectorAll(
+                            ".universe-node"
+                        )
+                        .forEach(
+                            (node, index) => {
+
+                                const depth =
+                                    (index % 4 + 1) / 4;
+
+                                node.style.setProperty(
+                                    "--px",
+                                    `${x * depth * 10}px`
+                                );
+
+                                node.style.setProperty(
+                                    "--py",
+                                    `${y * depth * 8}px`
+                                );
+                            }
+                        );
+
+
+                    const core =
+                        document.querySelector(
+                            ".universe-core"
+                        );
+
+                    if (core) {
+
+                        core.style.setProperty(
+                            "--px",
+                            `${x * 4}px`
+                        );
+
+                        core.style.setProperty(
+                            "--py",
+                            `${y * 4}px`
+                        );
+                    }
+                }
+            );
+    }
+
+
+    // ==================================================
+    // INTERACTION
+    // ==================================================
+
+    stage.addEventListener(
+        "pointermove",
+        event => {
+
+            const rect =
+                stage.getBoundingClientRect();
+
+            parallax(
+                (
+                    (event.clientX - rect.left) /
+                    rect.width
+                ) * 2 - 1,
+
+                (
+                    (event.clientY - rect.top) /
+                    rect.height
+                ) * 2 - 1
+            );
+        }
+    );
+
+
+    stage.addEventListener(
+        "pointerleave",
+        () => {
+            parallax(0, 0);
+        }
+    );
+
+
+    if (closeMemory) {
+
+        closeMemory.addEventListener(
+            "click",
+            closeDetail
+        );
+    }
+
+
+    if (openMemory) {
+
+        openMemory.addEventListener(
+            "click",
+            openSelectedMemory
+        );
+    }
+
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Escape" &&
+                selected
+            ) {
+                closeDetail();
+            }
+        }
+    );
+
+
+    window.addEventListener(
+        "resize",
+        () => {
+
+            makeStars();
+            renderLines();
+        }
+    );
+
+
+    // ==================================================
+    // INITIAL RENDER
+    // ==================================================
+
+    makeStars();
+    renderNodes();
+    renderLines();
+            }
