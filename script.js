@@ -728,7 +728,18 @@ function renderThings(things) {
         `;
     }).join("");
 }
+// ======================================================
+// HTML ESCAPE HELPER
+// ======================================================
 
+function escapeHTML(value) {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
 // ======================================================
 // PLACES WE'VE BEEN
 // ======================================================
@@ -1623,3 +1634,26 @@ async function loadTree() {
     renderNodes();
     renderLines();
             }
+// ======================================================
+// INITIALIZE ARCHIVE
+// ======================================================
+
+async function init() {
+    setupMobileMenu();
+    setupLightbox();
+    setupKeyboard();
+    setupArchiveNavigation();
+
+    await loadMemories();
+    await loadThings();
+    await loadPlaces();
+    await loadTree();
+
+    setupRandomMemory();
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+} else {
+    init();
+}
