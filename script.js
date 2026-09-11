@@ -628,24 +628,113 @@ function setupMemoryNavigation(currentMemory) {
 // MOBILE MENU
 // ======================================================
 function setupMobileMenu() {
-    const button = document.getElementById("menuButton");
-    const sidebar = document.querySelector(".sidebar");
 
-    if (!button || !sidebar) return;
+    /*
+     * Current archive markup uses .menu-toggle.
+     * The id fallback keeps compatibility with older pages.
+     */
+    const button =
+        document.querySelector(".menu-toggle") ||
+        document.getElementById("menuButton");
 
-    button.setAttribute("aria-expanded", "false");
+    const sidebar =
+        document.querySelector(".sidebar");
 
-    button.addEventListener("click", () => {
-        const isOpen = sidebar.classList.toggle("mobile-open");
-        button.setAttribute("aria-expanded", String(isOpen));
-    });
+    if (!button || !sidebar) {
+        return;
+    }
 
-    sidebar.querySelectorAll(".nav-link").forEach(link => {
-        link.addEventListener("click", () => {
-            sidebar.classList.remove("mobile-open");
-            button.setAttribute("aria-expanded", "false");
-        });
-    });
+    const setMenuState = function (isOpen) {
+
+        sidebar.classList.toggle(
+            "mobile-open",
+            isOpen
+        );
+
+        button.setAttribute(
+            "aria-expanded",
+            String(isOpen)
+        );
+
+        button.setAttribute(
+            "aria-label",
+            isOpen
+                ? "Close menu"
+                : "Open menu"
+        );
+
+        document.body.classList.toggle(
+            "mobile-menu-open",
+            isOpen
+        );
+
+    };
+
+    setMenuState(false);
+
+    button.addEventListener(
+        "click",
+        function () {
+
+            const isOpen =
+                sidebar.classList.contains(
+                    "mobile-open"
+                );
+
+            setMenuState(!isOpen);
+
+        }
+    );
+
+    sidebar.querySelectorAll(".nav-link").forEach(
+        function (link) {
+
+            link.addEventListener(
+                "click",
+                function () {
+                    setMenuState(false);
+                }
+            );
+
+        }
+    );
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key === "Escape" &&
+                sidebar.classList.contains(
+                    "mobile-open"
+                )
+            ) {
+                setMenuState(false);
+            }
+
+        }
+    );
+
+    /*
+     * If the viewport returns to desktop while the
+     * mobile panel is open, reset its mobile state.
+     */
+    window.addEventListener(
+        "resize",
+        function () {
+
+            if (
+                window.innerWidth > 800 &&
+                sidebar.classList.contains(
+                    "mobile-open"
+                )
+            ) {
+                setMenuState(false);
+            }
+
+        }
+    );
+
 }
 
 // ======================================================
