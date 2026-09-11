@@ -3404,3 +3404,251 @@ body.tree-page nav a[aria-current="page"] {
         transition: none !important;
     }
 }
+/* =========================================================
+   MEMORY UNIVERSE STYLE MOBILE SIDEBAR
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    /* Mobile sidebar panel */
+    .sidebar {
+        display: flex;
+        position: fixed;
+
+        top: 60px;
+        left: 0;
+
+        width: 100%;
+        height: calc(100dvh - 60px);
+
+        padding: 38px 28px;
+
+        flex-direction: column;
+
+        background: rgba(245, 241, 232, 0.97);
+
+        border-right: none;
+        border-bottom: 1px solid rgba(41, 38, 34, 0.08);
+
+        overflow-y: auto;
+
+        z-index: 110;
+
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+
+        transform: translateY(-14px);
+
+        transition:
+            opacity 0.30s ease,
+            transform 0.35s ease,
+            visibility 0.30s ease;
+
+        backdrop-filter: blur(22px);
+        -webkit-backdrop-filter: blur(22px);
+    }
+
+
+    /* Open state */
+    .sidebar.mobile-open {
+
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+
+        transform: translateY(0);
+
+    }
+
+
+    /* Mobile header */
+    .mobile-header {
+
+        position: fixed;
+
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        height: 60px;
+
+        padding: 0 20px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        background: rgba(245, 241, 232, 0.94);
+
+        border-bottom: 1px solid rgba(41, 38, 34, 0.08);
+
+        z-index: 120;
+
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+    }
+
+
+    /* Menu button */
+    .menu-toggle,
+    #menuButton {
+
+        position: relative;
+
+        width: 34px;
+        height: 34px;
+
+        padding: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: transparent;
+
+        border: none;
+
+        cursor: pointer;
+
+        font-size: 0;
+    }
+
+
+    /* Two-line hamburger */
+    .menu-toggle::before,
+    .menu-toggle::after,
+    #menuButton::before,
+    #menuButton::after {
+
+        content: "";
+
+        position: absolute;
+
+        width: 20px;
+        height: 1px;
+
+        background: currentColor;
+
+        transition:
+            transform 0.3s ease,
+            opacity 0.2s ease;
+    }
+
+
+    .menu-toggle::before,
+    #menuButton::before {
+        transform: translateY(-4px);
+    }
+
+
+    .menu-toggle::after,
+    #menuButton::after {
+        transform: translateY(4px);
+    }
+
+
+    /* X state */
+    .sidebar.mobile-open
+    ~ .mobile-header
+    .menu-toggle::before,
+
+    body.mobile-menu-open
+    .menu-toggle::before,
+
+    body.mobile-menu-open
+    #menuButton::before {
+
+        transform: rotate(45deg);
+    }
+
+
+    .sidebar.mobile-open
+    ~ .mobile-header
+    .menu-toggle::after,
+
+    body.mobile-menu-open
+    .menu-toggle::after,
+
+    body.mobile-menu-open
+    #menuButton::after {
+
+        transform: rotate(-45deg);
+    }
+
+
+    /* Navigation inside opened sidebar */
+    .sidebar .navigation {
+
+        opacity: 0;
+
+        transform: translateY(-8px);
+
+        transition:
+            opacity 0.3s ease 0.08s,
+            transform 0.35s ease 0.08s;
+    }
+
+
+    .sidebar.mobile-open .navigation {
+
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+
+
+    /* Slightly spaced navigation links */
+    .sidebar.mobile-open .nav-link {
+
+        transition:
+            opacity 0.3s ease,
+            transform 0.3s ease;
+    }
+
+
+    /* Lock page scrolling while menu is open */
+    body.mobile-menu-open {
+
+        overflow: hidden;
+    }
+
+}
+
+
+/* Smaller mobile screens */
+@media (max-width: 700px) {
+
+    .mobile-header {
+
+        height: 60px;
+    }
+
+
+    .sidebar {
+
+        top: 60px;
+
+        height: calc(100dvh - 60px);
+
+        padding:
+            34px 24px;
+    }
+
+}
+
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+    .sidebar,
+    .sidebar .navigation,
+    .menu-toggle::before,
+    .menu-toggle::after,
+    #menuButton::before,
+    #menuButton::after {
+
+        transition: none !important;
+    }
+
+}
