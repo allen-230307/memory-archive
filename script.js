@@ -687,17 +687,26 @@ function setupMobileMenu() {
     );
 
     sidebar.querySelectorAll(".nav-link").forEach(
-        function (link) {
+    function (link) {
 
-            link.addEventListener(
-                "click",
-                function () {
-                    setMenuState(false);
-                }
-            );
+        link.addEventListener(
+            "click",
+            function () {
 
-        }
-    );
+                /*
+                 * Give the link a moment to show its
+                 * selection animation before the page
+                 * navigation takes place.
+                 */
+                link.classList.add("nav-link-selected");
+
+                setMenuState(false);
+
+            }
+        );
+
+    }
+);
 
     document.addEventListener(
         "keydown",
