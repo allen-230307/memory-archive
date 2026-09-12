@@ -1,0 +1,1132 @@
+/* =========================================================
+   THE ARCHIVE — PRIVATE EDITOR
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+
+    min-height: 100vh;
+
+    background: #f5f1e8;
+
+    color: #292622;
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    -webkit-font-smoothing: antialiased;
+}
+
+
+button,
+input,
+textarea {
+    font: inherit;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.editor-header {
+
+    width: 100%;
+
+    padding: 24px 6vw;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    border-bottom:
+        1px solid #d8d0c3;
+
+    background: rgba(
+        245,
+        241,
+        232,
+        0.94
+    );
+
+    backdrop-filter: blur(14px);
+
+    -webkit-backdrop-filter: blur(14px);
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 20;
+}
+
+
+.editor-brand {
+
+    font-size: 13px;
+
+    letter-spacing: 0.22em;
+
+    font-weight: 600;
+}
+
+
+.editor-subtitle {
+
+    margin-top: 4px;
+
+    font-size: 9px;
+
+    letter-spacing: 0.25em;
+
+    color: #777067;
+}
+
+
+.back-link {
+
+    color: #292622;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    letter-spacing: 0.08em;
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.back-link:hover {
+
+    opacity: 0.55;
+
+    transform: translateX(-2px);
+}
+
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.editor-container {
+
+    width: min(
+        1050px,
+        88%
+    );
+
+    margin: 0 auto;
+
+    padding: 70px 0 100px;
+}
+
+
+.editor-section {
+    display: block;
+}
+
+
+.hidden {
+    display: none !important;
+}
+
+
+/* =========================================================
+   HEADINGS
+   ========================================================= */
+
+.section-heading {
+
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: space-between;
+
+    gap: 30px;
+
+    margin-bottom: 42px;
+}
+
+
+.eyebrow {
+
+    margin: 0 0 10px;
+
+    font-size: 9px;
+
+    letter-spacing: 0.25em;
+
+    color: #777067;
+
+    text-transform: uppercase;
+}
+
+
+h1 {
+
+    margin: 0;
+
+    font-family:
+        "Cormorant Garamond",
+        Georgia,
+        serif;
+
+    font-size: clamp(
+        38px,
+        5vw,
+        58px
+    );
+
+    font-weight: 400;
+
+    line-height: 0.95;
+}
+
+
+h2 {
+
+    margin: 0;
+
+    font-family:
+        "Cormorant Garamond",
+        Georgia,
+        serif;
+
+    font-size: 42px;
+
+    font-weight: 400;
+}
+
+
+.section-description {
+
+    max-width: 570px;
+
+    margin: 18px 0 0;
+
+    color: #777067;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   MANAGER CARDS
+   ========================================================= */
+
+.manager-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 18px;
+}
+
+
+.manager-card {
+
+    position: relative;
+
+    min-height: 210px;
+
+    padding: 28px;
+
+    text-align: left;
+
+    border: 1px solid #d8d0c3;
+
+    background: #eee8dc;
+
+    color: #292622;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.3s ease,
+        background 0.3s ease,
+        border-color 0.3s ease;
+}
+
+
+.manager-card:hover {
+
+    transform: translateY(-4px);
+
+    background: #f0ebe1;
+
+    border-color: #c8bfb1;
+}
+
+
+.card-number {
+
+    display: block;
+
+    margin-bottom: 55px;
+
+    font-size: 10px;
+
+    letter-spacing: 0.2em;
+
+    color: #777067;
+}
+
+
+.card-title {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-family:
+        "Cormorant Garamond",
+        Georgia,
+        serif;
+
+    font-size: 30px;
+
+    font-weight: 400;
+}
+
+
+.card-description {
+
+    display: block;
+
+    max-width: 320px;
+
+    color: #777067;
+
+    font-size: 12px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.primary-button,
+.secondary-button {
+
+    min-height: 44px;
+
+    padding: 0 20px;
+
+    border: 1px solid #292622;
+
+    cursor: pointer;
+
+    font-size: 11px;
+
+    letter-spacing: 0.08em;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.primary-button {
+
+    background: #292622;
+
+    color: #f5f1e8;
+}
+
+
+.primary-button:hover {
+
+    background: #44403a;
+
+    transform: translateY(-1px);
+}
+
+
+.secondary-button {
+
+    background: transparent;
+
+    color: #292622;
+
+    border-color: #bdb4a7;
+}
+
+
+.secondary-button:hover {
+
+    background: #eee8dc;
+}
+
+
+.back-button {
+
+    margin-bottom: 42px;
+
+    padding: 0;
+
+    border: none;
+
+    background: none;
+
+    color: #777067;
+
+    cursor: pointer;
+
+    font-size: 11px;
+
+    letter-spacing: 0.08em;
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.back-button:hover {
+
+    color: #292622;
+
+    transform: translateX(-3px);
+}
+
+
+/* =========================================================
+   ENTRY LIST
+   ========================================================= */
+
+.entry-list {
+
+    border-top:
+        1px solid #d8d0c3;
+}
+
+
+.entry-item {
+
+    display: grid;
+
+    grid-template-columns:
+        60px
+        1fr
+        auto;
+
+    gap: 20px;
+
+    align-items: center;
+
+    padding: 25px 0;
+
+    border-bottom:
+        1px solid #d8d0c3;
+}
+
+
+.entry-number {
+
+    color: #777067;
+
+    font-size: 10px;
+
+    letter-spacing: 0.12em;
+}
+
+
+.entry-title {
+
+    margin-bottom: 5px;
+
+    font-family:
+        "Cormorant Garamond",
+        Georgia,
+        serif;
+
+    font-size: 26px;
+}
+
+
+.entry-meta {
+
+    color: #777067;
+
+    font-size: 11px;
+
+    line-height: 1.6;
+}
+
+
+.entry-actions {
+
+    display: flex;
+
+    gap: 8px;
+}
+
+
+.small-button {
+
+    padding: 9px 12px;
+
+    border:
+        1px solid #c8bfb1;
+
+    background: transparent;
+
+    color: #292622;
+
+    cursor: pointer;
+
+    font-size: 10px;
+
+    letter-spacing: 0.05em;
+
+    transition:
+        background 0.2s ease;
+}
+
+
+.small-button:hover {
+
+    background: #eee8dc;
+}
+
+
+.small-button.delete:hover {
+
+    background: #e8ded5;
+}
+
+
+/* =========================================================
+   FORMS
+   ========================================================= */
+
+#memoryFormElement {
+
+    max-width: 760px;
+}
+
+
+.form-group {
+
+    margin-bottom: 28px;
+}
+
+
+.form-row {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1fr;
+
+    gap: 20px;
+}
+
+
+.form-group label {
+
+    display: block;
+
+    margin-bottom: 9px;
+
+    font-size: 10px;
+
+    letter-spacing: 0.12em;
+
+    color: #777067;
+
+    text-transform: uppercase;
+}
+
+
+input,
+textarea {
+
+    width: 100%;
+
+    border: none;
+
+    border-bottom:
+        1px solid #bdb4a7;
+
+    border-radius: 0;
+
+    padding:
+        12px
+        0;
+
+    background: transparent;
+
+    color: #292622;
+
+    outline: none;
+
+    font-size: 14px;
+}
+
+
+textarea {
+
+    resize: vertical;
+
+    min-height: 150px;
+
+    line-height: 1.7;
+}
+
+
+input:focus,
+textarea:focus {
+
+    border-bottom-color:
+        #292622;
+}
+
+
+/* =========================================================
+   MEDIA
+   ========================================================= */
+
+.media-heading {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+
+.media-heading label {
+
+    margin-bottom: 0;
+}
+
+
+#mediaCount {
+
+    color: #777067;
+
+    font-size: 10px;
+}
+
+
+.media-preview {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
+
+    gap: 10px;
+
+    margin:
+        15px 0;
+}
+
+
+.media-item {
+
+    position: relative;
+
+    aspect-ratio: 3 / 4;
+
+    overflow: hidden;
+
+    background: #e7e0d5;
+}
+
+
+.media-item img,
+.media-item video {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+.media-remove {
+
+    position: absolute;
+
+    top: 6px;
+
+    right: 6px;
+
+    width: 26px;
+
+    height: 26px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background:
+        rgba(
+            41,
+            38,
+            34,
+            0.8
+        );
+
+    color: white;
+
+    cursor: pointer;
+}
+
+
+.media-upload {
+
+    min-height: 120px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    border:
+        1px dashed #bdb4a7;
+
+    cursor: pointer;
+
+    color: #777067;
+
+    font-size: 12px;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+
+.media-upload:hover {
+
+    background: #eee8dc;
+
+    border-color: #8e867b;
+}
+
+
+.upload-symbol {
+
+    font-size: 25px;
+
+    font-weight: 200;
+}
+
+
+.media-upload small {
+
+    font-size: 9px;
+
+    letter-spacing: 0.05em;
+}
+
+
+/* =========================================================
+   FORM ACTIONS
+   ========================================================= */
+
+.form-actions {
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    padding-top: 20px;
+
+    border-top:
+        1px solid #d8d0c3;
+}
+
+
+/* =========================================================
+   COMING SOON
+   ========================================================= */
+
+.coming-soon {
+
+    padding: 60px 30px;
+
+    border:
+        1px solid #d8d0c3;
+
+    background: #eee8dc;
+
+    font-family:
+        "Cormorant Garamond",
+        Georgia,
+        serif;
+
+    font-size: 28px;
+}
+
+
+.coming-soon span {
+
+    display: block;
+
+    margin-top: 10px;
+
+    font-family:
+        Inter,
+        sans-serif;
+
+    font-size: 10px;
+
+    letter-spacing: 0.15em;
+
+    color: #777067;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.loading {
+
+    padding: 40px 0;
+
+    color: #777067;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.modal {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 100;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+}
+
+
+.modal.hidden {
+
+    display: none;
+}
+
+
+.modal-backdrop {
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        rgba(
+            41,
+            38,
+            34,
+            0.45
+        );
+
+    backdrop-filter: blur(5px);
+
+    -webkit-backdrop-filter: blur(5px);
+}
+
+
+.modal-content {
+
+    position: relative;
+
+    width: min(
+        760px,
+        100%
+    );
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    padding: 45px;
+
+    background: #f5f1e8;
+
+    border:
+        1px solid #d8d0c3;
+}
+
+
+.modal-close {
+
+    position: absolute;
+
+    top: 15px;
+
+    right: 18px;
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 28px;
+
+    color: #777067;
+
+    cursor: pointer;
+}
+
+
+.preview-meta {
+
+    margin:
+        18px 0 25px;
+
+    color: #777067;
+
+    font-size: 11px;
+
+    line-height: 1.7;
+}
+
+
+.preview-description {
+
+    white-space: pre-wrap;
+
+    font-size: 14px;
+
+    line-height: 1.8;
+}
+
+
+.preview-media {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            1fr
+        );
+
+    gap: 10px;
+
+    margin-top: 30px;
+}
+
+
+.preview-media img,
+.preview-media video {
+
+    width: 100%;
+
+    aspect-ratio: 3 / 4;
+
+    object-fit: cover;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .editor-header {
+
+        padding:
+            18px 6vw;
+    }
+
+
+    .back-link {
+
+        font-size: 10px;
+    }
+
+
+    .editor-container {
+
+        width: 88%;
+
+        padding:
+            50px 0 80px;
+    }
+
+
+    .section-heading {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        margin-bottom: 32px;
+    }
+
+
+    h1 {
+
+        font-size: 43px;
+    }
+
+
+    .manager-grid {
+
+        grid-template-columns: 1fr;
+
+        gap: 12px;
+    }
+
+
+    .manager-card {
+
+        min-height: 170px;
+
+        padding: 22px;
+    }
+
+
+    .card-number {
+
+        margin-bottom: 35px;
+    }
+
+
+    .card-title {
+
+        font-size: 27px;
+    }
+
+
+    .form-row {
+
+        grid-template-columns: 1fr;
+
+        gap: 0;
+    }
+
+
+    .media-preview {
+
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(0, 1fr)
+            );
+    }
+
+
+    .entry-item {
+
+        grid-template-columns:
+            35px
+            1fr;
+
+        gap: 10px;
+    }
+
+
+    .entry-actions {
+
+        grid-column: 2;
+
+        margin-top: 5px;
+    }
+
+
+    .modal-content {
+
+        padding: 32px 22px;
+    }
+
+
+    .preview-media {
+
+        grid-template-columns:
+            repeat(
+                2,
+                1fr
+            );
+    }
+
+
+    .form-actions {
+
+        flex-direction: column-reverse;
+    }
+
+
+    .form-actions button {
+
+        width: 100%;
+    }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+
+    outline:
+        1px solid #777067;
+
+    outline-offset: 4px;
+}
