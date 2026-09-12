@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="robots"
+        content="noindex, nofollow"
+    >
+
+    <title>Archive Editor</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="editor-header">
+
+        <div>
+            <div class="editor-brand">
+                THE ARCHIVE
+            </div>
+
+            <div class="editor-subtitle">
+                PRIVATE EDITOR
+            </div>
+        </div>
+
+        <a
+            href="../index.html"
+            class="back-link"
+        >
+            View Archive
+        </a>
+
+    </header>
+
+
+    <main class="editor-container">
+
+        <!-- =================================================
+             DASHBOARD
+             ================================================= -->
+
+        <section
+            id="dashboard"
+            class="editor-section"
+        >
+
+            <div class="section-heading">
+
+                <div>
+                    <p class="eyebrow">
+                        CONTENT
+                    </p>
+
+                    <h1>
+                        Archive Manager
+                    </h1>
+                </div>
+
+            </div>
+
+
+            <div class="manager-grid">
+
+                <button
+                    class="manager-card"
+                    data-section="memories"
+                >
+
+                    <span class="card-number">
+                        01
+                    </span>
+
+                    <span class="card-title">
+                        Memories
+                    </span>
+
+                    <span class="card-description">
+                        Moments, stories and memories.
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="manager-card"
+                    data-section="places"
+                >
+
+                    <span class="card-number">
+                        02
+                    </span>
+
+                    <span class="card-title">
+                        Places
+                    </span>
+
+                    <span class="card-description">
+                        Places we have been.
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="manager-card"
+                    data-section="things"
+                >
+
+                    <span class="card-number">
+                        03
+                    </span>
+
+                    <span class="card-title">
+                        Things I Love
+                    </span>
+
+                    <span class="card-description">
+                        The little details I love about you.
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="manager-card"
+                    data-section="tree"
+                >
+
+                    <span class="card-number">
+                        04
+                    </span>
+
+                    <span class="card-title">
+                        Memory Universe
+                    </span>
+
+                    <span class="card-description">
+                        The memories that form the universe.
+                    </span>
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             MEMORIES
+             ================================================= -->
+
+        <section
+            id="memories"
+            class="editor-section hidden"
+        >
+
+            <button
+                class="back-button"
+                data-back="dashboard"
+            >
+                ← Back
+            </button>
+
+
+            <div class="section-heading">
+
+                <div>
+                    <p class="eyebrow">
+                        MEMORIES
+                    </p>
+
+                    <h1>
+                        Memory Pages
+                    </h1>
+
+                    <p class="section-description">
+                        Create, edit and organise the moments
+                        that belong in the archive.
+                    </p>
+                </div>
+
+
+                <button
+                    id="addMemoryButton"
+                    class="primary-button"
+                >
+                    + Add Memory
+                </button>
+
+            </div>
+
+
+            <div
+                id="memoryList"
+                class="entry-list"
+            >
+
+                <div class="loading">
+                    Loading memories…
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             MEMORY FORM
+             ================================================= -->
+
+        <section
+            id="memoryForm"
+            class="editor-section hidden"
+        >
+
+            <button
+                class="back-button"
+                data-back="memories"
+            >
+                ← Back to Memories
+            </button>
+
+
+            <div class="section-heading">
+
+                <div>
+
+                    <p
+                        id="memoryFormEyebrow"
+                        class="eyebrow"
+                    >
+                        NEW MEMORY
+                    </p>
+
+                    <h1 id="memoryFormTitle">
+                        Add Memory
+                    </h1>
+
+                </div>
+
+            </div>
+
+
+            <form id="memoryFormElement">
+
+
+                <div class="form-group">
+
+                    <label for="memoryTitle">
+                        Title
+                    </label>
+
+                    <input
+                        type="text"
+                        id="memoryTitle"
+                        name="title"
+                        placeholder="The Night I Told You"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="memoryDate">
+                            Date
+                        </label>
+
+                        <input
+                            type="text"
+                            id="memoryDate"
+                            name="date"
+                            placeholder="21 August 2026"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="memoryTime">
+                            Time
+                        </label>
+
+                        <input
+                            type="text"
+                            id="memoryTime"
+                            name="time"
+                            placeholder="3:00 AM"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="memoryLocation">
+                        Location
+                    </label>
+
+                    <input
+                        type="text"
+                        id="memoryLocation"
+                        name="location"
+                        placeholder="Muvattupuzha"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="memoryDescription">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="memoryDescription"
+                        name="description"
+                        rows="7"
+                        placeholder="Write what happened, what you remember, and why it matters."
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <div class="media-heading">
+
+                        <label>
+                            Media
+                        </label>
+
+                        <span id="mediaCount">
+                            0 items
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        id="mediaPreview"
+                        class="media-preview"
+                    >
+                    </div>
+
+
+                    <label
+                        for="mediaInput"
+                        class="media-upload"
+                    >
+
+                        <span class="upload-symbol">
+                            +
+                        </span>
+
+                        <span>
+                            Add Photos / Videos
+                        </span>
+
+                        <small>
+                            Images and MP4 videos
+                        </small>
+
+                    </label>
+
+
+                    <input
+                        type="file"
+                        id="mediaInput"
+                        accept="image/*,video/mp4,video/webm,video/quicktime"
+                        multiple
+                        hidden
+                    >
+
+                </div>
+
+
+                <div class="form-actions">
+
+                    <button
+                        type="button"
+                        id="previewMemoryButton"
+                        class="secondary-button"
+                    >
+                        Preview
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="primary-button"
+                    >
+                        Save Memory
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+        <!-- =================================================
+             PLACES
+             ================================================= -->
+
+        <section
+            id="places"
+            class="editor-section hidden"
+        >
+
+            <button
+                class="back-button"
+                data-back="dashboard"
+            >
+                ← Back
+            </button>
+
+            <div class="section-heading">
+
+                <div>
+                    <p class="eyebrow">
+                        PLACES
+                    </p>
+
+                    <h1>
+                        Places We’ve Been
+                    </h1>
+
+                    <p class="section-description">
+                        This section will become editable
+                        in the next stage.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="coming-soon">
+                Places Manager
+                <span>Coming next</span>
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             THINGS
+             ================================================= -->
+
+        <section
+            id="things"
+            class="editor-section hidden"
+        >
+
+            <button
+                class="back-button"
+                data-back="dashboard"
+            >
+                ← Back
+            </button>
+
+            <div class="section-heading">
+
+                <div>
+                    <p class="eyebrow">
+                        THINGS I LOVE ABOUT YOU
+                    </p>
+
+                    <h1>
+                        Things I Love
+                    </h1>
+
+                    <p class="section-description">
+                        This section will become editable
+                        in the next stage.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="coming-soon">
+                Things Manager
+                <span>Coming next</span>
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             MEMORY UNIVERSE
+             ================================================= -->
+
+        <section
+            id="tree"
+            class="editor-section hidden"
+        >
+
+            <button
+                class="back-button"
+                data-back="dashboard"
+            >
+                ← Back
+            </button>
+
+            <div class="section-heading">
+
+                <div>
+                    <p class="eyebrow">
+                        MEMORY UNIVERSE
+                    </p>
+
+                    <h1>
+                        Growing Universe
+                    </h1>
+
+                    <p class="section-description">
+                        Universe management will be connected
+                        to the memory system.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="coming-soon">
+                Memory Universe Manager
+                <span>Coming next</span>
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- =====================================================
+         MEMORY PREVIEW MODAL
+         ===================================================== -->
+
+    <div
+        id="previewModal"
+        class="modal hidden"
+    >
+
+        <div class="modal-backdrop"></div>
+
+        <div class="modal-content">
+
+            <button
+                id="closePreview"
+                class="modal-close"
+                aria-label="Close preview"
+            >
+                ×
+            </button>
+
+
+            <p class="eyebrow">
+                MEMORY PREVIEW
+            </p>
+
+            <h2 id="previewTitle">
+                Memory title
+            </h2>
+
+
+            <div
+                id="previewMeta"
+                class="preview-meta"
+            >
+            </div>
+
+
+            <div
+                id="previewDescription"
+                class="preview-description"
+            >
+            </div>
+
+
+            <div
+                id="previewMedia"
+                class="preview-media"
+            >
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
