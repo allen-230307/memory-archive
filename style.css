@@ -3816,3 +3816,273 @@ body.tree-page nav a[aria-current="page"] {
     opacity: 0.7;
 
 }
+/* =========================================================
+   MEMORY UNIVERSE — UNIFIED NAVIGATION LINK INTERACTION
+   Keeps the Galaxy navigation styling while matching the
+   navigation interaction used throughout THE ARCHIVE.
+   ========================================================= */
+
+.tree-page .universe-nav-link,
+.tree-page .universe-mobile-menu a {
+
+    position: relative;
+
+    outline: none;
+
+    -webkit-tap-highlight-color: transparent;
+
+}
+
+
+/* ---------------------------------------------------------
+   DESKTOP UNIVERSE NAVIGATION
+   --------------------------------------------------------- */
+
+.tree-page .universe-nav-link {
+
+    transition:
+        color 0.25s ease,
+        opacity 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+/* Underline / light trail */
+.tree-page .universe-nav-link::after {
+
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    bottom: -5px;
+
+    width: 100%;
+    height: 1px;
+
+    background: linear-gradient(
+        90deg,
+        rgba(169, 140, 255, 0.8),
+        rgba(103, 232, 249, 0.35),
+        transparent
+    );
+
+    transform: scaleX(0);
+    transform-origin: left center;
+
+    opacity: 0;
+
+    transition:
+        transform 0.28s ease,
+        opacity 0.22s ease;
+}
+
+
+/* Hover */
+.tree-page .universe-nav-link:hover {
+
+    color: rgba(255, 255, 255, 0.92);
+
+    opacity: 1;
+
+    transform: translateX(4px);
+}
+
+
+.tree-page .universe-nav-link:hover::after {
+
+    transform: scaleX(1);
+
+    opacity: 0.65;
+}
+
+
+/* Currently selected page */
+.tree-page .universe-nav-link.active {
+
+    color: #ffffff;
+
+}
+
+
+/* Keep the existing active dash */
+.tree-page .universe-nav-link.active::before {
+
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+
+}
+
+
+/* Pressed / selected interaction */
+.tree-page .universe-nav-link:active {
+
+    color: #ffffff;
+
+    opacity: 0.55;
+
+    transform:
+        translateX(6px)
+        scale(0.98);
+}
+
+
+.tree-page .universe-nav-link:active::after {
+
+    transform: scaleX(1);
+
+    opacity: 0.8;
+}
+
+
+/* Keyboard navigation */
+.tree-page .universe-nav-link:focus-visible {
+
+    outline: none;
+
+    color: #ffffff;
+
+    transform: translateX(4px);
+}
+
+
+.tree-page .universe-nav-link:focus-visible::after {
+
+    transform: scaleX(1);
+
+    opacity: 0.65;
+}
+
+
+/* ---------------------------------------------------------
+   MOBILE UNIVERSE NAVIGATION
+   --------------------------------------------------------- */
+
+@media (max-width: 800px) {
+
+    .tree-page .universe-mobile-menu a {
+
+        position: relative;
+
+        display: inline-block;
+
+        transition:
+            color 0.25s ease,
+            opacity 0.25s ease,
+            transform 0.25s ease;
+    }
+
+
+    /* Mobile underline */
+    .tree-page .universe-mobile-menu a::after {
+
+        content: "";
+
+        position: absolute;
+
+        left: 0;
+        bottom: -5px;
+
+        width: 100%;
+        height: 1px;
+
+        background: linear-gradient(
+            90deg,
+            rgba(169, 140, 255, 0.85),
+            rgba(103, 232, 249, 0.35),
+            transparent
+        );
+
+        transform: scaleX(0);
+        transform-origin: left center;
+
+        opacity: 0;
+
+        transition:
+            transform 0.28s ease,
+            opacity 0.22s ease;
+    }
+
+
+    /* Hover */
+    .tree-page .universe-mobile-menu a:hover {
+
+        color: #ffffff;
+
+        transform: translateX(4px);
+    }
+
+
+    .tree-page .universe-mobile-menu a:hover::after {
+
+        transform: scaleX(1);
+
+        opacity: 0.65;
+    }
+
+
+    /* Tap */
+    .tree-page .universe-mobile-menu a:active {
+
+        color: #ffffff;
+
+        opacity: 0.5;
+
+        transform:
+            translateX(7px)
+            scale(0.98);
+    }
+
+
+    .tree-page .universe-mobile-menu a:active::after {
+
+        transform: scaleX(1);
+
+        opacity: 0.8;
+    }
+
+
+    /* Current page */
+    .tree-page .universe-mobile-menu a[aria-current="page"] {
+
+        color: #ffffff;
+    }
+
+
+    /* Keyboard focus */
+    .tree-page .universe-mobile-menu a:focus-visible {
+
+        outline: none;
+
+        color: #ffffff;
+
+        transform: translateX(4px);
+    }
+
+
+    .tree-page .universe-mobile-menu a:focus-visible::after {
+
+        transform: scaleX(1);
+
+        opacity: 0.65;
+    }
+
+}
+
+
+/* ---------------------------------------------------------
+   REDUCED MOTION
+   --------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .tree-page .universe-nav-link,
+    .tree-page .universe-nav-link::after,
+    .tree-page .universe-mobile-menu a,
+    .tree-page .universe-mobile-menu a::after {
+
+        transition: none !important;
+    }
+
+}
