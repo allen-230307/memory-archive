@@ -1,17 +1,23 @@
 [
-    {
-        "name": "Bangalore",
-        "date": "1 August 2026",
-        "location": "Karnataka, India",
-        "description": "A place that became part of our story — a journey from Kerala to Bangalore, carrying a whole day of memories with it.",
-        "image": ""
-    },
-
-    {
-        "name": "Add another place",
-        "date": "",
-        "location": "",
-        "description": "Replace this entry with another place that became meaningful to us.",
-        "image": ""
-    }
+  {
+    "name": "Bangalore",
+    "date": "1 August 2026",
+    "location": "Karnataka, India",
+    "description": "A place that became part of our story — a journey from Kerala to Bangalore, carrying a whole day of memories with it.",
+    "image": ""
+  },
+  {
+    "name": "Add another place",
+    "date": "",
+    "location": "",
+    "description": "Replace this entry with another place that became meaningful to us.",
+    "image": ""
+  },
+  {
+    "name": "Test place name",
+    "date": "1 November 2026",
+    "location": "Test location",
+    "description": "Test place and memory description",
+    "image": "images/places/place-2/1792021567311-IMG_20261013_173303.jpg"
+  }
 ]
