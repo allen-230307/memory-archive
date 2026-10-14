@@ -1,10 +1,12 @@
 
 /* =========================================================
-   THE ARCHIVE — PRIVATE EDITOR
+   THE ARCHIVE — PRIVATE EDITOR WITH MEDIA UPLOADS
    ========================================================= */
 
 const WORKER_URL =
     "https://memory-archive-publisher.allen-tinkerer.workers.dev";
+
+const MAX_FILE_BYTES = 8 * 1024 * 1024;
 
 let memories = [];
 let editingMemoryId = null;
@@ -12,9 +14,7 @@ let selectedMedia = [];
 let hasUnsavedChanges = false;
 
 
-/* =========================================================
-   INITIALISE
-   ========================================================= */
+/* INITIALISE */
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -23,14 +23,11 @@ async function init() {
     setupMemoryForm();
     setupPreview();
     setupPublishing();
-
     await loadMemories();
 }
 
 
-/* =========================================================
-   NAVIGATION
-   ========================================================= */
+/* NAVIGATION */
 
 function setupNavigation() {
     document.querySelectorAll(".manager-card").forEach(button => {
@@ -46,8 +43,7 @@ function setupNavigation() {
     });
 
     document.getElementById("addMemoryButton").addEventListener(
-        "click",
-        openNewMemory
+        "click", openNewMemory
     );
 }
 
@@ -56,18 +52,16 @@ function showSection(id) {
         section.classList.add("hidden");
     });
 
-    const target = document.getElementById(id);
+    const section = document.getElementById(id);
 
-    if (target) {
-        target.classList.remove("hidden");
+    if (section) {
+        section.classList.remove("hidden");
         window.scrollTo({ top: 0, behavior: "smooth" });
     }
 }
 
 
-/* =========================================================
-   LOAD MEMORIES
-   ========================================================= */
+/* LOAD MEMORIES */
 
 async function loadMemories() {
     const list = document.getElementById("memoryList");
@@ -78,13 +72,13 @@ async function loadMemories() {
         });
 
         if (!response.ok) {
-            throw new Error("Could not load memories.json");
+            throw new Error("Could not load memories.json.");
         }
 
         const data = await response.json();
 
         if (!Array.isArray(data)) {
-            throw new Error("The memories file is not an array.");
+            throw new Error("Invalid memories data.");
         }
 
         memories = data;
@@ -94,29 +88,24 @@ async function loadMemories() {
         updatePublishButton();
     } catch (error) {
         console.error(error);
-
         list.textContent =
-            "Could not load memories.json. Check the public Archive website and try again.";
+            "Could not load memories. Please reload the editor and try again.";
     }
 }
 
 
-/* =========================================================
-   MEMORY LIST
-   ========================================================= */
+/* MEMORY LIST */
 
 function renderMemoryList() {
     const list = document.getElementById("memoryList");
 
     if (!memories.length) {
-        list.innerHTML = `
-            <div class="loading">No memories yet.</div>
-        `;
+        list.innerHTML = '<div class="loading">No memories yet.</div>';
         return;
     }
 
     list.innerHTML = memories.map((memory, index) => {
-        const mediaCount = Array.isArray(memory.media)
+        const count = Array.isArray(memory.media)
             ? memory.media.length
             : 0;
 
@@ -130,50 +119,42 @@ function renderMemoryList() {
                     <div class="entry-title">
                         ${escapeHTML(memory.title || "")}
                     </div>
-
                     <div class="entry-meta">
                         ${escapeHTML(memory.date || "")}
                         · ${escapeHTML(memory.time || "")}
                         ${memory.location
-                            ? ` · ${escapeHTML(memory.location)}`
+                            ? " · " + escapeHTML(memory.location)
                             : ""}
                         <br>
-                        ${mediaCount} media item${mediaCount === 1 ? "" : "s"}
+                        ${count} media item${count === 1 ? "" : "s"}
                     </div>
                 </div>
 
                 <div class="entry-actions">
-                    <button
-                        class="small-button"
-                        data-edit-memory="${Number(memory.id)}"
-                    >Edit</button>
-
-                    <button
-                        class="small-button delete"
-                        data-delete-memory="${Number(memory.id)}"
-                    >Delete</button>
+                    <button class="small-button"
+                        data-edit="${Number(memory.id)}">Edit</button>
+                    <button class="small-button delete"
+                        data-delete="${Number(memory.id)}">Delete</button>
                 </div>
             </article>
         `;
     }).join("");
 
-    list.querySelectorAll("[data-edit-memory]").forEach(button => {
+    list.querySelectorAll("[data-edit]").forEach(button => {
         button.addEventListener("click", () => {
-            editMemory(Number(button.dataset.editMemory));
+            editMemory(Number(button.dataset.edit));
         });
     });
 
-    list.querySelectorAll("[data-delete-memory]").forEach(button => {
+    list.querySelectorAll("[data-delete]").forEach(button => {
         button.addEventListener("click", () => {
-            deleteMemory(Number(button.dataset.deleteMemory));
+            deleteMemory(Number(button.dataset.delete));
         });
     });
 }
 
 
-/* =========================================================
-   ADD MEMORY
-   ========================================================= */
+/* NEW MEMORY */
 
 function openNewMemory() {
     editingMemoryId = null;
@@ -193,38 +174,27 @@ function openNewMemory() {
 }
 
 
-/* =========================================================
-   EDIT MEMORY
-   ========================================================= */
+/* EDIT MEMORY */
 
 function editMemory(id) {
     const memory = memories.find(item => Number(item.id) === id);
-
     if (!memory) return;
 
     editingMemoryId = id;
 
-    document.getElementById("memoryTitle").value =
-        memory.title || "";
-
-    document.getElementById("memoryDate").value =
-        memory.date || "";
-
-    document.getElementById("memoryTime").value =
-        memory.time || "";
-
-    document.getElementById("memoryLocation").value =
-        memory.location || "";
-
+    document.getElementById("memoryTitle").value = memory.title || "";
+    document.getElementById("memoryDate").value = memory.date || "";
+    document.getElementById("memoryTime").value = memory.time || "";
+    document.getElementById("memoryLocation").value = memory.location || "";
     document.getElementById("memoryDescription").value =
         memory.description || "";
 
-    selectedMedia = Array.isArray(memory.media)
-        ? memory.media.map(item => ({
-            existing: true,
-            ...item
-        }))
-        : [];
+    selectedMedia = (memory.media || []).map(item => ({
+        existing: true,
+        type: item.type,
+        src: item.src,
+        caption: item.caption || ""
+    }));
 
     document.getElementById("mediaInput").value = "";
 
@@ -239,56 +209,66 @@ function editMemory(id) {
 }
 
 
-/* =========================================================
-   MEMORY FORM
-   ========================================================= */
+/* MEMORY FORM */
 
 function setupMemoryForm() {
     document.getElementById("memoryFormElement").addEventListener(
-        "submit",
-        event => {
+        "submit", event => {
             event.preventDefault();
             saveMemoryDraft();
         }
     );
 
     document.getElementById("mediaInput").addEventListener(
-        "change",
-        handleMediaSelection
+        "change", handleMediaSelection
     );
 }
 
 
-/* =========================================================
-   MEDIA SELECTION
-   ========================================================= */
+/* SELECT MEDIA */
 
 function handleMediaSelection(event) {
     const files = Array.from(event.target.files || []);
 
-    files.forEach(file => {
+    for (const file of files) {
+        if (file.size > MAX_FILE_BYTES) {
+            alert(
+                `"${file.name}" is larger than 8 MB. ` +
+                "Please compress it before adding it."
+            );
+            continue;
+        }
+
+        if (!file.type.startsWith("image/") &&
+            !["video/mp4", "video/webm", "video/quicktime"]
+                .includes(file.type)) {
+            alert(
+                `"${file.name}" has an unsupported format. ` +
+                "Use JPEG, PNG, GIF, WebP, AVIF, HEIC, HEIF, MP4, WebM, or MOV."
+            );
+            continue;
+        }
+
         selectedMedia.push({
+            existing: false,
             file,
-            type: file.type.startsWith("video/") ? "video" : "image",
             name: file.name,
+            type: file.type.startsWith("video/") ? "video" : "image",
             caption: ""
         });
-    });
+    }
 
     renderMediaPreview();
     event.target.value = "";
 }
 
 
-/* =========================================================
-   MEDIA PREVIEW
-   ========================================================= */
+/* MEDIA PREVIEW AND CAPTIONS */
 
 function renderMediaPreview() {
     const container = document.getElementById("mediaPreview");
-    const count = document.getElementById("mediaCount");
 
-    count.textContent =
+    document.getElementById("mediaCount").textContent =
         `${selectedMedia.length} item${selectedMedia.length === 1 ? "" : "s"}`;
 
     container.innerHTML = "";
@@ -297,35 +277,47 @@ function renderMediaPreview() {
         const wrapper = document.createElement("div");
         wrapper.className = "media-item";
 
+        let url = null;
+
         if (item.existing && item.src) {
-            const url = "../" + item.src;
-
-            if (item.type === "video") {
-                const video = document.createElement("video");
-                video.src = url;
-                video.muted = true;
-                wrapper.appendChild(video);
-            } else {
-                const img = document.createElement("img");
-                img.src = url;
-                img.alt = "";
-                wrapper.appendChild(img);
-            }
+            url = "../" + item.src;
         } else if (item.file) {
-            const url = URL.createObjectURL(item.file);
+            url = URL.createObjectURL(item.file);
+        }
 
+        if (url) {
             if (item.type === "video") {
                 const video = document.createElement("video");
                 video.src = url;
                 video.muted = true;
+                video.controls = true;
                 wrapper.appendChild(video);
             } else {
                 const img = document.createElement("img");
                 img.src = url;
-                img.alt = "";
+                img.alt = item.caption || "";
                 wrapper.appendChild(img);
             }
         }
+
+        const caption = document.createElement("input");
+        caption.type = "text";
+        caption.placeholder = "Add a caption (optional)";
+        caption.value = item.caption || "";
+        caption.setAttribute("aria-label", "Media caption");
+
+        caption.addEventListener("input", () => {
+            selectedMedia[index].caption = caption.value;
+        });
+
+        Object.assign(caption.style, {
+            display: "block",
+            width: "100%",
+            boxSizing: "border-box",
+            marginTop: "8px"
+        });
+
+        wrapper.appendChild(caption);
 
         const remove = document.createElement("button");
         remove.type = "button";
@@ -344,29 +336,18 @@ function renderMediaPreview() {
 }
 
 
-/* =========================================================
-   SAVE MEMORY AS AN UNSENT CHANGE
-   ========================================================= */
+/* SAVE MEMORY LOCALLY IN THE EDITOR SESSION */
 
 function saveMemoryDraft() {
     const title = document.getElementById("memoryTitle").value.trim();
     const date = document.getElementById("memoryDate").value.trim();
     const time = document.getElementById("memoryTime").value.trim();
     const location = document.getElementById("memoryLocation").value.trim();
-    const description = document.getElementById("memoryDescription").value.trim();
+    const description =
+        document.getElementById("memoryDescription").value.trim();
 
     if (!title || !date || !time || !description) {
         alert("Please complete the required fields.");
-        return;
-    }
-
-    // Do not silently discard files that have not been uploaded.
-    if (selectedMedia.some(item => !item.existing)) {
-        alert(
-            "New photo/video uploading is not connected yet.\n\n" +
-            "Remove the newly selected files using ×, then save. " +
-            "Existing media will be preserved."
-        );
         return;
     }
 
@@ -376,6 +357,25 @@ function saveMemoryDraft() {
             ? Math.max(...memories.map(item => Number(item.id))) + 1
             : 0;
 
+    const media = selectedMedia.map(item => {
+        if (item.file) {
+            return {
+                existing: false,
+                file: item.file,
+                name: item.name || item.file.name,
+                type: item.type,
+                caption: item.caption || ""
+            };
+        }
+
+        return {
+            existing: true,
+            type: item.type,
+            src: item.src,
+            caption: item.caption || ""
+        };
+    });
+
     const memory = {
         id,
         title,
@@ -383,13 +383,7 @@ function saveMemoryDraft() {
         time,
         location,
         description,
-        media: selectedMedia
-            .filter(item => item.existing)
-            .map(item => ({
-                type: item.type,
-                src: item.src,
-                caption: item.caption || ""
-            }))
+        media
     };
 
     if (editingMemoryId !== null) {
@@ -397,37 +391,33 @@ function saveMemoryDraft() {
             item => Number(item.id) === editingMemoryId
         );
 
-        if (index !== -1) {
-            memories[index] = memory;
-        }
+        if (index !== -1) memories[index] = memory;
     } else {
         memories.push(memory);
     }
 
     hasUnsavedChanges = true;
+
     renderMemoryList();
     updatePublishButton();
     showSection("memories");
 
     alert(
-        "Memory saved in this editor session.\n\n" +
-        "It is not published yet. Tap Publish Changes to send it to GitHub."
+        "Memory saved in this editor session. " +
+        "Tap Publish Changes to upload its new media and publish it."
     );
 }
 
 
-/* =========================================================
-   DELETE MEMORY
-   ========================================================= */
+/* DELETE MEMORY */
 
 function deleteMemory(id) {
     const memory = memories.find(item => Number(item.id) === id);
-
     if (!memory) return;
 
     if (!confirm(
         `Remove "${memory.title}" from the pending changes?\n\n` +
-        "This will affect the live Archive only after you publish."
+        "The live website changes only after publishing."
     )) {
         return;
     }
@@ -440,12 +430,12 @@ function deleteMemory(id) {
 }
 
 
-/* =========================================================
-   PUBLISHING CONTROLS
-   ========================================================= */
+/* PUBLISHING UI */
 
 function setupPublishing() {
-    const heading = document.querySelector("#memories .section-heading");
+    const heading = document.querySelector(
+        "#memories .section-heading"
+    );
 
     const button = document.createElement("button");
     button.type = "button";
@@ -453,14 +443,14 @@ function setupPublishing() {
     button.className = "primary-button";
     button.textContent = "Publish Changes";
     button.addEventListener("click", publishChanges);
-
     heading.appendChild(button);
 
     const status = document.createElement("p");
     status.id = "publishStatus";
     status.className = "section-description";
     status.setAttribute("role", "status");
-    status.textContent = "Changes are published only when you choose Publish Changes.";
+    status.textContent =
+        "Changes are published only when you choose Publish Changes.";
 
     heading.insertAdjacentElement("afterend", status);
 
@@ -469,7 +459,6 @@ function setupPublishing() {
 
 function updatePublishButton() {
     const button = document.getElementById("publishChangesButton");
-
     if (!button) return;
 
     button.textContent = hasUnsavedChanges
@@ -483,9 +472,7 @@ function setPublishStatus(message) {
 }
 
 
-/* =========================================================
-   ASK FOR SECRET WITHOUT SAVING IT
-   ========================================================= */
+/* ASK FOR EDITOR SECRET — DO NOT STORE IT */
 
 function requestEditorSecret() {
     return new Promise(resolve => {
@@ -495,16 +482,16 @@ function requestEditorSecret() {
             position: "fixed",
             inset: "0",
             zIndex: "99999",
-            background: "rgba(0,0,0,0.65)",
+            background: "rgba(0,0,0,.65)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             padding: "20px"
         });
 
-        const panel = document.createElement("form");
+        const form = document.createElement("form");
 
-        Object.assign(panel.style, {
+        Object.assign(form.style, {
             width: "100%",
             maxWidth: "420px",
             padding: "24px",
@@ -517,8 +504,8 @@ function requestEditorSecret() {
         const title = document.createElement("h2");
         title.textContent = "Publish to THE ARCHIVE";
 
-        const explanation = document.createElement("p");
-        explanation.textContent =
+        const note = document.createElement("p");
+        note.textContent =
             "Enter your EDITOR_SECRET. It will not be saved by this editor.";
 
         const input = document.createElement("input");
@@ -528,17 +515,11 @@ function requestEditorSecret() {
         input.required = true;
 
         Object.assign(input.style, {
+            display: "block",
             width: "100%",
             padding: "12px",
-            margin: "10px 0 16px",
+            margin: "12px 0",
             boxSizing: "border-box"
-        });
-
-        const actions = document.createElement("div");
-        Object.assign(actions.style, {
-            display: "flex",
-            gap: "10px",
-            justifyContent: "flex-end"
         });
 
         const cancel = document.createElement("button");
@@ -547,11 +528,18 @@ function requestEditorSecret() {
 
         const submit = document.createElement("button");
         submit.type = "submit";
-        submit.textContent = "Publish";
+        submit.textContent = "Continue";
+
+        const actions = document.createElement("div");
+        Object.assign(actions.style, {
+            display: "flex",
+            gap: "10px",
+            justifyContent: "flex-end"
+        });
 
         actions.append(cancel, submit);
-        panel.append(title, explanation, input, actions);
-        overlay.appendChild(panel);
+        form.append(title, note, input, actions);
+        overlay.appendChild(form);
         document.body.appendChild(overlay);
 
         function finish(value) {
@@ -566,10 +554,9 @@ function requestEditorSecret() {
             if (event.target === overlay) finish(null);
         });
 
-        panel.addEventListener("submit", event => {
+        form.addEventListener("submit", event => {
             event.preventDefault();
-            const secret = input.value;
-            finish(secret || null);
+            finish(input.value || null);
         });
 
         input.focus();
@@ -577,9 +564,84 @@ function requestEditorSecret() {
 }
 
 
-/* =========================================================
-   PUBLISH TO CLOUDFLARE WORKER
-   ========================================================= */
+/* READ FILE AS BASE64 */
+
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onload = () => {
+            const result = String(reader.result || "");
+            const comma = result.indexOf(",");
+
+            if (comma < 0) {
+                reject(new Error("Could not read the selected file."));
+                return;
+            }
+
+            resolve(result.slice(comma + 1));
+        };
+
+        reader.onerror = () => {
+            reject(new Error(`Could not read ${file.name}.`));
+        };
+
+        reader.readAsDataURL(file);
+    });
+}
+
+
+/* UPLOAD ONE FILE */
+
+async function uploadMediaFile(memoryId, item, index, secret) {
+    const file = item.file;
+
+    if (!file) return;
+
+    if (file.size > MAX_FILE_BYTES) {
+        throw new Error(`${file.name} is larger than 8 MB.`);
+    }
+
+    const contentBase64 = await fileToBase64(file);
+
+    // A unique name prevents accidentally overwriting another photo.
+    const fileName =
+        `${Date.now()}-${index}-${file.name}`;
+
+    const response = await fetch(`${WORKER_URL}/upload`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-Editor-Secret": secret
+        },
+        body: JSON.stringify({
+            memoryId,
+            fileName,
+            contentType: file.type,
+            contentBase64
+        })
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+        throw new Error(
+            result.error || `Upload failed for ${file.name}.`
+        );
+    }
+
+    // Keep the uploaded path in memory immediately. If a later
+    // operation fails, this file does not need to be uploaded again.
+    item.src = result.path;
+    item.existing = true;
+    delete item.file;
+    delete item.name;
+
+    return result.path;
+}
+
+
+/* PUBLISH MEMORIES AND THEIR MEDIA */
 
 async function publishChanges() {
     if (!hasUnsavedChanges) {
@@ -587,26 +649,32 @@ async function publishChanges() {
         return;
     }
 
-    if (!Array.isArray(memories) || memories.some(memory =>
-        !memory ||
-        !Number.isInteger(Number(memory.id)) ||
-        typeof memory.title !== "string" ||
-        typeof memory.date !== "string" ||
-        !Array.isArray(memory.media)
-    )) {
-        alert("The memory data has an invalid format. Nothing was published.");
-        return;
+    for (const memory of memories) {
+        if (
+            !Number.isInteger(Number(memory.id)) ||
+            !memory.title ||
+            !memory.date ||
+            !Array.isArray(memory.media)
+        ) {
+            alert("A memory has invalid data. Nothing was published.");
+            return;
+        }
     }
 
-    if (!confirm(
-        "Publish all pending memory changes to GitHub?\n\n" +
-        "This will update the live memories.json file."
-    )) {
-        return;
-    }
+    const newFileCount = memories.reduce(
+        (total, memory) =>
+            total + memory.media.filter(item => item.file).length,
+        0
+    );
+
+    const confirmation = newFileCount
+        ? `Publish your changes and upload ${newFileCount} new file(s)?\n\n` +
+          "Each file must be 8 MB or smaller."
+        : "Publish all pending memory changes to GitHub?";
+
+    if (!confirm(confirmation)) return;
 
     const secret = await requestEditorSecret();
-
     if (!secret) {
         setPublishStatus("Publishing cancelled.");
         return;
@@ -615,9 +683,36 @@ async function publishChanges() {
     const button = document.getElementById("publishChangesButton");
     button.disabled = true;
     button.textContent = "Publishing…";
-    setPublishStatus("Sending memory data to GitHub…");
 
     try {
+        // Upload media first, one file at a time.
+        let uploadedCount = 0;
+        const totalUploads = newFileCount;
+
+        for (const memory of memories) {
+            for (let i = 0; i < memory.media.length; i++) {
+                const item = memory.media[i];
+
+                if (!item.file) continue;
+
+                setPublishStatus(
+                    `Uploading media: ${uploadedCount + 1} of ${totalUploads}…`
+                );
+
+                await uploadMediaFile(memory.id, item, i, secret);
+                uploadedCount++;
+            }
+
+            // Remove temporary browser-only fields before publishing JSON.
+            memory.media = memory.media.map(item => ({
+                type: item.type,
+                src: item.src,
+                caption: item.caption || ""
+            }));
+        }
+
+        setPublishStatus("Publishing memory data to GitHub…");
+
         const response = await fetch(`${WORKER_URL}/publish`, {
             method: "PUT",
             headers: {
@@ -632,7 +727,7 @@ async function publishChanges() {
         if (!response.ok || !result.success) {
             if (response.status === 401) {
                 throw new Error(
-                    "Authentication failed. Check that EDITOR_SECRET matches the value in Cloudflare."
+                    "Authentication failed. Check EDITOR_SECRET in Cloudflare."
                 );
             }
 
@@ -645,22 +740,27 @@ async function publishChanges() {
         updatePublishButton();
 
         setPublishStatus(
-            "Published successfully. GitHub Pages may take a short time to update."
+            "Published successfully. Your website may take a short time to update."
         );
 
+        renderMemoryList();
+
         alert(
-            "Memory data published successfully!\n\n" +
-            "Your website may take a short time to display the changes."
+            "Published successfully!\n\n" +
+            `${uploadedCount} new file(s) uploaded.\n` +
+            "The live website may take a short time to update."
         );
     } catch (error) {
         console.error(error);
 
-        setPublishStatus("Publishing failed. Your pending changes remain in this session.");
+        setPublishStatus(
+            "Publishing failed. Check the message; pending changes remain in this editor session."
+        );
 
         alert(
-            "Could not publish the changes.\n\n" +
+            "Could not finish publishing.\n\n" +
             error.message +
-            "\n\nYour pending changes have not been cleared. Check your connection and Worker settings before retrying."
+            "\n\nDo not refresh this page yet. Check the error before retrying."
         );
     } finally {
         button.disabled = false;
@@ -669,24 +769,19 @@ async function publishChanges() {
 }
 
 
-/* =========================================================
-   PREVIEW
-   ========================================================= */
+/* PREVIEW MODAL */
 
 function setupPreview() {
     document.getElementById("previewMemoryButton").addEventListener(
-        "click",
-        previewMemory
+        "click", previewMemory
     );
 
     document.getElementById("closePreview").addEventListener(
-        "click",
-        closePreview
+        "click", closePreview
     );
 
     document.querySelector(".modal-backdrop").addEventListener(
-        "click",
-        closePreview
+        "click", closePreview
     );
 }
 
@@ -695,7 +790,8 @@ function previewMemory() {
     const date = document.getElementById("memoryDate").value.trim();
     const time = document.getElementById("memoryTime").value.trim();
     const location = document.getElementById("memoryLocation").value.trim();
-    const description = document.getElementById("memoryDescription").value.trim();
+    const description =
+        document.getElementById("memoryDescription").value.trim();
 
     document.getElementById("previewTitle").textContent =
         title || "Untitled memory";
@@ -705,25 +801,19 @@ function previewMemory() {
 
     document.getElementById("previewDescription").textContent = description;
 
-    renderPreviewMedia();
-
-    document.getElementById("previewModal").classList.remove("hidden");
-}
-
-function renderPreviewMedia() {
     const container = document.getElementById("previewMedia");
     container.innerHTML = "";
 
     selectedMedia.forEach(item => {
-        let url;
+        let url = null;
 
         if (item.existing && item.src) {
             url = "../" + item.src;
         } else if (item.file) {
             url = URL.createObjectURL(item.file);
-        } else {
-            return;
         }
+
+        if (!url) return;
 
         if (item.type === "video") {
             const video = document.createElement("video");
@@ -733,10 +823,18 @@ function renderPreviewMedia() {
         } else {
             const img = document.createElement("img");
             img.src = url;
-            img.alt = "";
+            img.alt = item.caption || "";
             container.appendChild(img);
         }
+
+        if (item.caption) {
+            const caption = document.createElement("p");
+            caption.textContent = item.caption;
+            container.appendChild(caption);
+        }
     });
+
+    document.getElementById("previewModal").classList.remove("hidden");
 }
 
 function closePreview() {
@@ -744,9 +842,7 @@ function closePreview() {
 }
 
 
-/* =========================================================
-   HELPERS
-   ========================================================= */
+/* HELPER */
 
 function escapeHTML(value) {
     return String(value)
