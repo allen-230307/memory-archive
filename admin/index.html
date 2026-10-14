@@ -419,47 +419,95 @@
         </section>
 
 
-        <!-- =================================================
-             PLACES
-             ================================================= -->
+        
+<!-- PLACES MANAGER -->
+<section id="places" class="editor-section hidden">
+    <button class="back-button" data-back="dashboard">← Back</button>
 
-        <section
-            id="places"
-            class="editor-section hidden"
-        >
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">PLACES</p>
+            <h1>Places We've Been</h1>
+            <p class="section-description">
+                Preserve the places that became part of your story.
+            </p>
+        </div>
+        <button id="addPlaceButton" class="primary-button" type="button">
+            + Add Place
+        </button>
+    </div>
 
-            <button
-                class="back-button"
-                data-back="dashboard"
-            >
-                ← Back
+    <div class="section-heading">
+        <p id="placesPublishStatus" class="section-description" role="status">
+            Changes remain in this editor until you publish them.
+        </p>
+        <button id="publishPlacesButton" class="primary-button" type="button">
+            Publish Places
+        </button>
+    </div>
+
+    <div id="placesListPanel">
+        <div id="placesEditorList" class="entry-list">
+            <div class="loading">Loading places…</div>
+        </div>
+    </div>
+
+    <form id="placeFormElement" class="hidden">
+        <div class="section-heading">
+            <div>
+                <p id="placeFormEyebrow" class="eyebrow">NEW PLACE</p>
+                <h2 id="placeFormTitle">Add a Place</h2>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="placeName">Place name</label>
+            <input id="placeName" type="text" required
+                   placeholder="Thattekad — Mini Switzerland">
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="placeDate">Date</label>
+                <input id="placeDate" type="text"
+                       placeholder="21 August 2026">
+            </div>
+            <div class="form-group">
+                <label for="placeLocation">Location</label>
+                <input id="placeLocation" type="text"
+                       placeholder="Thattekad, Kerala">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="placeDescription">Description</label>
+            <textarea id="placeDescription" rows="6"
+                placeholder="What made this place meaningful to you?"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="placeImage">Existing image path (optional)</label>
+            <input id="placeImage" type="text"
+                placeholder="images/places/thattekad.jpg">
+            <small>Use a path relative to the repository root, or upload a new image below.</small>
+        </div>
+
+        <div class="form-group">
+            <label for="placeImageFile">Upload or replace the place photo</label>
+            <input id="placeImageFile" type="file" accept="image/*">
+            <div id="placeImagePreview"></div>
+        </div>
+
+        <div class="form-actions">
+            <button id="cancelPlaceButton" class="secondary-button" type="button">
+                Cancel
             </button>
-
-            <div class="section-heading">
-
-                <div>
-                    <p class="eyebrow">
-                        PLACES
-                    </p>
-
-                    <h1>
-                        Places We’ve Been
-                    </h1>
-
-                    <p class="section-description">
-                        This section will become editable
-                        in the next stage.
-                    </p>
-                </div>
-
-            </div>
-
-            <div class="coming-soon">
-                Places Manager
-                <span>Coming next</span>
-            </div>
-
-        </section>
+            <button class="primary-button" type="submit">
+                Save Place
+            </button>
+        </div>
+    </form>
+</section>
 
 
         <!-- =================================================
