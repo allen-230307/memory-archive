@@ -847,7 +847,7 @@ async function loadPlaces() {
 
     try {
         const response = await fetch(
-            "./data/places.json?v=1",
+            "./data/places.json?v=2",
             { cache: "no-store" }
         );
 
