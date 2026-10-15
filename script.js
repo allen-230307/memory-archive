@@ -773,7 +773,7 @@ async function loadThings() {
 
     try {
         const response = await fetch(
-            "./data/things.json?v=1",
+            "./data/things.json?v=2",
             { cache: "no-store" }
         );
 
