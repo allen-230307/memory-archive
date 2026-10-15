@@ -510,47 +510,77 @@
 </section>
 
 
-        <!-- =================================================
-             THINGS
-             ================================================= -->
+        
+<!-- THINGS I LOVE ABOUT YOU -->
+<section id="things" class="editor-section hidden">
+    <button class="back-button" data-back="dashboard" type="button">
+        ← Back
+    </button>
 
-        <section
-            id="things"
-            class="editor-section hidden"
-        >
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">THINGS I LOVE ABOUT YOU</p>
+            <h1>Things I Love</h1>
+            <p class="section-description">
+                Keep the little details that make her who she is.
+            </p>
+        </div>
+        <button id="addThingButton" class="primary-button" type="button">
+            + Add Thing
+        </button>
+    </div>
 
-            <button
-                class="back-button"
-                data-back="dashboard"
-            >
-                ← Back
+    <div class="section-heading">
+        <p id="thingsPublishStatus" class="section-description" role="status">
+            Changes remain in this editor until you publish them.
+        </p>
+        <button id="publishThingsButton" class="primary-button" type="button">
+            Publish Things
+        </button>
+    </div>
+
+    <div id="thingsListPanel">
+        <div id="thingsEditorList" class="entry-list">
+            <div class="loading">Loading entries…</div>
+        </div>
+    </div>
+
+    <form id="thingFormElement" class="hidden">
+        <div class="section-heading">
+            <div>
+                <p id="thingFormEyebrow" class="eyebrow">NEW ENTRY</p>
+                <h2 id="thingFormTitle">Add a Thing</h2>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="thingTitle">Title</label>
+            <input id="thingTitle" type="text" required
+                   placeholder="Your kindness">
+        </div>
+
+        <div class="form-group">
+            <label for="thingDate">Date (optional)</label>
+            <input id="thingDate" type="text"
+                   placeholder="15 October 2026">
+        </div>
+
+        <div class="form-group">
+            <label for="thingText">Description</label>
+            <textarea id="thingText" rows="7" required
+                placeholder="Write what you love about her and why it matters."></textarea>
+        </div>
+
+        <div class="form-actions">
+            <button id="cancelThingButton" class="secondary-button" type="button">
+                Cancel
             </button>
-
-            <div class="section-heading">
-
-                <div>
-                    <p class="eyebrow">
-                        THINGS I LOVE ABOUT YOU
-                    </p>
-
-                    <h1>
-                        Things I Love
-                    </h1>
-
-                    <p class="section-description">
-                        This section will become editable
-                        in the next stage.
-                    </p>
-                </div>
-
-            </div>
-
-            <div class="coming-soon">
-                Things Manager
-                <span>Coming next</span>
-            </div>
-
-        </section>
+            <button class="primary-button" type="submit">
+                Save Entry
+            </button>
+        </div>
+    </form>
+</section>
 
 
         <!-- =================================================
