@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f3efe5">
+<title>Our Little Garden — The Archive</title>
+<link rel="stylesheet" href="style.css?v=11">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Memory Garden: page-local styling. The shared archive navigation remains untouched. */
+:root{
+  --garden-paper:#f3efe5;--garden-cream:#e8e0d1;--garden-ink:#343a2e;
+  --garden-sage:#8c9b78;--garden-leaf:#536a49;--garden-deep:#354b37;
+  --garden-stem:#506b48;--garden-earth:#b7a184;--garden-rose:#c88f91;
+  --garden-blue:#879db1;--garden-lilac:#a79ab9;--garden-gold:#d5b96f;
+}
+body.tree-page{
+  margin:0;min-height:100vh;overflow-x:hidden;color:var(--garden-ink);
+  background:linear-gradient(180deg,#f5f1e8 0%,#eee8dc 55%,#e5dfd0 100%);
+}
+.tree-page::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.16;
+  background-image:radial-gradient(#6c765d .45px,transparent .6px);background-size:9px 9px;}
+.tree-page .site-header,.tree-page header,.tree-page main,.tree-page footer{position:relative;z-index:1}
+.universe-page{width:min(1320px,calc(100% - 44px));margin:0 auto;padding:0 0 58px}
+.universe-header{max-width:760px;padding:58px 0 28px}
+.universe-header .handwritten{margin:0 0 8px;color:#7b8065;font:500 21px/1.3 Caveat,cursive}
+.universe-header h1{margin:0;color:#394333;font:400 clamp(50px,7vw,88px)/.9 "Cormorant Garamond",serif;letter-spacing:-2.5px}
+.universe-intro{max-width:430px;margin:18px 0 0;color:#727665;font:12px/1.85 Inter,sans-serif}
+.universe-hint{margin-top:17px;color:#8b8b77;font:9px/1.5 Inter,sans-serif;letter-spacing:2px;text-transform:uppercase}
+.garden-shell{
+  position:relative;isolation:isolate;min-height:640px;height:min(75vh,820px);overflow:hidden;
+  border:1px solid rgba(78,92,63,.18);border-radius:3px;
+  background:linear-gradient(180deg,#d8e0d0 0%,#e4e3d0 28%,#c5cfad 54%,#7d9367 100%);
+  box-shadow:0 25px 65px rgba(67,72,50,.13),inset 0 1px rgba(255,255,255,.6);
+}
+.garden-sky,.garden-landscape,.garden-path,.garden-plants,.garden-atmosphere{position:absolute;inset:0;width:100%;height:100%}
+.garden-sky{z-index:0;background:radial-gradient(ellipse at 48% 15%,rgba(255,250,226,.68),transparent 35%),linear-gradient(180deg,rgba(249,245,226,.3),transparent 38%);pointer-events:none}
+.garden-landscape{z-index:1;pointer-events:none}
+.garden-path{z-index:2;pointer-events:none}
+.garden-plants{z-index:4;pointer-events:none}
+.garden-atmosphere{z-index:6;pointer-events:none;overflow:hidden}
+.garden-landscape svg,.garden-path svg{width:100%;height:100%;display:block}
+.garden-plants .memory-flower{pointer-events:auto}
+.garden-haze{position:absolute;left:-10%;right:-10%;height:22%;bottom:0;background:linear-gradient(0deg,rgba(58,78,48,.35),transparent);filter:blur(10px)}
+.garden-memory{
+  position:absolute;pointer-events:auto;left:var(--x);top:var(--y);width:var(--w,100px);height:var(--h,210px);
+  transform:translate(-50%,-100%) scale(var(--scale,1));transform-origin:50% 100%;
+  border:0;padding:0;background:transparent;cursor:pointer;overflow:visible;
+  filter:drop-shadow(0 6px 5px rgba(48,60,38,.13));
+  transition:filter .35s ease,transform .5s cubic-bezier(.2,.75,.2,1);
+}
+.garden-memory svg{display:block;width:100%;height:100%;overflow:visible}
+.garden-memory:hover,.garden-memory:focus-visible,.garden-memory.selected{
+  z-index:12;filter:drop-shadow(0 9px 9px rgba(48,60,38,.22));
+  transform:translate(-50%,-100%) scale(calc(var(--scale,1) * 1.08));
+}
+.garden-memory:focus-visible{outline:2px solid rgba(74,93,59,.7);outline-offset:6px;border-radius:50%}
+.garden-memory .stem-sway{transform-origin:50% 100%;animation:stemSway var(--sway,5.8s) ease-in-out infinite alternate}
+.garden-memory .petal-bloom{transform-origin:50% 50%;animation:bloomBreath var(--bloom,6s) ease-in-out infinite alternate}
+.garden-memory .leaf-sway{transform-origin:50% 100%;animation:leafSway 5.2s ease-in-out infinite alternate}
+@keyframes stemSway{from{transform:rotate(-1.8deg)}to{transform:rotate(2.2deg)}}
+@keyframes leafSway{from{transform:rotate(-3deg)}to{transform:rotate(4deg)}}
+@keyframes bloomBreath{from{filter:brightness(.98)}to{filter:brightness(1.07)}}
+.garden-ground-flower{position:absolute;left:var(--x);bottom:var(--bottom);width:var(--w);opacity:var(--opacity,.85);z-index:var(--z,3);pointer-events:none;transform:translateX(-50%)}
+.garden-ground-flower svg{width:100%;height:auto;display:block}
+.garden-butterfly{position:absolute;left:var(--x);top:var(--y);width:20px;height:15px;opacity:.66;animation:butterflyDrift 12s ease-in-out infinite alternate}
+.garden-butterfly::before,.garden-butterfly::after{content:"";position:absolute;top:0;width:9px;height:12px;background:rgba(244,239,218,.86);border:1px solid rgba(121,128,92,.25);border-radius:90% 15% 80% 20%;transform-origin:100% 100%;animation:wing 1s ease-in-out infinite alternate}
+.garden-butterfly::after{left:9px;transform:scaleX(-1);animation-delay:-.4s}
+@keyframes wing{to{transform:rotateY(60deg) scale(.88)}}
+@keyframes butterflyDrift{to{transform:translate(28px,-16px)}}
+.garden-firefly{position:absolute;left:var(--x);top:var(--y);width:4px;height:4px;border-radius:50%;background:#fff4c5;box-shadow:0 0 8px 2px rgba(255,244,197,.62);animation:firefly var(--duration,7s) ease-in-out infinite alternate}
+@keyframes firefly{to{transform:translate(var(--dx,10px),var(--dy,-18px));opacity:.22}}
+.garden-future{position:absolute;right:20px;top:18px;z-index:7;color:rgba(64,77,54,.48);font:9px/1.5 Inter,sans-serif;letter-spacing:1.8px;text-transform:uppercase}
+.garden-detail{
+  position:absolute;right:clamp(14px,3vw,32px);bottom:clamp(14px,3vw,32px);z-index:20;
+  width:min(365px,calc(100% - 28px));padding:22px 23px 20px;
+  color:#3b4334;background:rgba(248,245,235,.95);border:1px solid rgba(78,92,63,.22);
+  box-shadow:0 18px 50px rgba(48,59,39,.18);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  opacity:0;visibility:hidden;transform:translateY(12px);pointer-events:none;
+  transition:opacity .3s ease,transform .35s ease,visibility .3s;
+}
+.garden-detail.open{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto}
+.garden-detail-date{margin-bottom:7px;color:#818668;font:9px/1.4 Inter,sans-serif;letter-spacing:1.8px;text-transform:uppercase}
+.garden-detail h2{margin:0 0 8px;color:#3c4735;font:400 clamp(27px,3.3vw,35px)/1 "Cormorant Garamond",serif}
+.garden-detail p{margin:0;color:#727667;font:11px/1.8 Inter,sans-serif;white-space:pre-line}
+.garden-detail-actions{display:flex;align-items:center;gap:18px;margin-top:17px}
+.garden-open,.garden-close{border:0;padding:5px 0;background:transparent;color:#596b4c;font:9px/1.3 Inter,sans-serif;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer}
+.garden-open:hover,.garden-close:hover{color:#9a6e70}
+.garden-open:focus-visible,.garden-close:focus-visible{outline:1px solid #78886b;outline-offset:4px}
+.garden-close{color:#888a7b}
+.garden-footer-note{padding-top:22px;color:#858575;font:11px/1.7 Inter,sans-serif;text-align:center;letter-spacing:.25px}
+.garden-shell.focus-mode .garden-memory:not(.selected){opacity:.52}
+.garden-shell.focus-mode .garden-atmosphere{opacity:.55}
+@media(max-width:700px){
+ .universe-page{width:calc(100% - 24px);padding-bottom:36px}
+ .universe-header{padding:42px 0 22px}
+ .universe-header h1{font-size:clamp(48px,15vw,72px);letter-spacing:-1.8px}
+ .universe-intro{max-width:340px;font-size:11px}
+ .garden-shell{height:76vh;min-height:570px;border-radius:2px}
+ .garden-memory{width:calc(var(--w,100px) * .86);height:calc(var(--h,210px) * .86)}
+ .garden-future{right:12px;top:12px;font-size:8px;letter-spacing:1px}
+ .garden-detail{left:12px;right:12px;bottom:12px;width:auto;padding:18px 18px 16px}
+ .garden-detail h2{font-size:30px}
+ .garden-footer-note{font-size:10px}
+}
+@media(max-width:420px){
+ .garden-shell{min-height:540px}
+ .garden-memory{width:calc(var(--w,100px) * .74);height:calc(var(--h,210px) * .74)}
+}
+@media(prefers-reduced-motion:reduce){
+ .garden-memory .stem-sway,.garden-memory .petal-bloom,.garden-memory .leaf-sway,
+ .garden-butterfly,.garden-firefly{animation:none!important}
+ .garden-memory,.garden-detail{transition:none!important}
+}
+</style>
+</head>
+<body class="tree-page">
+<header class="universe-mobile-header">
+    <a href="index.html" class="universe-brand-title">THE ARCHIVE</a>
+    <button id="universeMenuButton" class="universe-menu-button" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="universeMobileMenu">
+        <span></span><span></span>
+    </button>
+</header>
+<aside class="universe-sidebar">
+    <div class="universe-brand">
+        <a href="index.html" class="universe-brand-title">THE ARCHIVE</a>
+        <span class="universe-brand-subtitle">A collection of moments.</span>
+    </div>
+    <nav class="universe-nav" aria-label="Main navigation">
+        <a href="index.html" class="universe-nav-link">Home</a>
+        <a href="story.html" class="universe-nav-link">Our Story</a>
+        <a href="gallery.html" class="universe-nav-link">The Gallery</a>
+        <a href="places.html" class="universe-nav-link">Places We've Been</a>
+        <a href="things.html" class="universe-nav-link">Things I Love About You</a>
+        <a href="tree.html" class="universe-nav-link active" aria-current="page">The Memory Universe</a>
+    </nav>
+    <div class="universe-sidebar-bottom">
+        <button id="randomMemory" class="universe-random-button" type="button">↻ Random Memory</button>
+        <div class="universe-memory-counter"><span id="memoryCount">0</span><span>memories preserved</span></div>
+    </div>
+</aside>
+<div id="universeMobileMenu" class="universe-mobile-menu" aria-hidden="true">
+    <nav aria-label="Mobile navigation">
+        <a href="index.html">Home</a><a href="story.html">Our Story</a><a href="gallery.html">The Gallery</a>
+        <a href="places.html">Places We've Been</a><a href="things.html">Things I Love About You</a>
+        <a href="tree.html" aria-current="page">The Memory Universe</a>
+    </nav>
+</div>
+
+<main class="universe-main universe-page">
+  <section class="universe-header">
+    <p class="handwritten">Everything we have become.</p>
+    <h1>Our little garden.</h1>
+    <p class="universe-intro">Every flower holds a memory. There is always room for one more.</p>
+    <p class="universe-hint">Choose a flower to visit a moment</p>
+  </section>
+
+  <section class="garden-shell" id="treeStage" aria-label="A garden of shared memories">
+    <div class="garden-sky" aria-hidden="true"></div>
+    <div class="garden-landscape" aria-hidden="true">
+      <svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="hedge" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#9ba984"/><stop offset="1" stop-color="#647b56"/></linearGradient>
+          <linearGradient id="lawn" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#9eaf7f"/><stop offset="1" stop-color="#617a50"/></linearGradient>
+          <radialGradient id="sunwash"><stop stop-color="#fff9df" stop-opacity=".72"/><stop offset="1" stop-color="#fff9df" stop-opacity="0"/></radialGradient>
+          <pattern id="leafTexture" width="48" height="35" patternUnits="userSpaceOnUse">
+            <path d="M4 25 Q13 5 23 17 Q17 30 4 25Z" fill="#e0e2c7" opacity=".14"/>
+            <path d="M28 10 Q40 0 44 14 Q38 25 28 10Z" fill="#344f39" opacity=".13"/>
+          </pattern>
+        </defs>
+        <ellipse cx="600" cy="150" rx="470" ry="230" fill="url(#sunwash)"/>
+        <!-- distant tree line -->
+        <path d="M0 210 Q65 118 126 184 Q185 92 246 178 Q300 115 360 185 Q422 104 493 177 Q564 115 628 179 Q703 94 762 173 Q829 110 894 180 Q969 93 1032 177 Q1111 106 1200 185 L1200 380 L0 380Z" fill="#aab69a" opacity=".75"/>
+        <path d="M0 265 Q76 182 144 245 Q204 158 274 246 Q352 179 420 251 Q505 174 581 250 Q657 175 728 248 Q808 167 879 247 Q961 181 1033 250 Q1117 170 1200 248 L1200 440 L0 440Z" fill="url(#hedge)"/>
+        <path d="M0 280 Q75 228 136 276 Q198 216 262 274 Q340 222 408 280 Q493 216 560 278 Q640 216 706 278 Q786 222 852 279 Q930 220 1002 279 Q1100 218 1200 280 L1200 455 L0 455Z" fill="#718a60" opacity=".7"/>
+        <!-- distant flowering shrubs -->
+        <g opacity=".72">
+          <g fill="#e8ddc7"><circle cx="90" cy="280" r="7"/><circle cx="115" cy="265" r="5"/><circle cx="141" cy="288" r="6"/><circle cx="170" cy="273" r="5"/></g>
+          <g fill="#cba3a0"><circle cx="278" cy="286" r="6"/><circle cx="303" cy="270" r="5"/><circle cx="327" cy="290" r="7"/><circle cx="354" cy="277" r="5"/></g>
+          <g fill="#e6d5a0"><circle cx="846" cy="283" r="6"/><circle cx="870" cy="267" r="5"/><circle cx="895" cy="287" r="7"/><circle cx="920" cy="274" r="5"/></g>
+          <g fill="#c8c3d3"><circle cx="1032" cy="281" r="6"/><circle cx="1056" cy="265" r="5"/><circle cx="1082" cy="287" r="7"/><circle cx="1107" cy="273" r="5"/></g>
+        </g>
+        <!-- lawn -->
+        <path d="M0 356 Q190 330 340 390 Q514 420 600 365 Q750 315 907 374 Q1052 420 1200 360 L1200 760 L0 760Z" fill="url(#lawn)"/>
+        <path d="M0 420 Q180 389 330 435 T620 420 T920 435 T1200 408 L1200 760 L0 760Z" fill="url(#leafTexture)"/>
+        <!-- planted borders left and right -->
+        <path d="M0 338 Q110 325 214 389 Q267 424 306 510 Q180 565 0 538Z" fill="#6e8056"/>
+        <path d="M1200 332 Q1082 323 1004 385 Q948 430 911 514 Q1044 570 1200 532Z" fill="#6b8055"/>
+        <path d="M0 380 Q110 363 208 424 Q255 454 283 510 Q162 541 0 520Z" fill="#829267"/>
+        <path d="M1200 378 Q1090 361 1005 420 Q959 455 929 511 Q1053 543 1200 517Z" fill="#819365"/>
+        <!-- nearer foreground beds -->
+        <path d="M0 510 Q132 455 270 525 Q330 567 372 760 L0 760Z" fill="#4e6845" opacity=".72"/>
+        <path d="M1200 505 Q1071 455 932 525 Q866 574 826 760 L1200 760Z" fill="#4c6743" opacity=".75"/>
+        <path d="M0 545 Q150 485 282 552 Q333 590 354 760 L0 760Z" fill="#627b4e"/>
+        <path d="M1200 542 Q1050 485 918 552 Q866 590 846 760 L1200 760Z" fill="#627b4e"/>
+        <!-- leafy silhouettes for depth -->
+        <g fill="#3f5c3e" opacity=".5">
+          <ellipse cx="35" cy="616" rx="90" ry="42"/><ellipse cx="116" cy="654" rx="105" ry="44"/><ellipse cx="205" cy="620" rx="88" ry="38"/>
+          <ellipse cx="1164" cy="615" rx="92" ry="43"/><ellipse cx="1086" cy="655" rx="105" ry="45"/><ellipse cx="994" cy="620" rx="88" ry="38"/>
+        </g>
+        <!-- scattered tiny grass strokes -->
+        <g stroke="#d3d7b3" stroke-width="1.4" opacity=".24" stroke-linecap="round">
+          <path d="M65 590l-5 -15 M80 600l5 -18 M156 574l-2 -12 M1075 582l4 -15 M1125 602l-5 -16 M1010 570l2 -12"/>
+          <path d="M390 515l-3 -12 M418 530l4 -14 M782 530l-2 -13 M822 513l5 -11 M560 580l-4 -13 M676 604l5 -15"/>
+        </g>
+      </svg>
+    </div>
+    <div class="garden-path" aria-hidden="true">
+      <svg viewBox="0 0 1200 760" preserveAspectRatio="none">
+        <defs><linearGradient id="pathFill" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d6c9ae"/><stop offset=".55" stop-color="#bdae91"/><stop offset="1" stop-color="#9b8c70"/></linearGradient></defs>
+        <path d="M535 760 C565 673 670 626 635 548 C598 470 525 449 548 383 C565 336 622 327 650 300" fill="none" stroke="#82785e" stroke-width="180" opacity=".18" stroke-linecap="round"/>
+        <path d="M535 760 C565 673 670 626 635 548 C598 470 525 449 548 383 C565 336 622 327 650 300" fill="none" stroke="url(#pathFill)" stroke-width="162" stroke-linecap="round"/>
+        <path d="M535 760 C565 673 670 626 635 548 C598 470 525 449 548 383 C565 336 622 327 650 300" fill="none" stroke="#e4d8bd" stroke-width="2" stroke-dasharray="3 12" opacity=".5" stroke-linecap="round"/>
+        <g fill="#82785e" opacity=".24">
+          <ellipse cx="570" cy="690" rx="30" ry="12" transform="rotate(-25 570 690)"/><ellipse cx="607" cy="652" rx="26" ry="11" transform="rotate(18 607 652)"/>
+          <ellipse cx="635" cy="593" rx="28" ry="11" transform="rotate(45 635 593)"/><ellipse cx="603" cy="528" rx="28" ry="11" transform="rotate(-38 603 528)"/>
+          <ellipse cx="550" cy="460" rx="24" ry="10" transform="rotate(-18 550 460)"/><ellipse cx="542" cy="407" rx="25" ry="10" transform="rotate(25 542 407)"/>
+        </g>
+      </svg>
+    </div>
+    <div class="garden-plants" id="gardenPlants" aria-label="Memory flowers"></div>
+    <div class="garden-atmosphere" id="gardenAtmosphere" aria-hidden="true"></div>
+    <span class="garden-future">always room for one more</span>
+
+    <article class="garden-detail" id="universeDetail" aria-live="polite" aria-atomic="true">
+      <div class="garden-detail-date" id="universeDetailDate"></div>
+      <h2 id="universeDetailTitle"></h2>
+      <p id="universeDetailText"></p>
+      <div class="garden-detail-actions">
+        <button class="garden-open" id="universeOpenMemory" type="button">Open memory →</button>
+        <button class="garden-close" id="universeClose" type="button">Close</button>
+      </div>
+    </article>
+  </section>
+  <p class="garden-footer-note">Some moments become memories. Some memories become places we carry with us.</p>
+</main>
+
+<script>
+(() => {
+  const button=document.getElementById('universeMenuButton'),menu=document.getElementById('universeMobileMenu');
+  if(!button||!menu)return;
+  const close=()=>{button.setAttribute('aria-expanded','false');button.setAttribute('aria-label','Open navigation');menu.classList.remove('open');menu.setAttribute('aria-hidden','true');document.body.classList.remove('universe-menu-open')};
+  button.addEventListener('click',()=>{if(button.getAttribute('aria-expanded')==='true'){close();return}button.setAttribute('aria-expanded','true');button.setAttribute('aria-label','Close navigation');menu.classList.add('open');menu.setAttribute('aria-hidden','false');document.body.classList.add('universe-menu-open')});
+  menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+})();
+</script>
+<script>
+(() => {
+ const stage=document.getElementById('treeStage'),plants=document.getElementById('gardenPlants'),atmosphere=document.getElementById('gardenAtmosphere');
+ const detail=document.getElementById('universeDetail'),detailDate=document.getElementById('universeDetailDate'),detailTitle=document.getElementById('universeDetailTitle'),detailText=document.getElementById('universeDetailText');
+ const openButton=document.getElementById('universeOpenMemory'),closeButton=document.getElementById('universeClose'),randomButton=document.getElementById('randomMemory'),countNode=document.getElementById('memoryCount');
+ const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ const palette=['#c98f91','#e3d6b6','#9aa9bc','#c8b6d1','#e0bd75','#d8d9b6','#d8a9a2','#f0e8d6'];
+ const flowerTypes=['daisy','cosmos','tulip','rose','forget','poppy','aster','lily'];
+ let memories=[],garden=[],selected=null;
+
+ const escapeHTML=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+ const svgNS='http://www.w3.org/2000/svg';
+ function el(tag,attrs={},parent){const n=document.createElementNS(svgNS,tag);Object.entries(attrs).forEach(([k,v])=>n.setAttribute(k,v));if(parent)parent.appendChild(n);return n}
+ function flowerHead(type,color,center){
+   let s='';
+   const petal=(cx,cy,rx,ry,rot,fill,opacity=1)=>`<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" transform="rotate(${rot} ${cx} ${cy})" fill="${fill}" opacity="${opacity}"/>`;
+   if(type==='tulip'){
+    s+=`<path d="M0 1 C-22 -15 -18 -38 -10 -43 C-6 -28 -2 -23 0 -21 C4 -34 13 -46 18 -39 C25 -22 13 -4 0 1Z" fill="${color}" stroke="#8e8170" stroke-opacity=".22" stroke-width="1"/>`;
+    s+=`<path d="M0 -4 C-4 -22 -2 -34 0 -40 C5 -28 7 -15 0 -4Z" fill="#fff7df" opacity=".34"/>`;
+   } else if(type==='rose'){
+    s+=`<g fill="${color}" stroke="#8c6d65" stroke-opacity=".2" stroke-width=".8"><path d="M0 0 C-24 -8 -21 -29 -7 -31 C-1 -31 0 -23 0 -23 C7 -40 26 -27 20 -12 C17 -3 8 2 0 0Z"/><path d="M0 -4 C-13 -13 -7 -25 1 -23 C13 -29 17 -13 7 -7 C5 -4 2 -3 0 -4Z" fill="#f4d4bd"/><path d="M-2 -5 C-7 -14 1 -18 5 -12 C10 -8 3 -3 -2 -5Z" fill="${color}"/></g>`;
+   } else if(type==='lily'){
+    s+=`<g stroke="#8b8077" stroke-opacity=".18" stroke-width=".8"><path d="M0 0 C-26 -14 -22 -39 -9 -35 C-4 -22 -2 -12 0 0Z" fill="${color}"/><path d="M0 0 C-2 -31 12 -45 17 -33 C18 -18 9 -8 0 0Z" fill="${color}"/><path d="M0 0 C18 -25 36 -20 28 -8 C19 -1 8 0 0 0Z" fill="${color}"/><path d="M0 0 C-25 2 -34 -15 -23 -19 C-13 -18 -4 -7 0 0Z" fill="${color}"/><path d="M0 0 C-12 20 -31 14 -26 2 C-19 -6 -8 -5 0 0Z" fill="${color}"/></g>`;
+   } else if(type==='poppy'){
+    s+=`<g stroke="#8c6f65" stroke-opacity=".22" stroke-width=".7">${petal(0,-11,9,15,-4,color)}${petal(-11,-4,10,14,-55,color)}${petal(11,-4,10,14,55,color)}${petal(-7,5,9,12,-125,color)}${petal(7,5,9,12,125,color)}</g>`;
+   } else {
+    const count=type==='forget'?5:(type==='aster'?12:8),rx=type==='forget'?5.5:7,ry=type==='forget'?8:10;
+    for(let i=0;i<count;i++){const a=(Math.PI*2*i/count)-Math.PI/2;const cx=Math.cos(a)*9,cy=-8+Math.sin(a)*9;s+=petal(cx,cy,rx,ry,(a*180/Math.PI)+90,color,type==='cosmos'?.92:1)}
+    if(type==='cosmos') s+=petal(0,-8,5,7,0,'#e9c88b',.7);
+   }
+   s+=`<circle cx="0" cy="${center}" r="${type==='forget'?3.2:4.3}" fill="${type==='tulip'?'#d6b768':'#d6b36a'}" stroke="#8c7b51" stroke-opacity=".28" stroke-width=".7"/>`;
+   if(type==='rose') s+=`<path d="M-2 -5 Q0 -11 5 -9 Q2 -5 -2 -5Z" fill="#6e8a5d"/>`;
+   return `<g class="petal-bloom">${s}</g>`;
+ }
+ function plantSVG(item,index){
+   const type=flowerTypes[index%flowerTypes.length],color=palette[index%palette.length],height=150+(index%3)*22;
+   const headY=25+(index%3)*5,leafColor=index%2?'#6c8759':'#789264';
+   let flower=flowerHead(type,color,0);
+   const second=index%3===1?`<g transform="translate(23 59) scale(.52)">${flowerHead(flowerTypes[(index+3)%flowerTypes.length],palette[(index+3)%palette.length],0)}</g>`:'';
+   const third=index%4===2?`<g transform="translate(-22 81) scale(.44)">${flowerHead(flowerTypes[(index+5)%flowerTypes.length],palette[(index+5)%palette.length],0)}</g>`:'';
+   return `<svg viewBox="-54 0 108 ${height+16}" role="presentation" aria-hidden="true">
+    <ellipse cx="0" cy="${height+5}" rx="20" ry="4" fill="#334a32" opacity=".18"/>
+    <g class="stem-sway">
+      <path d="M0 ${height+3} C-3 ${height*.68} 5 ${height*.37} 0 ${headY+4}" fill="none" stroke="#4e6b48" stroke-width="3.1" stroke-linecap="round"/>
+      <g class="leaf-sway" fill="${leafColor}" stroke="#48633f" stroke-opacity=".3" stroke-width=".7">
+        <path d="M-1 ${height*.74} C-23 ${height*.69} -31 ${height*.55} -28 ${height*.51} C-13 ${height*.52} -3 ${height*.62} -1 ${height*.74}Z"/>
+        <path d="M1 ${height*.58} C21 ${height*.54} 31 ${height*.41} 28 ${height*.37} C12 ${height*.41} 3 ${height*.48} 1 ${height*.58}Z"/>
+        <path d="M0 ${height*.87} C-16 ${height*.83} -23 ${height*.75} -22 ${height*.72} C-10 ${height*.74} -2 ${height*.8} 0 ${height*.87}Z"/>
+      </g>
+      <g transform="translate(0 ${headY})">${flower}</g>${second}${third}
+    </g></svg>`;
+ }
+ function layoutGarden(items){
+   const w=stage.clientWidth,h=stage.clientHeight;
+   // Flower beds sit on both sides of the winding path; positions are stable by memory ID.
+   const spots=[
+    {x:8,y:75,s:1.0,z:4},{x:18,y:70,s:.92,z:3},{x:29,y:82,s:1.12,z:5},
+    {x:39,y:68,s:.78,z:2},{x:49,y:82,s:1.02,z:5},{x:59,y:71,s:.88,z:3},
+    {x:69,y:81,s:1.12,z:5},{x:80,y:70,s:.95,z:4},{x:91,y:78,s:1.06,z:5},
+    {x:14,y:57,s:.74,z:2},{x:26,y:61,s:.68,z:2},{x:36,y:55,s:.72,z:2},
+    {x:65,y:57,s:.72,z:2},{x:76,y:59,s:.7,z:2},{x:87,y:56,s:.74,z:2},
+    {x:6,y:88,s:1.18,z:6},{x:22,y:89,s:1.12,z:6},{x:40,y:91,s:1.2,z:6},
+    {x:72,y:90,s:1.15,z:6},{x:89,y:89,s:1.18,z:6}
+   ];
+   return items.map((item,i)=>{
+     const spot=spots[i%spots.length],cycle=Math.floor(i/spots.length);
+     const x=Math.max(4,Math.min(96,spot.x+(cycle%2?3:-2)));
+     const y=Math.min(93,spot.y+(cycle?cycle*1.6:0));
+     return {...item,_x:x,_y:y,_scale:spot.s,_z:spot.z,_height:Math.round((150+(i%3)*22)*spot.s)};
+   });
+ }
+ function renderGarden(){
+   plants.replaceChildren();
+   const fragment=document.createDocumentFragment();
+   garden=layoutGarden(garden);
+   garden.forEach((item,i)=>{
+     const button=document.createElement('button');
+     button.type='button';button.className='garden-memory';button.dataset.index=String(i);
+     button.style.setProperty('--x',item._x+'%');button.style.setProperty('--y',item._y+'%');
+     button.style.setProperty('--w',Math.round(78*item._scale)+'px');button.style.setProperty('--h',Math.round((150+(i%3)*22)*item._scale)+'px');
+     button.style.setProperty('--scale',String(item._scale));button.style.setProperty('--z',String(item._z));
+     button.style.setProperty('--sway',(5.1+(i%5)*.53)+'s');button.style.setProperty('--bloom',(4.5+(i%4)*.6)+'s');
+     const mem=memories.find(m=>String(m.id)===String(item.memoryId));
+     button.setAttribute('aria-label','Discover memory: '+(mem?.title||item.title||'A memory'));
+     button.title='Discover a memory';
+     button.innerHTML=plantSVG(item,i);
+     button.addEventListener('click',()=>selectMemory(i));
+     fragment.appendChild(button);
+   });
+   plants.appendChild(fragment);
+   countNode.textContent=String(memories.length);
+ }
+ function makeAtmosphere(){
+   atmosphere.replaceChildren();
+   if(reduced)return;
+   const fragment=document.createDocumentFragment();
+   for(let i=0;i<10;i++){
+     const f=document.createElement('span');f.className='garden-firefly';
+     f.style.setProperty('--x',(6+Math.random()*88)+'%');f.style.setProperty('--y',(27+Math.random()*58)+'%');
+     f.style.setProperty('--dx',(-15+Math.random()*30)+'px');f.style.setProperty('--dy',(-24+Math.random()*35)+'px');
+     f.style.setProperty('--duration',(5+Math.random()*7)+'s');f.style.animationDelay=(-Math.random()*7)+'s';fragment.appendChild(f);
+   }
+   for(let i=0;i<3;i++){const b=document.createElement('span');b.className='garden-butterfly';b.style.setProperty('--x',(15+Math.random()*70)+'%');b.style.setProperty('--y',(25+Math.random()*35)+'%');b.style.animationDelay=(-Math.random()*10)+'s';fragment.appendChild(b)}
+   atmosphere.appendChild(fragment);
+ }
+ function selectMemory(index){
+   const item=garden[index];if(!item)return;
+   const memory=memories.find(m=>String(m.id)===String(item.memoryId));if(!memory)return;
+   selected={item,memory,index};
+   detailDate.textContent=[memory.date||item.date,memory.time].filter(Boolean).join(' · ');
+   detailTitle.textContent=memory.title||item.title||'A memory';
+   detailText.textContent=memory.description||item.text||'A moment kept close.';
+   openButton.dataset.memoryId=String(memory.id);
+   plants.querySelectorAll('.garden-memory').forEach((n,i)=>n.classList.toggle('selected',i===index));
+   detail.classList.add('open');stage.classList.add('focus-mode');
+ }
+ function closeDetail(){selected=null;detail.classList.remove('open');stage.classList.remove('focus-mode');plants.querySelectorAll('.garden-memory').forEach(n=>n.classList.remove('selected'))}
+ function openSelected(){if(selected)window.location.href='memory.html?id='+encodeURIComponent(selected.memory.id)}
+ async function loadData(){
+   const [memRes,treeRes]=await Promise.all([fetch('./data/memories.json?v=14',{cache:'no-store'}),fetch('./data/tree.json?v=14',{cache:'no-store'})]);
+   if(!memRes.ok||!treeRes.ok)throw new Error('Unable to load garden memories.');
+   memories=await memRes.json();const tree=await treeRes.json();
+   // tree.json remains the curated list. Keep its selection, but use live memory copy where available.
+   garden=tree.map(item=>{const m=memories.find(x=>String(x.id)===String(item.memoryId));return m?{...item,title:m.title||item.title,date:m.date||item.date,text:m.description||item.text}:item});
+ }
+ randomButton.addEventListener('click',()=>{
+   if(!garden.length)return;
+   const next=selected?((selected.index+1+Math.floor(Math.random()*(garden.length-1||1)))%garden.length):Math.floor(Math.random()*garden.length);
+   selectMemory(next);
+ });
+ closeButton.addEventListener('click',closeDetail);openButton.addEventListener('click',openSelected);
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&selected)closeDetail()});
+ window.addEventListener('resize',()=>{if(!reduced)makeAtmosphere()});
+ loadData().then(()=>{renderGarden();makeAtmosphere()}).catch(err=>{
+   console.error(err);countNode.textContent='—';detailDate.textContent='A quiet moment';detailTitle.textContent='The garden is resting';detailText.textContent='Please refresh the archive and try again.';detail.classList.add('open');
+ });
+})();
+</script>
+</body>
+</html>
