@@ -945,7 +945,7 @@ function renderPlaces(places) {
         const metaParts = [];
         if (date) metaParts.push(`<span class="place-date">${escapeHTML(date)}</span>`);
         if (date && location) metaParts.push(`<span class="place-separator">·</span>`);
-        if (location) metaParts.push(`<span class="place-location">${escapeHTML(location)}</span>`)
+        if (location) metaParts.push(`<span class="place-location">${escapeHTML(location)}</span>`);
 
         return `
             <article class="place-entry">
