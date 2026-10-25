@@ -945,13 +945,7 @@ function renderPlaces(places) {
         const metaParts = [];
         if (date) metaParts.push(`<span class="place-date">${escapeHTML(date)}</span>`);
         if (date && location) metaParts.push(`<span class="place-separator">·</span>`);
-        if (location) metaParts.push(`<span class="place-location">${escapeHTML(location)}</span>`);
-
-        const imageHTML = image ? `
-            <a class="place-image" href="${detailURL}" aria-label="Open ${name}">
-                <img src="./${escapeHTML(image)}" alt="${name}" loading="lazy">
-            </a>
-        ` : "";
+        if (location) metaParts.push(`<span class="place-location">${escapeHTML(location)}</span>`)
 
         return `
             <article class="place-entry">
@@ -959,7 +953,7 @@ function renderPlaces(places) {
                 <div class="place-body">
                     <div class="place-meta">${metaParts.join("")}</div>
                     <h2><a class="place-title-link" href="${detailURL}">${name}</a></h2>
-                    ${description ? `<p class="place-excerpt">${escapeHTML(description)}</p>` : ""}
+                    ${description ? `<p class="place-excerpt">${escapeHTML(description)}</p>` : ""};
                     ${imageHTML}
                     <a class="place-read-link" href="${detailURL}">Read this place <span aria-hidden="true">→</span></a>
                 </div>
