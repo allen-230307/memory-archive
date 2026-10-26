@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,6 +21,163 @@
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500&family=Caveat:wght@400;500&display=swap"
         rel="stylesheet"
     >
+
+    <!-- Homepage addition only: existing styles remain untouched -->
+    <style>
+        .home-welcome {
+            max-width: 760px;
+            margin: 100px auto 60px;
+            padding: 0 24px;
+            text-align: center;
+        }
+
+        .home-welcome-label {
+            margin: 0 0 18px;
+            color: #687568;
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+        }
+
+        .home-welcome-title {
+            margin: 0;
+            color: #292622;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(34px, 5vw, 48px);
+            font-weight: 400;
+            line-height: 1.12;
+        }
+
+        .home-welcome-subtitle {
+            margin: 16px auto 30px;
+            color: #777067;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            line-height: 1.9;
+        }
+
+        .home-welcome-photo {
+            width: 100%;
+            max-width: 510px;
+            aspect-ratio: 4 / 3;
+            margin: 0 auto;
+            overflow: hidden;
+            background: #eee8dc;
+            border: 1px solid #d8d0c3;
+        }
+
+        .home-welcome-photo img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .home-welcome-caption {
+            margin: 12px 0 0;
+            color: #777067;
+            font-family: 'Caveat', cursive;
+            font-size: 19px;
+        }
+
+        .home-welcome-discovery {
+            margin-top: 34px;
+        }
+
+        .home-welcome-trigger {
+            padding: 8px 12px;
+            border: 0;
+            background: transparent;
+            color: #687568;
+            font-family: 'Caveat', cursive;
+            font-size: 25px;
+            cursor: pointer;
+            transition: opacity 0.25s ease;
+        }
+
+        .home-welcome-trigger:hover {
+            opacity: 0.65;
+        }
+
+        .home-welcome-trigger:focus-visible {
+            outline: 1px solid #687568;
+            outline-offset: 5px;
+        }
+
+        .home-welcome-reveal {
+            max-width: 430px;
+            margin: 18px auto 0;
+            padding: 24px 20px;
+            border-top: 1px solid #d8d0c3;
+            border-bottom: 1px solid #d8d0c3;
+            animation: homeReveal 0.6s ease both;
+        }
+
+        .home-welcome-reveal[hidden] {
+            display: none;
+        }
+
+        .home-welcome-reveal p {
+            margin: 0;
+            color: #777067;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            line-height: 1.5;
+        }
+
+        .home-welcome-reveal .home-welcome-signoff {
+            margin-top: 14px;
+            color: #687568;
+            font-family: 'Caveat', cursive;
+            font-size: 20px;
+        }
+
+        .home-welcome-hint {
+            margin: 12px 0 0;
+            color: #777067;
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            letter-spacing: 0.3px;
+        }
+
+        @keyframes homeReveal {
+            from {
+                opacity: 0;
+                transform: translateY(7px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .home-welcome {
+                margin: 70px auto 40px;
+                padding: 0 20px;
+            }
+
+            .home-welcome-subtitle {
+                max-width: 310px;
+            }
+
+            .home-welcome-reveal p {
+                font-size: 22px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .home-welcome-trigger {
+                transition: none;
+            }
+
+            .home-welcome-reveal {
+                animation: none;
+            }
+        }
+    </style>
 </head>
 
 
@@ -46,7 +204,7 @@
             <a href="story.html" class="nav-link">
                 Our Story
             </a>
-            
+
             <a href="gallery.html" class="nav-link">
                 The Gallery
             </a>
@@ -118,7 +276,7 @@
     <main class="main-content">
 
 
-        <!-- HERO -->
+        <!-- EXISTING HERO — UNCHANGED -->
 
         <section class="hero">
 
@@ -138,9 +296,8 @@
 
         </section>
 
-        <!-- =========================
-             ARCHIVE INTRODUCTION
-             ========================= -->
+
+        <!-- EXISTING ARCHIVE INTRODUCTION — UNCHANGED -->
 
         <section class="archive-introduction">
 
@@ -160,14 +317,144 @@
         </section>
 
 
+        <!-- =========================
+             NEW HOMEPAGE WELCOME
+             ========================= -->
+
+        <section
+            class="home-welcome"
+            aria-labelledby="homeWelcomeTitle"
+        >
+
+            <p class="home-welcome-label">
+                A place made for you
+            </p>
+
+            <h2
+                class="home-welcome-title"
+                id="homeWelcomeTitle"
+            >
+                Whenever you need<br>
+                a little piece of us.
+            </h2>
+
+            <p class="home-welcome-subtitle">
+                You can always find your way back here.
+            </p>
+
+
+            <!--
+                Replace the image path below with the path
+                to a real photograph from your relationship.
+                This addition does not change your existing gallery.
+            -->
+
+            <figure class="home-welcome-photo">
+
+                <img
+                    src="media/images/memory-01/011.jpg"
+                    alt="A photograph from our time together"
+                    loading="lazy"
+                >
+
+            </figure>
+
+            <p class="home-welcome-caption">
+                Take your time. There's no hurry here.
+            </p>
+
+
+            <!-- A small discovery, not another memory page -->
+
+            <div class="home-welcome-discovery">
+
+                <button
+                    type="button"
+                    class="home-welcome-trigger"
+                    id="homeWelcomeTrigger"
+                    aria-expanded="false"
+                    aria-controls="homeWelcomeReveal"
+                >
+                    a little note for you
+                </button>
+
+                <p class="home-welcome-hint">
+                    ( if you'd like to see it )
+                </p>
+
+
+                <div
+                    class="home-welcome-reveal"
+                    id="homeWelcomeReveal"
+                    hidden
+                >
+
+                    <p>
+                        You don't have to look for anything here.
+                        You can simply be.
+                    </p>
+
+                    <p class="home-welcome-signoff">
+                        I'm glad you're here.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
     </main>
 
 
     <!-- =========================
-         JAVASCRIPT
+         EXISTING JAVASCRIPT
          ========================= -->
 
     <script src="./script.js?v=14"></script>
+
+
+    <!-- Homepage-only interaction -->
+
+    <script>
+        (() => {
+            const trigger = document.getElementById(
+                'homeWelcomeTrigger'
+            );
+
+            const reveal = document.getElementById(
+                'homeWelcomeReveal'
+            );
+
+            if (!trigger || !reveal) return;
+
+            trigger.addEventListener('click', () => {
+                const isExpanded =
+                    trigger.getAttribute('aria-expanded') === 'true';
+
+                trigger.setAttribute(
+                    'aria-expanded',
+                    String(!isExpanded)
+                );
+
+                reveal.hidden = isExpanded;
+
+                trigger.textContent = isExpanded
+                    ? 'a little note for you'
+                    : 'let that stay with you';
+
+                if (!isExpanded) {
+                    reveal.scrollIntoView({
+                        behavior: window.matchMedia(
+                            '(prefers-reduced-motion: reduce)'
+                        ).matches ? 'auto' : 'smooth',
+                        block: 'nearest'
+                    });
+                }
+            });
+        })();
+    </script>
 
 </body>
 
