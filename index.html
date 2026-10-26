@@ -10,6 +10,11 @@
         content="width=device-width, initial-scale=1.0"
     >
 
+    <meta
+        name="theme-color"
+        content="#f5f1e8"
+    >
+
     <title>The Archive</title>
 
     <link
@@ -22,17 +27,33 @@
         rel="stylesheet"
     >
 
-    <!-- Homepage addition only: existing styles remain untouched -->
+    <!--
+        HOMEPAGE ADDITION
+        All new styles use the home-entrance prefix.
+        Existing site-wide styles are not modified.
+    -->
+
     <style>
-        .home-welcome {
+        /* =========================
+           HOMEPAGE ENTRANCE
+           ========================= */
+
+        .home-entrance {
             max-width: 760px;
-            margin: 100px auto 60px;
+            margin: 90px auto 80px;
             padding: 0 24px;
+            color: #292622;
             text-align: center;
         }
 
-        .home-welcome-label {
-            margin: 0 0 18px;
+        .home-entrance *,
+        .home-entrance *::before,
+        .home-entrance *::after {
+            box-sizing: border-box;
+        }
+
+        .home-entrance-label {
+            margin: 0 0 15px;
             color: #687568;
             font-family: 'Inter', sans-serif;
             font-size: 10px;
@@ -40,7 +61,7 @@
             text-transform: uppercase;
         }
 
-        .home-welcome-title {
+        .home-entrance-heading {
             margin: 0;
             color: #292622;
             font-family: 'Cormorant Garamond', serif;
@@ -49,102 +70,378 @@
             line-height: 1.12;
         }
 
-        .home-welcome-subtitle {
-            margin: 16px auto 30px;
+        .home-entrance-description {
+            max-width: 390px;
+            margin: 18px auto 32px;
             color: #777067;
             font-family: 'Inter', sans-serif;
-            font-size: 13px;
+            font-size: 12px;
             line-height: 1.9;
         }
 
-        .home-welcome-photo {
-            width: 100%;
-            max-width: 510px;
-            aspect-ratio: 4 / 3;
-            margin: 0 auto;
+        /* =========================
+           THE LITTLE DOOR
+           ========================= */
+
+        .home-door-scene {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 290px;
+            padding: 25px 0;
             overflow: hidden;
-            background: #eee8dc;
-            border: 1px solid #d8d0c3;
+            background:
+                radial-gradient(
+                    ellipse at 50% 85%,
+                    rgba(104, 117, 104, 0.10),
+                    transparent 65%
+                );
         }
 
-        .home-welcome-photo img {
+        .home-door {
+            position: relative;
             display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            width: 156px;
+            height: 218px;
+            padding: 0;
+            border: 1px solid #c9c0b2;
+            border-radius: 78px 78px 0 0;
+            background: #eee8dc;
+            cursor: pointer;
+            perspective: 900px;
+            -webkit-tap-highlight-color: transparent;
+            transition:
+                transform 0.5s ease,
+                box-shadow 0.5s ease;
         }
 
-        .home-welcome-caption {
-            margin: 12px 0 0;
+        .home-door:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(41, 38, 34, 0.08);
+        }
+
+        .home-door:focus-visible {
+            outline: 2px solid #687568;
+            outline-offset: 7px;
+        }
+
+        .home-door-frame {
+            position: absolute;
+            inset: 9px;
+            overflow: hidden;
+            border: 1px solid #d8d0c3;
+            border-radius: 70px 70px 0 0;
+            background: #e8e0d3;
+        }
+
+        .home-door-light {
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.45),
+                    transparent 48%
+                ),
+                linear-gradient(
+                    180deg,
+                    #d8d4c4,
+                    #eee8dc 76%
+                );
+            transition:
+                opacity 0.8s ease,
+                transform 0.8s ease;
+        }
+
+        .home-door-light::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 17px;
+            width: 1px;
+            height: 100%;
+            background: rgba(104, 117, 104, 0.20);
+        }
+
+        .home-door-light::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 24px;
+            width: 1px;
+            height: 100%;
+            background: rgba(104, 117, 104, 0.14);
+        }
+
+        .home-door-inner {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 13px;
+            padding: 18px;
+            transform-origin: left center;
+            background: #e6dece;
+            border-right: 1px solid #c9c0b2;
+            transition:
+                transform 0.9s cubic-bezier(.2, .75, .25, 1),
+                opacity 0.6s ease;
+        }
+
+        .home-door-inner::before {
+            content: "";
+            position: absolute;
+            inset: 9px;
+            border: 1px solid rgba(104, 117, 104, 0.30);
+            pointer-events: none;
+        }
+
+        .home-door-mark {
+            color: #687568;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 35px;
+            font-weight: 400;
+            line-height: 1;
+        }
+
+        .home-door-label {
+            color: #777067;
+            font-family: 'Inter', sans-serif;
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .home-door-knob {
+            position: absolute;
+            top: 52%;
+            right: 15px;
+            z-index: 3;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #687568;
+            transition: opacity 0.3s ease;
+        }
+
+        .home-door-ground {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            width: 240px;
+            height: 1px;
+            background: #d8d0c3;
+            transform: translateX(-50%);
+        }
+
+        .home-door-instruction {
+            margin: 8px 0 0;
+            color: #777067;
+            font-family: 'Caveat', cursive;
+            font-size: 22px;
+        }
+
+        .home-door-subinstruction {
+            margin: 4px 0 0;
+            color: #999185;
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+        }
+
+        /* Open door animation */
+
+        .home-entrance.is-open .home-door {
+            box-shadow: 0 0 45px rgba(104, 117, 104, 0.12);
+        }
+
+        .home-entrance.is-open .home-door-inner {
+            transform: rotateY(-72deg);
+            opacity: 0.35;
+        }
+
+        .home-entrance.is-open .home-door-knob {
+            opacity: 0;
+        }
+
+        .home-entrance.is-open .home-door-light {
+            transform: scale(1.05);
+            opacity: 0.85;
+        }
+
+        .home-entrance.is-open .home-door-mark {
+            opacity: 0;
+        }
+
+        /* =========================
+           THE REVEAL
+           ========================= */
+
+        .home-entrance-reveal {
+            max-width: 460px;
+            margin: 28px auto 0;
+            animation: homeEntranceAppear 0.8s ease both;
+        }
+
+        .home-entrance-reveal[hidden] {
+            display: none;
+        }
+
+        .home-entrance-reveal-title {
+            margin: 0;
+            color: #292622;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(28px, 4vw, 36px);
+            font-weight: 400;
+            line-height: 1.2;
+        }
+
+        .home-entrance-reveal-description {
+            margin: 13px auto 0;
+            color: #777067;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            line-height: 1.9;
+        }
+
+        .home-entrance-divider {
+            width: 45px;
+            height: 1px;
+            margin: 23px auto;
+            background: #c9c0b2;
+        }
+
+        .home-entrance-reveal-note {
+            margin: 0;
+            color: #687568;
+            font-family: 'Caveat', cursive;
+            font-size: 23px;
+        }
+
+        /* =========================
+           ARCHIVE DESTINATIONS
+           ========================= */
+
+        .home-archive-map {
+            margin: 45px auto 0;
+            padding-top: 28px;
+            border-top: 1px solid #d8d0c3;
+            animation: homeEntranceAppear 0.9s ease both;
+        }
+
+        .home-archive-map[hidden] {
+            display: none;
+        }
+
+        .home-archive-map-heading {
+            margin: 0;
+            color: #777067;
+            font-family: 'Caveat', cursive;
+            font-size: 23px;
+            font-weight: 400;
+        }
+
+        .home-archive-map-description {
+            margin: 8px 0 22px;
+            color: #999185;
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            line-height: 1.8;
+        }
+
+        .home-archive-destinations {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+            max-width: 530px;
+            margin: 0 auto;
+        }
+
+        .home-archive-destination {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            min-height: 92px;
+            padding: 16px 17px;
+            border: 1px solid #d8d0c3;
+            background: rgba(245, 241, 232, 0.55);
+            text-align: left;
+            text-decoration: none;
+            transition:
+                background 0.3s ease,
+                border-color 0.3s ease,
+                transform 0.3s ease;
+        }
+
+        .home-archive-destination:hover {
+            background: #eee8dc;
+            border-color: #b9b1a3;
+            transform: translateY(-2px);
+        }
+
+        .home-archive-destination:focus-visible {
+            outline: 2px solid #687568;
+            outline-offset: 3px;
+        }
+
+        .home-archive-destination-name {
+            color: #292622;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 21px;
+            line-height: 1.2;
+        }
+
+        .home-archive-destination-hint {
+            margin-top: 7px;
+            color: #777067;
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            line-height: 1.5;
+        }
+
+        .home-archive-map-footer {
+            margin: 24px 0 0;
             color: #777067;
             font-family: 'Caveat', cursive;
             font-size: 19px;
         }
 
-        .home-welcome-discovery {
-            margin-top: 34px;
-        }
+        /* =========================
+           CLOSE / RETURN
+           ========================= */
 
-        .home-welcome-trigger {
+        .home-entrance-return {
+            display: inline-block;
+            margin-top: 25px;
             padding: 8px 12px;
             border: 0;
             background: transparent;
-            color: #687568;
-            font-family: 'Caveat', cursive;
-            font-size: 25px;
-            cursor: pointer;
-            transition: opacity 0.25s ease;
-        }
-
-        .home-welcome-trigger:hover {
-            opacity: 0.65;
-        }
-
-        .home-welcome-trigger:focus-visible {
-            outline: 1px solid #687568;
-            outline-offset: 5px;
-        }
-
-        .home-welcome-reveal {
-            max-width: 430px;
-            margin: 18px auto 0;
-            padding: 24px 20px;
-            border-top: 1px solid #d8d0c3;
-            border-bottom: 1px solid #d8d0c3;
-            animation: homeReveal 0.6s ease both;
-        }
-
-        .home-welcome-reveal[hidden] {
-            display: none;
-        }
-
-        .home-welcome-reveal p {
-            margin: 0;
-            color: #777067;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 24px;
-            line-height: 1.5;
-        }
-
-        .home-welcome-reveal .home-welcome-signoff {
-            margin-top: 14px;
-            color: #687568;
-            font-family: 'Caveat', cursive;
-            font-size: 20px;
-        }
-
-        .home-welcome-hint {
-            margin: 12px 0 0;
             color: #777067;
             font-family: 'Inter', sans-serif;
             font-size: 10px;
-            letter-spacing: 0.3px;
+            cursor: pointer;
+            text-decoration: underline;
+            text-decoration-color: #d8d0c3;
+            text-underline-offset: 4px;
         }
 
-        @keyframes homeReveal {
+        .home-entrance-return:hover {
+            color: #292622;
+        }
+
+        .home-entrance-return:focus-visible {
+            outline: 1px solid #687568;
+            outline-offset: 4px;
+        }
+
+        @keyframes homeEntranceAppear {
             from {
                 opacity: 0;
-                transform: translateY(7px);
+                transform: translateY(8px);
             }
 
             to {
@@ -153,28 +450,51 @@
             }
         }
 
+        /* =========================
+           RESPONSIVE
+           ========================= */
+
         @media (max-width: 600px) {
-            .home-welcome {
-                margin: 70px auto 40px;
+            .home-entrance {
+                margin: 65px auto 55px;
                 padding: 0 20px;
             }
 
-            .home-welcome-subtitle {
-                max-width: 310px;
+            .home-entrance-description {
+                max-width: 320px;
             }
 
-            .home-welcome-reveal p {
-                font-size: 22px;
+            .home-door-scene {
+                min-height: 265px;
+            }
+
+            .home-door {
+                width: 140px;
+                height: 198px;
+            }
+
+            .home-archive-destinations {
+                gap: 8px;
+            }
+
+            .home-archive-destination {
+                min-height: 88px;
+                padding: 13px 12px;
+            }
+
+            .home-archive-destination-name {
+                font-size: 19px;
             }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .home-welcome-trigger {
-                transition: none;
-            }
-
-            .home-welcome-reveal {
-                animation: none;
+            .home-entrance *,
+            .home-entrance *::before,
+            .home-entrance *::after {
+                scroll-behavior: auto !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
             }
         }
     </style>
@@ -184,7 +504,7 @@
 <body>
 
     <!-- =========================
-         NAVIGATION
+         EXISTING NAVIGATION
          ========================= -->
 
     <aside class="sidebar">
@@ -251,7 +571,7 @@
 
 
     <!-- =========================
-         MOBILE HEADER
+         EXISTING MOBILE HEADER
          ========================= -->
 
     <header class="mobile-header">
@@ -276,7 +596,7 @@
     <main class="main-content">
 
 
-        <!-- EXISTING HERO — UNCHANGED -->
+        <!-- EXISTING HERO — PRESERVED -->
 
         <section class="hero">
 
@@ -297,7 +617,7 @@
         </section>
 
 
-        <!-- EXISTING ARCHIVE INTRODUCTION — UNCHANGED -->
+        <!-- EXISTING INTRODUCTION — PRESERVED -->
 
         <section class="archive-introduction">
 
@@ -318,87 +638,223 @@
 
 
         <!-- =========================
-             NEW HOMEPAGE WELCOME
+             NEW HOMEPAGE EXPERIENCE
              ========================= -->
 
         <section
-            class="home-welcome"
-            aria-labelledby="homeWelcomeTitle"
+            class="home-entrance"
+            id="homeEntrance"
+            aria-labelledby="homeEntranceHeading"
         >
 
-            <p class="home-welcome-label">
-                A place made for you
+            <p class="home-entrance-label">
+                A little place of your own
             </p>
 
             <h2
-                class="home-welcome-title"
-                id="homeWelcomeTitle"
+                class="home-entrance-heading"
+                id="homeEntranceHeading"
             >
                 Whenever you need<br>
                 a little piece of us.
             </h2>
 
-            <p class="home-welcome-subtitle">
-                You can always find your way back here.
+            <p class="home-entrance-description">
+                You don't need to be looking for anything.
+                You can simply be here.
             </p>
 
 
-            <!--
-                Replace the image path below with the path
-                to a real photograph from your relationship.
-                This addition does not change your existing gallery.
-            -->
+            <!-- THE INTERACTIVE DOOR -->
 
-            <figure class="home-welcome-photo">
-
-                <img
-                    src="media/images/memory-01/011.jpg"
-                    alt="A photograph from our time together"
-                    loading="lazy"
-                >
-
-            </figure>
-
-            <p class="home-welcome-caption">
-                Take your time. There's no hurry here.
-            </p>
-
-
-            <!-- A small discovery, not another memory page -->
-
-            <div class="home-welcome-discovery">
+            <div class="home-door-scene">
 
                 <button
+                    class="home-door"
+                    id="homeDoor"
                     type="button"
-                    class="home-welcome-trigger"
-                    id="homeWelcomeTrigger"
+                    aria-label="Open the door into The Archive"
                     aria-expanded="false"
-                    aria-controls="homeWelcomeReveal"
+                    aria-controls="homeEntranceReveal homeArchiveMap"
                 >
-                    a little note for you
+
+                    <span class="home-door-frame">
+
+                        <span class="home-door-light"></span>
+
+                        <span class="home-door-inner">
+
+                            <span class="home-door-mark">
+                                ∞
+                            </span>
+
+                            <span class="home-door-label">
+                                For you
+                            </span>
+
+                        </span>
+
+                        <span class="home-door-knob"></span>
+
+                    </span>
+
                 </button>
 
-                <p class="home-welcome-hint">
-                    ( if you'd like to see it )
+                <span
+                    class="home-door-ground"
+                    aria-hidden="true"
+                ></span>
+
+            </div>
+
+
+            <p
+                class="home-door-instruction"
+                id="homeDoorInstruction"
+            >
+                there's a little door here
+            </p>
+
+            <p class="home-door-subinstruction">
+                You can open it whenever you like.
+            </p>
+
+
+            <!-- THE REVEAL -->
+
+            <div
+                class="home-entrance-reveal"
+                id="homeEntranceReveal"
+                hidden
+            >
+
+                <h3 class="home-entrance-reveal-title">
+                    You're welcome here.
+                </h3>
+
+                <p class="home-entrance-reveal-description">
+                    No occasion needed. Nothing to catch up on.
+                    Just a little place I made for you.
+                </p>
+
+                <div
+                    class="home-entrance-divider"
+                    aria-hidden="true"
+                ></div>
+
+                <p class="home-entrance-reveal-note">
+                    I'm glad you're here.
+                </p>
+
+            </div>
+
+
+            <!-- THE MINIATURE ARCHIVE MAP -->
+
+            <div
+                class="home-archive-map"
+                id="homeArchiveMap"
+                hidden
+            >
+
+                <h3 class="home-archive-map-heading">
+                    Where would you like to wander?
+                </h3>
+
+                <p class="home-archive-map-description">
+                    Take whichever path feels right today.
                 </p>
 
 
-                <div
-                    class="home-welcome-reveal"
-                    id="homeWelcomeReveal"
-                    hidden
+                <nav
+                    class="home-archive-destinations"
+                    aria-label="Explore The Archive"
                 >
 
-                    <p>
-                        You don't have to look for anything here.
-                        You can simply be.
-                    </p>
+                    <a
+                        class="home-archive-destination"
+                        href="story.html"
+                    >
+                        <span class="home-archive-destination-name">
+                            Our Story
+                        </span>
 
-                    <p class="home-welcome-signoff">
-                        I'm glad you're here.
-                    </p>
+                        <span class="home-archive-destination-hint">
+                            Where it all belongs
+                        </span>
+                    </a>
 
-                </div>
+
+                    <a
+                        class="home-archive-destination"
+                        href="gallery.html"
+                    >
+                        <span class="home-archive-destination-name">
+                            The Gallery
+                        </span>
+
+                        <span class="home-archive-destination-hint">
+                            A collection in pictures
+                        </span>
+                    </a>
+
+
+                    <a
+                        class="home-archive-destination"
+                        href="places.html"
+                    >
+                        <span class="home-archive-destination-name">
+                            Places We've Been
+                        </span>
+
+                        <span class="home-archive-destination-hint">
+                            Places that hold a story
+                        </span>
+                    </a>
+
+
+                    <a
+                        class="home-archive-destination"
+                        href="things.html"
+                    >
+                        <span class="home-archive-destination-name">
+                            Things I Love About You
+                        </span>
+
+                        <span class="home-archive-destination-hint">
+                            The little things that matter
+                        </span>
+                    </a>
+
+
+                    <a
+                        class="home-archive-destination"
+                        href="tree.html"
+                        style="grid-column: 1 / -1;"
+                    >
+                        <span class="home-archive-destination-name">
+                            The Memory Universe
+                        </span>
+
+                        <span class="home-archive-destination-hint">
+                            Wander a little further
+                        </span>
+                    </a>
+
+                </nav>
+
+
+                <p class="home-archive-map-footer">
+                    No particular order. No hurry.
+                </p>
+
+                <button
+                    class="home-entrance-return"
+                    id="homeEntranceReturn"
+                    type="button"
+                >
+                    Close this little world
+                </button>
 
             </div>
 
@@ -410,47 +866,122 @@
 
     <!-- =========================
          EXISTING JAVASCRIPT
+         PRESERVED
          ========================= -->
 
     <script src="./script.js?v=14"></script>
 
 
-    <!-- Homepage-only interaction -->
+    <!-- =========================
+         NEW HOMEPAGE INTERACTION
+         ========================= -->
 
     <script>
         (() => {
-            const trigger = document.getElementById(
-                'homeWelcomeTrigger'
+            const entrance = document.getElementById('homeEntrance');
+            const door = document.getElementById('homeDoor');
+
+            const instruction = document.getElementById(
+                'homeDoorInstruction'
             );
 
             const reveal = document.getElementById(
-                'homeWelcomeReveal'
+                'homeEntranceReveal'
             );
 
-            if (!trigger || !reveal) return;
+            const archiveMap = document.getElementById(
+                'homeArchiveMap'
+            );
 
-            trigger.addEventListener('click', () => {
-                const isExpanded =
-                    trigger.getAttribute('aria-expanded') === 'true';
+            const closeButton = document.getElementById(
+                'homeEntranceReturn'
+            );
 
-                trigger.setAttribute(
-                    'aria-expanded',
-                    String(!isExpanded)
+            if (
+                !entrance ||
+                !door ||
+                !instruction ||
+                !reveal ||
+                !archiveMap ||
+                !closeButton
+            ) {
+                return;
+            }
+
+            function openEntrance() {
+                entrance.classList.add('is-open');
+
+                door.setAttribute('aria-expanded', 'true');
+
+                door.setAttribute(
+                    'aria-label',
+                    'The Archive door is open'
                 );
 
-                reveal.hidden = isExpanded;
+                instruction.textContent =
+                    'the door is open now';
 
-                trigger.textContent = isExpanded
-                    ? 'a little note for you'
-                    : 'let that stay with you';
+                reveal.hidden = false;
+                archiveMap.hidden = false;
 
-                if (!isExpanded) {
-                    reveal.scrollIntoView({
-                        behavior: window.matchMedia(
-                            '(prefers-reduced-motion: reduce)'
-                        ).matches ? 'auto' : 'smooth',
+                /*
+                 * Wait briefly for the reveal to appear,
+                 * then move it into view on smaller screens.
+                 */
+                window.setTimeout(() => {
+                    const reducedMotion = window.matchMedia(
+                        '(prefers-reduced-motion: reduce)'
+                    ).matches;
+
+                    archiveMap.scrollIntoView({
+                        behavior: reducedMotion ? 'auto' : 'smooth',
                         block: 'nearest'
                     });
+                }, 120);
+            }
+
+            function closeEntrance() {
+                entrance.classList.remove('is-open');
+
+                door.setAttribute('aria-expanded', 'false');
+
+                door.setAttribute(
+                    'aria-label',
+                    'Open the door into The Archive'
+                );
+
+                instruction.textContent =
+                    "there's a little door here";
+
+                reveal.hidden = true;
+                archiveMap.hidden = true;
+
+                door.focus({
+                    preventScroll: true
+                });
+            }
+
+            door.addEventListener('click', () => {
+                const isOpen =
+                    door.getAttribute('aria-expanded') === 'true';
+
+                if (isOpen) {
+                    closeEntrance();
+                } else {
+                    openEntrance();
+                }
+            });
+
+            closeButton.addEventListener('click', closeEntrance);
+
+            document.addEventListener('keydown', event => {
+                if (event.key === 'Escape') {
+                    const isOpen =
+                        door.getAttribute('aria-expanded') === 'true';
+
+                    if (isOpen) {
+                        closeEntrance();
+                    }
                 }
             });
         })();
